@@ -141,3 +141,34 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Certificates
+certs/
+*.key
+*.crt
+*.pem
+*.p12
+*.pfx
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Database files
+*.sql.bak
+*.dump
+*.sqlite
+*.db
+
+# Uploads (juegos subidos localmente)
+uploads/
+games/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+*.swp

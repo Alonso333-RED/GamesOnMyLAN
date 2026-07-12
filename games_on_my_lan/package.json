@@ -1,0 +1,17 @@
+{
+  "name": "goml-server",
+  "version": "1.0.0",
+  "description": "Backend server for GamesOnMyLAN",
+  "license": "AGPL-3.0-only",
+  "author": "alonso",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "express": "^5.2.1",
+    "pg": "^8.22.0"
+  }
+}
