@@ -2,7 +2,7 @@ body {
     min-height: 100vh;
     margin: 0;
     background-color: #111111;
-    color: white;
+    color: rgb(255, 255, 255);
 
     background-image: url("/img/bg.png");
     background-size: cover;
@@ -19,6 +19,17 @@ body {
 
 .text-primary {
     color: rgba(255, 191, 191, 1) !important;
+    font-size: 2rem;
+}
+
+.text-secondary {
+    color: #ffffff !important;
+    font-size: 1.5rem;
+}
+
+.text-tertiary {
+    color: rgb(255, 255, 255) !important;
+    font-size: 1rem;
 }
 
 .btn-primary {
@@ -26,6 +37,38 @@ body {
     border-color: #000000;
 }
 
+.btn-primary:hover {
+    background-color: #ff0000;
+    border-color: #000000;
+}
+
+.btn-primary:focus {
+    background-color: #ff0000 !important;
+    border-color: #ff0000 !important;
+}
+
 .bg-primary {
     background-color: #000000 !important;
+}
+
+.logo {
+    width: 100px;
+    height: auto;
+}
+
+.form-control {
+    background-color: #000000;
+    color: #ffbfbf;
+    border: 1px solid #ffbfbf;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    background-color: #404040; 
+    color: white;
+    border-color: #ff0000; 
+    box-shadow: none; 
 }

@@ -5,9 +5,9 @@ const { Pool } = pg;
 const pool = new Pool({
     host: "localhost",
     port: 5432,
-    user: "alonso",
-    password: "1289",
-    database: "gamesonmylan"
+    user: "goml",
+    password: "goml_psw",
+    database: "goml_db",
 });
 
 export default pool;

@@ -13,31 +13,42 @@
 
     <header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
         <img src="img/logo.png" alt="GamesOnMyLan Logo" class="logo mb-2 mb-md-0">
-        <h1 class="text-primary">
+        <h2 class="text-primary">
             GamesOnMyLan
-        </h1>
+        </h2>
+<h1 class="text-primary ms-md-5 mt-3 mt-md-0">
+    Iniciar sesión
+</h1>
 
         <nav class="nav">
             <a class="nav-link text-tertiary" href="/gallery">Galería</a>
             <a class="nav-link text-tertiary" href="/create">Crear</a>
             <a class="nav-link text-tertiary" href="/admin">Administración</a>
-            <a class="nav-link text-tertiary" href="/login">Ingresar</a>
+            <a class="nav-link text-tertiary" href="/index">Inicio</a>
         </nav>
     </header>
 
     <main class="main-panel container mt-5">
 
         <h1 class="text-secondary">
-            Galeria de videojuegos en la red local.
+            Iniciar seccion
         </h1>
 
         <p class="text-tertiary">
-            GamesOnMyLan es una plataforma self-hosting en donde los usuarios pueden subir videojuegos y probar juegos creados por otros.
-            Por motivos de seguridad debes de preguntarle a un administrador si puedes tener una cuenta para subir juegos, pero puedes sin
-            problema jugar juegos sin tener una cuenta.
-
-            Se recomienda no usar datos de la vida real, ya que por ahora la conexion no es cifrada
+            Para iniciar sesión, por favor ingresa tu nombre de usuario y contraseña. Si no tienes una cuenta, contacta a un administrador para obtener acceso.
         </p>
+
+        <form class="mt-4" action="/auth/login" method="POST">
+            <div class="mb-3">
+                <label for="username" class="form-label">Nombre de usuario</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+        </form>
 
     </main>
 

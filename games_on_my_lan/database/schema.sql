@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS games (
 
 INSERT INTO roles (role_name)
 VALUES
-    ('member'),
+    ('owner'),
     ('admin'),
-    ('owner')
+    ('member')
 ON CONFLICT (role_name) DO NOTHING;
