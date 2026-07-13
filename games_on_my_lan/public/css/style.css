@@ -1,0 +1,31 @@
+body {
+    min-height: 100vh;
+    margin: 0;
+    background-color: #111111;
+    color: white;
+
+    background-image: url("/img/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.main-panel {
+    background-color: #000000;
+
+    padding: 40px;
+    border-radius: 20px;
+}
+
+.text-primary {
+    color: rgba(255, 191, 191, 1) !important;
+}
+
+.btn-primary {
+    background-color: #400000;
+    border-color: #000000;
+}
+
+.bg-primary {
+    background-color: #000000 !important;
+}
