@@ -9,24 +9,23 @@ router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
 
-    const usuario = await authService.login(
+    const user = await authService.login(
         username,
         password
     );
 
 
-    if (!usuario) {
+    if (!user) {
         return res.status(401).send("Usuario o contraseña incorrectos");
     }
 
 
-    req.session.usuario = {
-        id: usuario.id,
-        username: usuario.username
+    req.session.user = {
+        id: user.id
     };
 
 
-    res.send("Login correcto");
+    res.redirect("/profile");
 
 });
 

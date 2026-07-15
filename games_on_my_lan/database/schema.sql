@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     role_id INTEGER NOT NULL,
+    profile_image_path TEXT,
 
     FOREIGN KEY (role_id)
         REFERENCES roles(id)
@@ -26,6 +27,7 @@ CREATE TABLE IF NOT EXISTS games (
     image_path TEXT UNIQUE,
     current_version VARCHAR(25) NOT NULL,
     author_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (author_id)
         REFERENCES users(id)

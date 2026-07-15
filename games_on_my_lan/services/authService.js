@@ -1,8 +1,5 @@
-// services/authService.js
-
 import pool from "../database/pool.js";
 import bcrypt from "bcryptjs";
-
 
 async function login(username,password){
 
@@ -11,27 +8,22 @@ async function login(username,password){
         [username]
     );
 
-
     if(result.rows.length === 0){
         return null;
     }
 
+    const user = result.rows[0];
 
-    const usuario = result.rows[0];
-
-
-    const correcto = await bcrypt.compare(
+    const correct = await bcrypt.compare(
         password,
-        usuario.password_hash
+        user.password_hash
     );
 
-
-    if(!correcto){
+    if(!correct){
         return null;
     }
 
-
-    return usuario;
+    return user;
 }
 
 

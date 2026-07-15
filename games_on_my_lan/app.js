@@ -33,6 +33,26 @@ app.get("/login", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "login.html"));
 });
 
+app.get("/profile", (req, res) => {
+
+    if (!req.session.user) {
+        return res.redirect("/login");
+    }
+
+    res.sendFile(path.join(__dirname, "public", "profile.html"));
+
+});
+
+app.get("/api/profile", (req, res) => {
+
+    if (!req.session.user) {
+        return res.sendStatus(401);
+    }
+
+    res.json(req.session.user);
+
+});
+
 app.use("/auth", authRouter);
 
 app.listen(PORT, () => {
