@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash VARCHAR(255) NOT NULL,
     role_id INTEGER NOT NULL,
     profile_image_path TEXT,
+    registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (role_id)
         REFERENCES roles(id)
