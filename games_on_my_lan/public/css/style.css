@@ -56,6 +56,15 @@ body {
     height: auto;
 }
 
+.profile-image {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    margin-bottom: 20px;
+
+    outline: 2px solid #ffbfbf;
+}
+
 .form-control {
     background-color: #000000;
     color: #ffbfbf;

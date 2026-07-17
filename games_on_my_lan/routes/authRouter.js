@@ -8,12 +8,10 @@ router.post("/login", async (req, res) => {
 
     const { username, password } = req.body;
 
-
     const user = await authService.login(
         username,
         password
     );
-
 
     if (!user) {
         return res.status(401).send("Usuario o contraseña incorrectos");
@@ -26,6 +24,23 @@ router.post("/login", async (req, res) => {
 
 
     res.redirect("/profile");
+
+});
+
+
+router.post("/logout", (req, res) => {
+
+    req.session.destroy((err) => {
+
+        if (err) {
+            console.error("Error destruyendo sesión:", err);
+            return res.status(500).send("Error cerrando sesión");
+        }
+
+        res.clearCookie("connect.sid");
+
+        res.redirect("/login");
+    });
 
 });
 
