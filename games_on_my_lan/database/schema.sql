@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     role_id INTEGER NOT NULL,
-    profile_image_path TEXT,
     registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (role_id)
@@ -24,15 +23,14 @@ CREATE TABLE IF NOT EXISTS games (
     id SERIAL PRIMARY KEY,
     game_name VARCHAR(100) NOT NULL,
     game_description TEXT,
-    file_path TEXT NOT NULL UNIQUE,
-    image_path TEXT UNIQUE,
-    current_version VARCHAR(25) NOT NULL,
+    entry_file TEXT NOT NULL DEFAULT 'index.html',
     author_id INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (author_id)
         REFERENCES users(id)
-        ON DELETE RESTRICT
+        ON DELETE CASCADE
 );
 
 -- INITIAL DATA

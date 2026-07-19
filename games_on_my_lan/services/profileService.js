@@ -7,7 +7,6 @@ async function getProfile(userId) {
         `
         SELECT 
             users.username,
-            users.profile_image_path,
             roles.role_name,
             users.registered_at
         FROM users

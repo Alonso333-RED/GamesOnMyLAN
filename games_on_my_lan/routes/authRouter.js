@@ -22,7 +22,6 @@ router.post("/login", async (req, res) => {
         id: user.id
     };
 
-
     res.redirect("/profile");
 
 });
