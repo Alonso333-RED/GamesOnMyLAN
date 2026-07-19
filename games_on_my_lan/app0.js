@@ -7,12 +7,15 @@ import authRouter from "./routes/authRouter.js";
 import profileRouter from "./routes/profileRouter.js";
 import gamesRouter from "./routes/gamesRouter.js";
 
+
 const app = express();
 const PORT = 3000;
+
 
 // Configuración de rutas
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 
 // Middlewares globales
 app.use(express.json());
@@ -20,6 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
+
 
 app.use(session({
 
@@ -35,40 +39,55 @@ app.use(session({
 
 }));
 
+
 // Archivos públicos
 app.use(express.static(
     path.join(__dirname, "public")
 ));
 
-// Rutas de páginas
-app.get("/index", (req, res) => {
+
+// ======================
+// PÁGINAS
+// ======================
+app.get("/index", (req,res)=>{
 
     res.sendFile(
-        path.join(__dirname, "public", "index.html")
+        path.join(__dirname,"public","index.html")
     );
 
 });
 
-app.get("/login", (req, res) => {
+
+app.get("/login", (req,res)=>{
 
     res.sendFile(
-        path.join(__dirname, "public", "login.html")
+        path.join(__dirname,"public","login.html")
     );
 
 });
 
-app.get("/profile", (req, res) => {
 
-    if (!req.session.user) {
+app.get("/profile", (req,res)=>{
+
+    if(!req.session.user){
         return res.redirect("/login");
     }
 
-
     res.sendFile(
-        path.join(__dirname, "public", "profile.html")
+        path.join(__dirname,"public","profile.html")
     );
 
 });
+
+
+app.get("/games", (req,res)=>{
+
+    res.sendFile(
+        path.join(__dirname,"public","games.html")
+    );
+
+});
+
 
 app.get("/games/new", (req,res)=>{
 
@@ -82,24 +101,16 @@ app.get("/games/new", (req,res)=>{
 
 });
 
-app.get("/games", (req,res)=>{
-
-    res.sendFile(
-        path.join(__dirname,"public","games.html")
-    );
-
-});
-
-// Rutas API
-app.use("/api", profileRouter);
+// ROUTERS
 app.use("/auth", authRouter);
-app.use("/games", gamesRouter);
+app.use("/api/profile", profileRouter);
+app.use("/api/games", gamesRouter);
 
 // Inicio servidor
-app.listen(PORT, () => {
+app.listen(PORT, ()=>{
 
     console.log(
-        `GamesOnMyLan listening on port ${PORT}`
+        `GamesOnMyLAN listening on port ${PORT}`
     );
 
 });
