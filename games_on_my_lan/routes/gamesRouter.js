@@ -5,7 +5,7 @@ import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
-router.get("/games", async (req,res)=>{
+router.get("/", async (req,res)=>{
 
     const games = await gamesService.getGames();
 
@@ -14,39 +14,54 @@ router.get("/games", async (req,res)=>{
 });
 
 router.get(
-    "/games/new",
+    "/new",
     requireLogin,
     requireRole("member","admin","owner"),
     (req,res)=>{
-
-        res.render("games/new");
-
+        res.sendFile(
+            path.join(__dirname,"../public/new_game.html")
+        );
     }
 );
 
 router.post(
-    "/games",
+    "/",
     requireLogin,
     requireRole("member","admin","owner"),
-    upload.single("gameFile"),
+
+    upload.fields([
+        {
+            name:"gameFile",
+            maxCount:1
+        },
+        {
+            name:"thumbnail",
+            maxCount:1
+        }
+    ]),
 
     async(req,res)=>{
 
+        const game = await gamesService.createGame({
 
-        const game = {
+            game_name: req.body.game_name,
 
-            name: req.body.name,
+            game_description: req.body.game_description,
 
-            description: req.body.description,
+            entry_file: req.body.entry_file,
 
-            file_path: req.file.filename,
+            author_id: req.session.user.id
 
-            user_id: req.session.user.id
-
-        };
+        });
 
 
-        await gamesService.createGame(game);
+        console.log("Juego creado:", game.id);
+
+
+        // aquí:
+        // crear data/games/{game.id}
+        // extraer ZIP
+        // mover thumbnail
 
 
         res.redirect("/games");
@@ -54,7 +69,7 @@ router.post(
     }
 );
 
-router.get("/games/:id", async(req,res)=>{
+router.get("/:id", async(req,res)=>{
 
 
     const game = await gamesService.getGameById(
@@ -72,7 +87,7 @@ router.get("/games/:id", async(req,res)=>{
 });
 
 router.delete(
-    "/games/:id",
+    "/:id",
     requireLogin,
 
     async(req,res)=>{
