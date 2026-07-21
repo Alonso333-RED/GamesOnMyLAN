@@ -21,8 +21,8 @@ export function requireRole(...roles){
                 SELECT roles.role_name
                 FROM users
                 JOIN roles
-                ON users.role_id = roles.id
-                WHERE users.id = $1
+                ON users.role_id = roles.id_role
+                WHERE users.id_user = $1
                 `,
                 [req.session.user.id]
             );

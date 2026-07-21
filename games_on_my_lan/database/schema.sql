@@ -3,24 +3,24 @@
 -- ===============
 
 CREATE TABLE IF NOT EXISTS roles (
-    id SERIAL PRIMARY KEY,
+    id_role SERIAL PRIMARY KEY,
     role_name VARCHAR(25) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
+    id_user SERIAL PRIMARY KEY,
     username VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     role_id INTEGER NOT NULL,
     registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (role_id)
-        REFERENCES roles(id)
+        REFERENCES roles(id_role)
         ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS games (
-    id SERIAL PRIMARY KEY,
+    id_game SERIAL PRIMARY KEY,
     game_name VARCHAR(100) NOT NULL,
     game_description TEXT,
     entry_file TEXT NOT NULL DEFAULT 'index.html',
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS games (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (author_id)
-        REFERENCES users(id)
+        REFERENCES users(id_user)
         ON DELETE CASCADE
 );
 

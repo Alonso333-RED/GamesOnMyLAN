@@ -76,7 +76,7 @@ async function main() {
                 $1,
                 $2,
                 (
-                    SELECT id
+                    SELECT id_role
                     FROM roles
                     WHERE role_name = 'owner'
                 )
