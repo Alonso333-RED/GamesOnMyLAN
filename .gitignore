@@ -175,3 +175,6 @@ Thumbs.db
 # IDEs
 .idea/
 *.swp
+
+# temporal folder
+temp/
