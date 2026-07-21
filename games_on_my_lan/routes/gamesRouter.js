@@ -1,28 +1,9 @@
 import express from "express";
 import gamesService from "../services/gamesService.js";
-import { requireLogin, requireRole } from "../middleware/auth.js";
-import upload from "../middleware/upload.js";
+import { requireLogin, requireRole } from "../middlewares/auth.js";
+import upload from "../middlewares/upload.js";
 
 const router = express.Router();
-
-router.get("/", async (req,res)=>{
-
-    const games = await gamesService.getGames();
-
-    res.json(games);
-
-});
-
-router.get(
-    "/new",
-    requireLogin,
-    requireRole("member","admin","owner"),
-    (req,res)=>{
-        res.sendFile(
-            path.join(__dirname,"../public/new_game.html")
-        );
-    }
-);
 
 router.post(
     "/",
@@ -68,41 +49,5 @@ router.post(
 
     }
 );
-
-router.get("/:id", async(req,res)=>{
-
-
-    const game = await gamesService.getGameById(
-        req.params.id
-    );
-
-
-    if(!game){
-        return res.status(404).send("Juego no encontrado");
-    }
-
-
-    res.json(game);
-
-});
-
-router.delete(
-    "/:id",
-    requireLogin,
-
-    async(req,res)=>{
-
-
-        await gamesService.deleteGame(
-            req.params.id,
-            req.session.user.id
-        );
-
-
-        res.sendStatus(204);
-
-    }
-);
-
 
 export default router;

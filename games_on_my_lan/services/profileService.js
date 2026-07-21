@@ -11,8 +11,8 @@ async function getProfile(userId) {
             users.registered_at
         FROM users
         INNER JOIN roles
-            ON users.role_id = roles.id
-        WHERE users.id = $1
+            ON users.role_id = roles.id_role
+        WHERE users.id_user = $1
         `,
         [userId]
     );

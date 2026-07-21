@@ -6,13 +6,13 @@ const gamesService = {
 
         const result = await pool.query(`
             SELECT
-                games.id,
+                games.id_game,
                 games.game_name,
                 games.game_description,
                 games.entry_file,
                 users.username AS author_username
             FROM games
-            JOIN users ON games.author_id = users.id
+            JOIN users ON games.author_id = users.id_user
             ORDER BY games.updated_at DESC;
         `);
 
@@ -49,14 +49,14 @@ const gamesService = {
         const result = await pool.query(
             `
             SELECT
-                games.id,
+                games.id_game,
                 games.game_name,
                 games.game_description,
                 games.entry_file,
                 users.username AS author_username
             FROM games
-            JOIN users ON games.author_id = users.id
-            WHERE games.id = $1;
+            JOIN users ON games.author_id = users.id_user
+            WHERE games.id_game = $1;
             `,
             [id]
         );
@@ -70,7 +70,7 @@ const gamesService = {
         const result = await pool.query(
             `
             DELETE FROM games
-            WHERE id = $1
+            WHERE id_game = $1
             AND author_id = $2;
             `,
             [
