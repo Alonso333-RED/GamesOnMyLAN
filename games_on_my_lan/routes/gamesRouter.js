@@ -1,5 +1,5 @@
 import express from "express";
-import gamesService from "../services/gamesService.js";
+import gamesController from "../controllers/gamesController.js";
 import { requireLogin, requireRole } from "../middlewares/auth.js";
 import upload from "../middlewares/upload.js";
 
@@ -9,7 +9,6 @@ router.post(
     "/",
     requireLogin,
     requireRole("member","admin","owner"),
-
     upload.fields([
         {
             name:"gameFile",
@@ -20,34 +19,7 @@ router.post(
             maxCount:1
         }
     ]),
-
-    async(req,res)=>{
-
-        const game = await gamesService.createGame({
-
-            game_name: req.body.game_name,
-
-            game_description: req.body.game_description,
-
-            entry_file: req.body.entry_file,
-
-            author_id: req.session.user.id
-
-        });
-
-
-        console.log("Juego creado:", game.id);
-
-
-        // aquí:
-        // crear data/games/{game.id}
-        // extraer ZIP
-        // mover thumbnail
-
-
-        res.redirect("/games");
-
-    }
+    gamesController.createGame
 );
 
 export default router;
