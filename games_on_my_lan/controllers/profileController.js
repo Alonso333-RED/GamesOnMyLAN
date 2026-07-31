@@ -1,10 +1,10 @@
-import profileService from '../services/profileService.js';
+import profileService from "../services/profileService.js";
+
 
 async function getProfile(req, res) {
-    if(!req.session.user){
-        return res.status(401).json({
-            error:"No autenticado"
-        });
+
+    if (!req.session.user) {
+        return res.redirect("/login");
     }
 
 
@@ -13,15 +13,20 @@ async function getProfile(req, res) {
     );
 
 
-    if(!user){
-        return res.status(404).json({
-            error:"Usuario no encontrado"
-        });
+    if (!user) {
+        return res.status(404).send(
+            "Usuario no encontrado"
+        );
     }
 
 
-    res.json(user);
+    res.render("profile", {
+        title: "Perfil",
+        user
+    });
+
 }
+
 
 export default {
     getProfile

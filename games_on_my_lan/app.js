@@ -2,104 +2,85 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import session from "express-session";
+import { engine } from "express-handlebars";
 
 import authRouter from "./routes/authRouter.js";
 import profileRouter from "./routes/profileRouter.js";
 import gamesRouter from "./routes/gamesRouter.js";
 
-const app = express();
-const PORT = 3000;
-
-// Configuración de rutas
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const app = express();
+const PORT = 3000;
+
+// Engine
+app.engine(
+    "hbs",
+    engine({
+        extname: ".hbs",
+        defaultLayout: "main"
+    })
+);
+
+app.set("view engine", "hbs");
+app.set(
+    "views",
+    path.join(__dirname, "views")
+);
+
 // Middlewares globales
 app.use(express.json());
-
-app.use(express.urlencoded({
-    extended: true
-}));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
-
     secret: "0!nC51q9Uz5K5rrz..Zn2JfyLvBRd9gAw)A4TBz>Q2m]mN^4.+:^y052ZA#%z9%?p",
-
     resave: false,
-
     saveUninitialized: false,
-
     cookie: {
         maxAge: 3600000
     }
-
 }));
 
-// Archivos públicos
-app.use(express.static(
-    path.join(__dirname, "public")
-));
+app.use((req, res, next) => {
 
-// Rutas de páginas
-app.get("/index", (req, res) => {
+    res.locals.user = req.session.user;
 
-    res.sendFile(
-        path.join(__dirname, "public", "index.html")
-    );
+    next();
 
 });
 
-app.get("/login", (req, res) => {
+// Archivos estáticos
+app.use(express.static(path.join(__dirname, "public")));
 
-    res.sendFile(
-        path.join(__dirname, "public", "login.html")
-    );
+// Vistas
+app.get("/", (req, res) => {
+
+    res.render("index", {
+        title: "GamesOnMyLan"
+    });
 
 });
 
-app.get("/profile", (req, res) => {
+
+app.get("/games/new", (req, res) => {
 
     if (!req.session.user) {
         return res.redirect("/login");
     }
 
-
-    res.sendFile(
-        path.join(__dirname, "public", "profile.html")
-    );
-
-});
-
-app.get("/games/new", (req,res)=>{
-
-    if(!req.session.user){
-        return res.redirect("/login");
-    }
-
-    res.sendFile(
-        path.join(__dirname,"public","new_game.html")
-    );
+    res.render("new_game", {
+        title: "Nuevo Juego"
+    });
 
 });
 
-app.get("/games", (req,res)=>{
-
-    res.sendFile(
-        path.join(__dirname,"public","games.html")
-    );
-
-});
-
-// Rutas API
-app.use("/api", profileRouter);
-app.use("/auth", authRouter);
+// Routers
+app.use(profileRouter);
+app.use(authRouter);
 app.use("/games", gamesRouter);
 
 // Inicio servidor
 app.listen(PORT, () => {
-
-    console.log(
-        `GamesOnMyLan listening on port ${PORT}`
-    );
-
+    console.log(`GamesOnMyLan listening on http://localhost:${PORT}`);
 });

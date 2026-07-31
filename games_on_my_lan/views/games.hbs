@@ -1,0 +1,116 @@
+<header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
+
+    <img src="/img/logo.png" 
+         alt="GamesOnMyLan Logo" 
+         class="logo mb-2 mb-md-0">
+
+    <h1 class="text-primary">
+        GamesOnMyLan
+    </h1>
+
+    <nav class="nav">
+
+        <a class="nav-link text-tertiary" href="/">
+            Inicio
+        </a>
+
+        <a class="nav-link text-tertiary" href="/games/new">
+            Nuevo
+        </a>
+
+        {{#if user}}
+            <a class="nav-link text-tertiary" href="/profile">
+                Perfil
+            </a>
+        {{else}}
+            <a class="nav-link text-tertiary" href="/login">
+                Ingresar
+            </a>
+        {{/if}}
+    </nav>
+</header>
+
+<main class="main-panel container mt-5">
+
+    <h1 class="text-secondary">
+        Juegos registrados
+    </h1>
+
+    <div class="table-responsive mt-4">
+
+        <table class="table table-dark table-hover align-middle">
+
+            <thead>
+                <tr>
+                    <th>
+                        Imagen
+                    </th>
+
+                    <th>
+                        Nombre
+                    </th>
+
+                    <th>
+                        Autor
+                    </th>
+
+                    <th>
+                        Última actualización
+                    </th>
+
+                    <th>
+                        Acciones
+                    </th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {{#each games}}
+                <tr>
+                    <td>
+                        <img 
+                            src="/img/logo.png"
+                            alt="Thumbnail"
+                            class="thumbnail"
+                            style="width:80px;height:80px;margin:0;">
+                    </td>
+
+                    <td class="text-primary">
+                        {{game_name}}
+                    </td>
+
+                    <td>
+                        {{author_name}}
+                    </td>
+
+                    <td>
+                        {{updated_at}}
+                    </td>
+
+                    <td>
+                        <button class="btn btn-primary me-2">
+                            Detalles
+                        </button>
+
+                        <button class="btn btn-primary">
+                            Jugar
+                        </button>
+                    </td>
+                </tr>
+
+            {{else}}
+
+                <tr>
+                    <td colspan="5" class="text-center">
+                        No hay juegos registrados.
+                    </td>
+                </tr>
+
+            {{/each}}
+
+            </tbody>
+        </table>
+    </div>
+</main>
