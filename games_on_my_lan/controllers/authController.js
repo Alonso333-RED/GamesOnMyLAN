@@ -36,7 +36,16 @@ function logout(req, res) {
     });
 }
 
+function showLogin(req, res) {
+
+    res.render("login", {
+        title: "Iniciar sesión"
+    });
+
+}
+
 export default {
     login,
-    logout
+    logout,
+    showLogin
 };

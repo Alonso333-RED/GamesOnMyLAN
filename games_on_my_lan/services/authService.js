@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 async function login(username,password){
 
     const result = await pool.query(
-        "SELECT * FROM users WHERE username=$1",
+        "SELECT id_user, password_hash FROM users WHERE username = $1",
         [username]
     );
 

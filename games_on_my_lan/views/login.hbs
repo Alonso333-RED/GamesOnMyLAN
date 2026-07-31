@@ -1,0 +1,65 @@
+<header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
+
+    <img src="/img/logo.png" 
+         alt="GamesOnMyLan Logo" 
+         class="logo mb-2 mb-md-0">
+
+    <h2 class="text-primary">
+        GamesOnMyLan
+    </h2>
+
+    <h1 class="text-primary ms-md-5 mt-3 mt-md-0">
+        Iniciar sesión
+    </h1>
+
+    <nav class="nav">
+        <a class="nav-link text-tertiary" href="/games">
+            Galería
+        </a>
+        <a class="nav-link text-tertiary" href="/">
+            Inicio
+        </a>
+    </nav>
+
+</header>
+<main class="main-panel container mt-5">
+    <h1 class="text-secondary">
+        Iniciar sesión
+    </h1>
+    <p class="text-tertiary">
+        Para iniciar sesión, por favor ingresa tu nombre de usuario y contraseña.
+        Si no tienes una cuenta, contacta a un administrador para obtener acceso.
+    </p>
+
+    <form class="mt-4" action="/login" method="POST">
+        <div class="mb-3">
+            <label for="username" class="form-label">
+                Nombre de usuario
+            </label>
+            <input 
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">
+                Contraseña
+            </label>
+            <input 
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                required>
+        </div>
+        
+        <button 
+            type="submit"
+            class="btn btn-primary">
+            Iniciar sesión
+        </button>
+    </form>
+</main>

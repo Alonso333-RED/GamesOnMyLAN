@@ -1,6 +1,6 @@
 import gamesService from "../services/gamesService.js";
 
-async function createGame(req,res){
+async function createGame(req, res) {
 
     try {
 
@@ -13,12 +13,9 @@ async function createGame(req,res){
 
         });
 
+        res.redirect("/");
 
-        console.log("Juego creado:", game.id);
-
-        res.redirect("/games");
-
-    } catch(error){
+    } catch (error) {
 
         console.error(error);
         res.status(500).send("Error creando juego");
@@ -27,6 +24,27 @@ async function createGame(req,res){
 
 }
 
+async function getAllGames(req, res) {
+
+    try {
+
+        const games = await gamesService.getAllGames();
+
+        res.render("games", {
+            title: "Galería",
+            games
+        });
+
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).send("Error al obtener los juegos");
+
+    }
+
+}
+
 export default {
-    createGame
+    createGame,
+    getAllGames
 };

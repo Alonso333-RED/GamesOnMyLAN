@@ -25,6 +25,24 @@ const gamesService = {
         );
         return result.rows[0];
     },
+
+    async getAllGames() {
+        const result = await pool.query(
+            `
+            SELECT 
+                g.id_game,
+                g.game_name,
+                g.game_description,
+                g.entry_file,
+                g.updated_at,
+                u.username AS author_name
+            FROM games g
+            JOIN users u ON g.author_id = u.id_user
+            ORDER BY g.updated_at DESC;
+            `
+        );
+        return result.rows;
+    }
 };
 
 export default gamesService;

@@ -1,0 +1,64 @@
+<header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
+
+    <img src="/img/logo.png" 
+         alt="GamesOnMyLan Logo" 
+         class="logo mb-2 mb-md-0">
+
+    <h1 class="text-primary">
+        GamesOnMyLan
+    </h1>
+
+    <h1 class="text-primary ms-md-5 mt-3 mt-md-0">
+        Perfil
+    </h1>
+
+    <nav class="nav">
+        <a class="nav-link text-tertiary" href="/games">
+            Galería
+        </a>
+
+        <a class="nav-link text-tertiary" href="/">
+            Inicio
+        </a>
+
+        <form action="/logout" method="POST">
+            <button class="nav-link text-tertiary" type="submit">
+                Cerrar sesión
+            </button>
+
+        </form>
+    </nav>
+
+</header>
+<main class="main-panel container mt-5">
+
+    <div class="d-flex flex-column flex-md-row">
+
+        <div class="me-md-4 mb-3 mb-md-0 text-center">
+            <img src="/img/default_profile.png"
+                 alt="Profile Image"
+                 class="thumbnail">
+        </div>
+
+        <div class="flex-grow-1">
+
+            <h1 class="text-primary">
+
+                {{user.username}}
+
+            </h1>
+            <p>
+                <strong>Rol:</strong>
+                {{user.role_name}}
+            </p>
+            <p>
+                <strong>Fecha de registro:</strong>
+                {{user.registered_at}}
+            </p>
+            <p>
+                <strong>Juegos subidos:</strong>
+                Próximamente
+            </p>
+        </div>
+    </div>
+</main>
