@@ -42,6 +42,21 @@ const gamesService = {
             `
         );
         return result.rows;
+    },
+
+    async getGameById(id_game) {
+
+        const result = await pool.query(
+            `
+            SELECT *
+            FROM games
+            WHERE id_game = $1;
+            `,
+            [id_game]
+        );
+
+        return result.rows[0];
+
     }
 };
 

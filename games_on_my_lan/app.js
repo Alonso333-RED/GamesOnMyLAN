@@ -80,6 +80,21 @@ app.use(profileRouter);
 app.use(authRouter);
 app.use("/games", gamesRouter);
 
+// datos
+app.use(
+    "/thumbnails",
+    express.static(
+        "data/thumbnails"
+    )
+);
+
+app.use(
+    "/game-files",
+    express.static(
+        path.join(process.cwd(), "data", "games")
+    )
+);
+
 // Inicio servidor
 app.listen(PORT, () => {
     console.log(`GamesOnMyLan listening on http://localhost:${PORT}`);

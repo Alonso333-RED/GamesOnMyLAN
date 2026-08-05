@@ -9,7 +9,7 @@ router.post(
     "/",
     requireLogin,
     requireRole("member","admin","owner"),
-    /*upload.fields([
+    upload.fields([
         {
             name:"gameFile",
             maxCount:1
@@ -18,8 +18,14 @@ router.post(
             name:"thumbnail",
             maxCount:1
         }
-    ]),*/
+    ]),
     gamesController.createGame
+);
+
+
+router.get(
+    "/:id/play",
+    gamesController.playGame
 );
 
 router.get("/", gamesController.getAllGames)

@@ -71,7 +71,7 @@
                 <tr>
                     <td>
                         <img 
-                            src="/img/logo.png"
+                            src="/thumbnails/{{id_game}}.png"
                             alt="Thumbnail"
                             class="thumbnail"
                             style="width:80px;height:80px;margin:0;">
@@ -94,9 +94,11 @@
                             Detalles
                         </button>
 
-                        <button class="btn btn-primary">
+                        <a
+                            href="/games/play/{{id_game}}"
+                            class="btn btn-primary">
                             Jugar
-                        </button>
+                        </a>
                     </td>
                 </tr>
 
