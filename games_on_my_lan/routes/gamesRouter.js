@@ -24,7 +24,7 @@ router.post(
 
 
 router.get(
-    "/:id/play",
+    "/:id",
     gamesController.playGame
 );
 
