@@ -30,7 +30,7 @@ async function main() {
         const hash = await bcrypt.hash(password, 12);
 
         await db.query(
-            "INSERT INTO users (username, password_hash, role_id) VALUES ($1, $2, (SELECT id FROM roles WHERE role_name = $3))",
+            "INSERT INTO users (username, password_hash, role_id) VALUES ($1, $2, (SELECT id_role FROM roles WHERE role_name = $3))",
             [username, hash, role]
         );
 
