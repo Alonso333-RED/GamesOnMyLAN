@@ -3,6 +3,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import session from "express-session";
 import { engine } from "express-handlebars";
+import fs from "fs";
+import https from "https";
 
 import authRouter from "./routes/authRouter.js";
 import profileRouter from "./routes/profileRouter.js";
@@ -38,7 +40,8 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 3600000
+        maxAge: 3600000,
+        secure: true
     }
 }));
 
@@ -96,6 +99,23 @@ app.use(
 );
 
 // Inicio servidor
-app.listen(PORT, () => {
-    console.log(`GamesOnMyLan listening on http://localhost:${PORT}`);
+https.createServer(
+    {
+        key: fs.readFileSync(
+            "certs/server.key"
+        ),
+
+        cert: fs.readFileSync(
+            "certs/server.crt"
+        )
+    },
+
+    app
+
+).listen(PORT, () => {
+
+    console.log(
+        `GamesOnMyLan listening on https://localhost:${PORT}`
+    );
+
 });
