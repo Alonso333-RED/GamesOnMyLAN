@@ -55,10 +55,81 @@
                 <strong>Fecha de registro:</strong>
                 {{user.registered_at}}
             </p>
-            <p>
-                <strong>Juegos subidos:</strong>
-                Próximamente
-            </p>
         </div>
+    </div>
+    <h1 class="text-secondary">
+        Mis Juegos
+    </h1>
+
+    <div class="table-responsive mt-4">
+
+        <table class="table table-dark table-hover align-middle">
+
+            <thead>
+                <tr>
+                    <th>
+                        Imagen
+                    </th>
+
+                    <th>
+                        Nombre
+                    </th>
+
+                    <th>
+                        Última actualización
+                    </th>
+
+                    <th>
+                        Acciones
+                    </th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {{#each games}}
+                <tr>
+                    <td>
+                        <img 
+                            src="/thumbnails/{{id_game}}.png"
+                            alt="Thumbnail"
+                            class="thumbnail"
+                            style="width:80px;height:80px;margin:0;">
+                    </td>
+
+                    <td class="text-primary">
+                        {{game_name}}
+                    </td>
+
+                    <td>
+                        {{updated_at}}
+                    </td>
+
+                    <td>
+                        <button class="btn btn-primary me-2">
+                            Detalles
+                        </button>
+
+                        <a
+                            href="/game-files/{{id_game}}/{{entry_file}}"
+                            class="btn btn-primary">
+                            Jugar
+                        </a>
+                    </td>
+                </tr>
+
+            {{else}}
+
+                <tr>
+                    <td colspan="5" class="text-center">
+                        No hay juegos registrados.
+                    </td>
+                </tr>
+
+            {{/each}}
+
+            </tbody>
+        </table>
     </div>
 </main>

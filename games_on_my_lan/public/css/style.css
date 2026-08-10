@@ -81,3 +81,8 @@ body {
     border-color: #ff0000; 
     box-shadow: none; 
 }
+
+a {
+    color: #ff0000;
+    text-decoration: underline;
+}

@@ -9,6 +9,7 @@ import https from "https";
 import authRouter from "./routes/authRouter.js";
 import profileRouter from "./routes/profileRouter.js";
 import gamesRouter from "./routes/gamesRouter.js";
+import registerRouter from "./routes/registerRouter.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -82,6 +83,7 @@ app.get("/games/new", (req, res) => {
 app.use(profileRouter);
 app.use(authRouter);
 app.use("/games", gamesRouter);
+app.use(registerRouter);
 
 // datos
 app.use(
