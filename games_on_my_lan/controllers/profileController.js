@@ -1,4 +1,5 @@
 import profileService from "../services/profileService.js";
+import gamesService from "../services/gamesService.js";
 
 
 async function getProfile(req, res) {
@@ -18,11 +19,13 @@ async function getProfile(req, res) {
             "Usuario no encontrado"
         );
     }
-
-
-    res.render("profile", {
-        title: "Perfil",
-        user
+    
+    gamesService.getGamesByAuthorId(req.session.user.id).then(games => {
+        res.render("profile", {
+            title: "Perfil",
+            user,
+            games
+        });
     });
 
 }

@@ -90,6 +90,13 @@ async function main() {
 
         console.log("\n✓ Owner creado correctamente.");
 
+        const settings = {
+            guest_register: true,
+        }
+        fs.writeFileSync(
+            "settings.json",
+            JSON.stringify(settings, null, 2)
+        );
         console.log(`
 [3/3] Instalación completada.
 

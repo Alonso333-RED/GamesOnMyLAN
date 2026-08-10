@@ -9,7 +9,7 @@
     </h2>
 
     <h1 class="text-primary ms-md-5 mt-3 mt-md-0">
-        Iniciar sesión
+        Crear usuario
     </h1>
 
     <nav class="nav">
@@ -24,14 +24,13 @@
 </header>
 <main class="main-panel container mt-5">
     <h1 class="text-secondary">
-        Iniciar sesión
+        Crear usuario
     </h1>
     <p class="text-tertiary">
-        Para iniciar sesión, por favor ingresa tu nombre de usuario y contraseña.
-        Si no tienes una cuenta, contacta a un administrador para obtener acceso.
+        Para crear un usuario, crea un nombre de usuario y una contraseña, procura recordar estos datos ya que se te preguntaran cad avez que quieras inciar sesión.
     </p>
 
-    <form class="mt-4" action="/login" method="POST">
+    <form class="mt-4" action="/register" method="POST">
         <div class="mb-3">
             <label for="username" class="form-label">
                 Nombre de usuario
@@ -59,9 +58,9 @@
         <button 
             type="submit"
             class="btn btn-primary">
-            Iniciar sesión
+            Registrarse
         </button>
+        
     </form>
-
-    no tienes un usuario? registrate <a href="/register">aquí</a>
+    ya tienes un usuario? inicia sesión <a href="/login">aquí</a>
 </main>

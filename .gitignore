@@ -165,8 +165,8 @@ certs/
 # Data
 data/
 games/
-profile_imgs/
-game_imgs/
+profile/
+thumbnails/
 
 # OS files
 .DS_Store
@@ -178,3 +178,6 @@ Thumbs.db
 
 # temporal folder
 temp/
+
+# settings
+settings.json

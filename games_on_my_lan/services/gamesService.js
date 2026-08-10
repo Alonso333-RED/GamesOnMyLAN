@@ -57,6 +57,22 @@ const gamesService = {
 
         return result.rows[0];
 
+    },
+
+    async getGamesByAuthorId(author_id) {
+
+        const result = await pool.query(
+            `
+            SELECT *
+            FROM games
+            WHERE author_id = $1
+            ORDER BY updated_at DESC;
+            `,
+            [author_id]
+        );
+
+        return result.rows;
+
     }
 };
 
