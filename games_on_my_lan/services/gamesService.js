@@ -48,9 +48,18 @@ const gamesService = {
 
         const result = await pool.query(
             `
-            SELECT *
-            FROM games
-            WHERE id_game = $1;
+            SELECT
+                g.id_game,
+                g.game_name,
+                g.game_description,
+                g.entry_file,
+                g.author_id,
+                g.updated_at,
+                g.created_at,
+                u.username AS author_name
+            FROM games g
+            JOIN users u ON g.author_id = u.id_user
+            WHERE g.id_game = $1;
             `,
             [id_game]
         );
@@ -72,6 +81,21 @@ const gamesService = {
         );
 
         return result.rows;
+
+    },
+
+    async deleteGame(id_game) {
+
+        const result = await pool.query(
+            `
+            DELETE FROM games
+            WHERE id_game = $1
+            RETURNING *;
+            `,
+            [id_game]
+        );
+
+        return result.rows[0];
 
     }
 };

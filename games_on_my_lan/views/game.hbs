@@ -1,0 +1,109 @@
+<header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
+
+    <img src="/img/logo.png" 
+         alt="GamesOnMyLan Logo" 
+         class="logo mb-2 mb-md-0">
+
+    <h1 class="text-primary">
+        GamesOnMyLan
+    </h1>
+
+    <h1 class="text-primary ms-md-5 mt-3 mt-md-0">
+        Juego: {{game.game_name}}
+    </h1>
+
+    <nav class="nav">
+        <a class="nav-link text-tertiary" href="/games">
+            Galería
+        </a>
+
+        <a class="nav-link text-tertiary" href="/">
+            Inicio
+        </a>
+        {{#if user}}
+            <a class="nav-link text-tertiary" href="/profile">
+                Perfil
+            </a>
+        {{else}}
+            <a class="nav-link text-tertiary" href="/login">
+                Ingresar
+            </a>
+        {{/if}}
+    </nav>
+
+</header>
+<main class="main-panel container mt-5">
+
+    <div class="d-flex flex-column flex-md-row">
+
+        <div class="me-md-4 mb-3 mb-md-0 text-center">
+
+        </div>
+
+        <div class="d-flex flex-column flex-md-row">
+
+            <div class="me-md-4 mb-3 mb-md-0 text-center">
+                <img 
+                    src="/thumbnails/{{game.id_game}}.png"
+                    alt="Thumbnail"
+                    class="thumbnail"
+                    style="width:275px;height:275px;margin:0;">
+
+            </div>
+
+            <div class="flex-grow-1">
+
+                <h1 class="text-primary">
+
+                    {{game.game_name}}
+
+                </h1>
+                <p>
+                    {{game.game_description}}
+                </p>
+                <p>
+                    <strong>Autor:</strong>
+                    {{game.author_name}}
+                </p>
+                <p>
+                    <strong>Última actualización:</strong>
+                    {{game.updated_at}}
+                </p>
+                <p>
+                    <strong>Creado:</strong>
+                    {{game.created_at}}
+                </p>
+                <td>
+                    <a
+                        href="/game-files/{{game.id_game}}/{{game.entry_file}}"
+                        class="btn btn-primary">
+                        Jugar
+                    </a>
+                    <a
+                        href="/games/update/{{game.id_game}}" 
+                        class="btn btn-primary me-2">
+                        Actualizar
+                    </a>
+                    <form action="/games/{{game.id_game}}?_method=DELETE" method="POST">
+                        <button type="submit" class="btn btn-danger">
+                            Eliminar
+                        </button>
+                    </form>
+
+
+                </td>
+            </div>
+        </div>
+        <div>
+
+        </div>
+    </div>
+
+
+    <div class="table-responsive mt-4">
+
+        <table class="table table-dark table-hover align-middle">
+
+        </table>
+    </div>
+</main>

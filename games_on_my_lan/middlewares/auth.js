@@ -54,3 +54,32 @@ export function requireRole(...roles){
     };
 
 }
+
+export function requireOwnership(req,res,next){
+
+    const userId = req.session.user.id;
+    const gameId = req.params.id;
+
+    pool.query(
+        `
+        SELECT *
+        FROM games
+        WHERE id_game = $1 AND author_id = $2
+        `,
+        [gameId, userId]
+    )
+    .then(result => {
+
+        if(result.rows.length === 0){
+            return res.status(403).send("No eres el propietario del juego");
+        }
+
+        next();
+
+    })
+    .catch(error => {
+        console.error(error);
+        res.status(500).send("Error verificando propiedad del juego");
+    });
+
+}
