@@ -1,4 +1,5 @@
 import express from "express";
+import methodOverride from "method-override";
 import path from "path";
 import { fileURLToPath } from "url";
 import session from "express-session";
@@ -35,6 +36,7 @@ app.set(
 // Middlewares globales
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
 
 app.use(session({
     secret: "SECRET_REMOVED",

@@ -84,8 +84,63 @@ async function playGame(req, res) {
 
 }
 
+async function getGameById(req, res) {
+
+    try {
+
+        const gameId = req.params.id;
+
+        const game = await gamesService.getGameById(gameId);
+        
+
+        if (!game) {
+            return res.status(404).send("Juego no encontrado");
+        }
+
+        res.render("game", {
+            title: "Detalles del juego",
+            game
+        });
+
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).send("Error al obtener los detalles del juego");
+
+    }
+
+}
+
+async function deleteGame(req, res) {
+
+    try {
+
+        const gameId = req.params.id;
+
+        const deletedGame = await gamesService.deleteGame(gameId);
+
+        if (!deletedGame) {
+            return res.status(404).send("Juego no encontrado");
+        }
+
+        await storageService.deleteGameFiles(deletedGame.id_game);
+
+        res.redirect("/games");
+
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).send("Error al eliminar el juego");
+
+    }
+
+}
+
+
 export default {
     createGame,
     getAllGames,
-    playGame
+    playGame,
+    getGameById,
+    deleteGame
 };

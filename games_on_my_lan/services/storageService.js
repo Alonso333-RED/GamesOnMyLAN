@@ -133,6 +133,30 @@ const storageService = {
         }
         await fsp.rmdir(innerFolder);
 
+    },
+
+    async deleteGameFiles(id_game) {
+
+        const gameFolder = path.join(
+            DATA_PATH,
+            "games",
+            String(id_game)
+        );
+
+        const thumbnailPath = path.join(
+            DATA_PATH,
+            "thumbnails",
+            `${id_game}.png`
+        );
+
+        await fsp.rm(gameFolder, {
+            recursive: true,
+            force: true
+        });
+
+        await fsp.rm(thumbnailPath, {
+            force: true
+        });
     }
 
 };

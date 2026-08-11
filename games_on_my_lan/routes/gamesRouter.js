@@ -1,6 +1,6 @@
 import express from "express";
 import gamesController from "../controllers/gamesController.js";
-import { requireLogin, requireRole } from "../middlewares/auth.js";
+import { requireLogin, requireRole, requireOwnership } from "../middlewares/auth.js";
 import upload from "../middlewares/upload.js";
 
 const router = express.Router();
@@ -29,5 +29,18 @@ router.get(
 );
 
 router.get("/", gamesController.getAllGames)
+
+router.get(
+    "/game-details/:id",
+    gamesController.getGameById
+);
+
+router.delete(
+    "/:id",
+    requireLogin,
+    requireOwnership,
+    gamesController.deleteGame
+);
+
 
 export default router;
