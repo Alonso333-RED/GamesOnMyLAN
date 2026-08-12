@@ -4,8 +4,6 @@ const settingsData = JSON.parse(
     await fs.readFile("./admin/settings.json", "utf8")
 );
 
-console.log(settingsData);
-
 export function requireGuestRegister(req, res, next) {
     const guestRegister = settingsData.guest_register;
 

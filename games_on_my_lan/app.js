@@ -7,6 +7,8 @@ import { engine } from "express-handlebars";
 import fs from "fs";
 import https from "https";
 
+import settings from "./admin/getSettings.js";
+
 import authRouter from "./routes/authRouter.js";
 import profileRouter from "./routes/profileRouter.js";
 import gamesRouter from "./routes/gamesRouter.js";
@@ -16,7 +18,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3000;
+const PORT = settings.app_port || 3000;
 
 // Engine
 app.engine(
@@ -91,7 +93,7 @@ app.use(registerRouter);
 app.use(
     "/thumbnails",
     express.static(
-        "data/thumbnails"
+        path.join(process.cwd(), "data", "thumbnails")
     )
 );
 
@@ -103,23 +105,92 @@ app.use(
 );
 
 // Inicio servidor
-https.createServer(
-    {
-        key: fs.readFileSync(
-            "certs/server.key"
-        ),
+try {
 
-        cert: fs.readFileSync(
-            "certs/server.crt"
-        )
-    },
+    const server = https.createServer(
+        {
+            key: fs.readFileSync(
+                path.join(__dirname, "certs", "server.key")
+            ),
 
-    app
+            cert: fs.readFileSync(
+                path.join(__dirname, "certs", "server.crt")
+            )
+        },
 
-).listen(PORT, () => {
-
-    console.log(
-        `GamesOnMyLan listening on https://localhost:${PORT}`
+        app
     );
 
-});
+    server.on("error", (error) => {
+
+        console.error("\n====================================");
+        console.error("ERROR AL INICIAR EL SERVIDOR");
+        console.error("====================================");
+
+        if (error.code === "EADDRINUSE") {
+
+            console.error(
+                `El puerto ${PORT} ya está siendo utilizado.`
+            );
+
+        } else {
+
+            console.error(error.message);
+
+        }
+
+        process.exit(1);
+
+    });
+
+    server.listen(PORT, () => {
+
+        console.log(
+            `app_port: ${settings.app_port}\n` +
+            `guest_register: ${settings.guest_register}\n` +
+            `GamesOnMyLAN listening on port ${PORT}`
+        );
+
+    });
+
+} catch (error) {
+
+    console.error("\n====================================");
+    console.error("ERROR AL CONFIGURAR HTTPS");
+    console.error("====================================");
+
+    if (error.code === "ENOENT") {
+
+        console.error(
+            "No se encontraron los certificados HTTPS."
+        );
+
+        console.log(`
+
+            IMPORTANTE:
+            Antes de iniciar GamesOnMyLAN debes generar los certificados HTTPS:
+
+                node admin/generate_cert.js
+
+            Esto creará la carpeta "certs" en el directorio raíz
+            del proyecto, de no ser asi, muevela a la raiz.
+
+            Si los certificados ya existen pero la IP local cambió,
+            elimina la carpeta "certs" y vuelve a ejecutar el script.
+        `);
+
+    } else if (error.code === "EACCES") {
+
+        console.error(
+            "No tienes permisos para acceder a los certificados."
+        );
+
+    } else {
+
+        console.error(error.message);
+
+    }
+
+    process.exit(1);
+
+}

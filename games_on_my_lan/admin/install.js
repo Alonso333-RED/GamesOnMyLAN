@@ -20,6 +20,30 @@ function ask(question) {
     });
 }
 
+function createSettings() {
+
+    const settings = {
+        db_host: "localhost",
+        db_port: 5432,
+        db_user: "goml",
+        db_password: "goml_psw",
+        db_database: "goml_db",
+        app_port: 3000,
+        guest_register: true
+    };
+
+    const settingsPath = path.join(
+        __dirname,
+        "settings.json"
+    );
+
+    fs.writeFileSync(
+        settingsPath,
+        JSON.stringify(settings, null, 2)
+    );
+
+}
+
 async function main() {
 
     try {
@@ -52,7 +76,20 @@ async function main() {
 
         if (Number(result.rows[0].count) > 0) {
             console.log("\nYa existe un usuario.");
-            console.log("La instalación ya fue realizada.");
+            console.log("Regenerando settings")
+            createSettings();
+            console.log(`La instalación ya fue realizada.
+IMPORTANTE:
+Antes de iniciar GamesOnMyLAN, debes generar los
+certificados HTTPS ejecutando el script de generación de certificados.
+
+node admin/generate_cert.js 
+
+que probablemente esta en la misma carpeta que este script.
+Se generara una carpeta llamada "certs" con los certificados necesarios,
+muevela al inicio del proyecto, junto a app.js.
+
+Luego inicia el servidor normalmente.`);
             return;
         }
 
@@ -89,18 +126,21 @@ async function main() {
         );
 
         console.log("\n✓ Owner creado correctamente.");
-
-        const settings = {
-            guest_register: true,
-        }
-        fs.writeFileSync(
-            "settings.json",
-            JSON.stringify(settings, null, 2)
-        );
+        createSettings();
         console.log(`
 [3/3] Instalación completada.
 
-Ya puedes iniciar el servidor.
+IMPORTANTE:
+Antes de iniciar GamesOnMyLAN, debes generar los
+certificados HTTPS ejecutando el script de generación de certificados.
+
+node admin/generate_cert.js 
+
+que probablemente esta en la misma carpeta que este script.
+Se generara una carpeta llamada "certs" con los certificados necesarios,
+muevela al inicio del proyecto, junto a app.js.
+
+Luego inicia el servidor normalmente.
 `);
 
     } catch (error) {
