@@ -4,23 +4,20 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import db from "../database/pool.js";
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
 
-function ask(question) {
-    return new Promise(resolve => {
-        rl.question(question, resolve);
-    });
-}
+// ====================================
+// CREAR SETTINGS ANTES DE TODO
+// ====================================
 
-function createSettings() {
+const settingsPath = path.join(
+    __dirname,
+    "settings.json"
+);
+
+if (!fs.existsSync(settingsPath)) {
 
     const settings = {
         db_host: "localhost",
@@ -32,16 +29,36 @@ function createSettings() {
         guest_register: true
     };
 
-    const settingsPath = path.join(
-        __dirname,
-        "settings.json"
-    );
-
     fs.writeFileSync(
         settingsPath,
         JSON.stringify(settings, null, 2)
     );
 
+}
+
+
+// ====================================
+// DESPUÉS DE CREAR SETTINGS
+// ====================================
+
+const { default: db } = await import(
+    "../database/pool.js"
+);
+
+
+// ====================================
+// RESTO DEL INSTALADOR
+// ====================================
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+function ask(question) {
+    return new Promise(resolve => {
+        rl.question(question, resolve);
+    });
 }
 
 async function main() {
@@ -75,21 +92,10 @@ async function main() {
         );
 
         if (Number(result.rows[0].count) > 0) {
+
             console.log("\nYa existe un usuario.");
-            console.log("Regenerando settings")
-            createSettings();
-            console.log(`La instalación ya fue realizada.
-IMPORTANTE:
-Antes de iniciar GamesOnMyLAN, debes generar los
-certificados HTTPS ejecutando el script de generación de certificados.
+            console.log("La instalación ya fue realizada.");
 
-node admin/generate_cert.js 
-
-que probablemente esta en la misma carpeta que este script.
-Se generara una carpeta llamada "certs" con los certificados necesarios,
-muevela al inicio del proyecto, junto a app.js.
-
-Luego inicia el servidor normalmente.`);
             return;
         }
 
@@ -126,21 +132,21 @@ Luego inicia el servidor normalmente.`);
         );
 
         console.log("\n✓ Owner creado correctamente.");
-        createSettings();
+
         console.log(`
 [3/3] Instalación completada.
+    IMPORTANTE:
+    Antes de iniciar GamesOnMyLAN debes generar los certificados HTTPS:
 
-IMPORTANTE:
-Antes de iniciar GamesOnMyLAN, debes generar los
-certificados HTTPS ejecutando el script de generación de certificados.
+        node admin/generate_cert.js
 
-node admin/generate_cert.js 
+    Esto creará la carpeta "certs" en el directorio raíz
+    del proyecto, de no ser asi, muevela a la raiz.
 
-que probablemente esta en la misma carpeta que este script.
-Se generara una carpeta llamada "certs" con los certificados necesarios,
-muevela al inicio del proyecto, junto a app.js.
+    Si los certificados ya existen pero la IP local cambió,
+    elimina la carpeta "certs" y vuelve a ejecutar el script.
 
-Luego inicia el servidor normalmente.
+    Ademas debes de revisar settings.json y cambiar los valores por defecto.
 `);
 
     } catch (error) {
