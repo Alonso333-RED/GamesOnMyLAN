@@ -148,7 +148,7 @@ try {
         console.log(
             `app_port: ${settings.app_port}\n` +
             `guest_register: ${settings.guest_register}\n` +
-            `GamesOnMyLAN listening on port ${PORT}`
+            `GamesOnMyLAN listening on port https://localhost:${PORT}/`
         );
 
     });
@@ -177,6 +177,8 @@ try {
 
             Si los certificados ya existen pero la IP local cambió,
             elimina la carpeta "certs" y vuelve a ejecutar el script.
+
+            Ademas debes de revisar admin/settings.json y cambiar los valores por defecto.
         `);
 
     } else if (error.code === "EACCES") {
