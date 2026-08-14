@@ -62,7 +62,7 @@ function ask(question) {
 }
 
 async function main() {
-
+    console.log("Recuerda que antes de ejecutar este script debes crear la base de datos en PostgreSQL y configurar los valores en admin/settings.json.\n");
     try {
 
         console.log(`
