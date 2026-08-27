@@ -97,6 +97,31 @@ const gamesService = {
 
         return result.rows[0];
 
+    },
+
+    async updateGame(id_game, game) {
+
+        const result = await pool.query(
+            `
+            UPDATE games
+            SET
+                game_name = $1,
+                game_description = $2,
+                entry_file = $3,
+                updated_at = NOW()
+            WHERE id_game = $4
+            RETURNING *;
+            `,
+            [
+                game.game_name,
+                game.game_description,
+                game.entry_file,
+                id_game
+            ]
+        );
+
+        return result.rows[0];
+
     }
 };
 

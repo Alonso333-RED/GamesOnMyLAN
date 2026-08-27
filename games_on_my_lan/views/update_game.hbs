@@ -1,0 +1,140 @@
+<header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
+
+    <img src="/img/logo.png"
+         alt="GamesOnMyLan Logo"
+         class="logo mb-2 mb-md-0">
+
+    <h1 class="text-primary">
+        GamesOnMyLan
+    </h1>
+
+    <h1 class="text-primary ms-md-5 mt-3 mt-md-0">
+        Editar Juego: {{game.game_name}}
+    </h1>
+
+    <nav class="nav">
+        <a class="nav-link text-tertiary" href="/games">
+            Galería
+        </a>
+
+        <a class="nav-link text-tertiary" href="/">
+            Inicio
+        </a>
+        {{#if user}}
+            <a class="nav-link text-tertiary" href="/profile">
+                Perfil
+            </a>
+        {{else}}
+            <a class="nav-link text-tertiary" href="/login">
+                Ingresar
+            </a>
+        {{/if}}
+    </nav>
+
+</header>
+<main class="main-panel container mt-5">
+
+    <form 
+        action="/games" 
+        method="POST"
+        enctype="multipart/form-data">
+
+        <div class="row">
+
+            <div class="col-md-4 mb-4 text-center">
+                <img
+                    src="/thumbnails/{{game.id_game}}.png"
+                    alt="Game Thumbnail"
+                    class="thumbnail mb-3"
+                    id="thumbnailPreview"
+                    style="width:275px;height:275px;">
+
+                <div>
+
+                    <label class="form-label">
+                        Imagen del juego
+                    </label>
+
+                    <input
+                        type="file"
+                        class="form-control"
+                        name="thumbnail"
+                        id="thumbnail"
+                        accept=".png">
+
+                </div>
+
+            </div>
+
+            <div class="col-md-8">
+
+                <h1 class="text-primary">
+                    Información del juego
+                </h1>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Nombre del juego
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="game_name"
+                        value="{{game.game_name}}"
+                        required>
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Descripción
+                    </label>
+
+                    <textarea
+                        class="form-control"
+                        name="game_description"
+                        rows="3">{{game.game_description}}</textarea>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Archivo del juego (.zip) (se actualizara el archivo principal si se sube uno nuevo)
+                    </label>
+
+                    <input
+                        type="file"
+                        class="form-control"
+                        name="gameFile"
+                        accept=".zip"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Archivo principal
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="entry_file"
+                        value="{{game.entry_file}}"
+                        required>
+                </div>
+
+                <button 
+                    class="btn btn-primary"
+                    type="submit">
+                    Registrar Juego
+                </button>
+            </div>
+        </div>
+    </form>
+</main>
+<script src="/js/newGame.js"></script>

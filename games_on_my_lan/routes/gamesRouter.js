@@ -42,5 +42,12 @@ router.delete(
     gamesController.deleteGame
 );
 
+router.get(
+    "/game-details/:id/edit",
+    requireLogin,
+    requireOwnership,
+    gamesController.getEditGame
+);
+
 
 export default router;

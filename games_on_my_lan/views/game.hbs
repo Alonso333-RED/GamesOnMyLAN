@@ -80,9 +80,11 @@
                         Jugar
                     </a>
                     <a
-                        href="/games/update/{{game.id_game}}" 
+                        href="/games/game-details/{{game.id_game}}/edit"
                         class="btn btn-primary me-2">
+
                         Actualizar
+
                     </a>
                     <form action="/games/{{game.id_game}}?_method=DELETE" method="POST">
                         <button type="submit" class="btn btn-danger">

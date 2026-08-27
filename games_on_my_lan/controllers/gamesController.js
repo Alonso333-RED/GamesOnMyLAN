@@ -136,11 +136,25 @@ async function deleteGame(req, res) {
 
 }
 
+async function getEditGame(req, res) {
+    const game = await gamesService.getGameById(req.params.id);
+
+    if (!game) {
+        return res.status(404).send("Juego no encontrado");
+    }
+
+    res.render("update_game", {
+        title: "Editar juego",
+        game
+    });
+}
+
 
 export default {
     createGame,
     getAllGames,
     playGame,
     getGameById,
-    deleteGame
+    deleteGame,
+    getEditGame
 };
