@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>HowToGOML</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+
+<body>
+    <header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
+        <img src="./img/logo.png" 
+            alt="GamesOnMyLan Logo" 
+            class="logo mb-2 mb-md-0">
+
+        <h1 class="text-primary">
+            How To GamesOnMyLan
+        </h1>
+        <h1 class="text-primary ms-md-5 mt-3 mt-md-0">
+            Requisitos Previos
+        </h1>
+
+        <nav class="nav">
+            <a class="nav-link text-tertiary" href="index.html">
+                Inicio
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <main class="main-panel container mt-5">
+
+        <h1 class="text-secondary">
+            Requisitos Tecnicos y Conocimientos Previos
+        </h1>
+
+        <p class="text-tertiary">
+            Antes de intentar instalar GOML se nececita que conozcas y configures ciertas herramientas.
+            Si bien no es necesario que seas un experto en ellas, si es recomendable que tengas un conocimiento básico de su funcionamiento.
+        </p>
+
+        <script src="./js/requirementItem.js" defer></script>
+        <requirement-item
+            img="./img/requirements/nodejs.webp"
+            titulo="Node JS"
+            desc="Node.js es el entorno que permite ejecutar JavaScript en un servidor, y es lo que hace funcionar el backend de GamesOnMyLAN. Sin Node.js instalado, no es posible correr el proyecto, por lo que es el primer requisito a cumplir antes de la instalación."
+            link="https://nodejs.org/">
+        </requirement-item>
+
+        <requirement-item
+            img="./img/requirements/elephant.png"
+            titulo="PostgreSQL"
+            desc="PostgreSQL es el sistema de base de datos donde GamesOnMyLAN guarda toda su información: usuarios, sesiones y datos de los juegos subidos. El servidor se conecta a esta base de datos para funcionar, por lo que sin PostgreSQL instalado y corriendo, GOML no tiene dónde almacenar ni leer esos datos."
+            link="https://www.postgresql.org/">
+        </requirement-item>
+
+        <requirement-item
+            img="./img/requirements/openssl.png"
+            titulo="OpenSSL"
+            desc="OpenSSL es la herramienta que GamesOnMyLAN usa para generar el certificado y la llave que permiten que el servidor corra bajo HTTPS (conexión cifrada). En Linux normalmente ya viene instalado por defecto, pero en Windows es necesario descargarlo aparte antes de poder generar esos archivos e iniciar el servidor."
+            link="https://www.openssl.org/">
+        </requirement-item>
+
+        </div>
+
+    </main>
+
+    <script src="./js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

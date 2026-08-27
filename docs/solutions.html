@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>HowToGOML</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+
+<body>
+    <header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
+        <img src="./img/logo.png" 
+            alt="GamesOnMyLan Logo" 
+            class="logo mb-2 mb-md-0">
+
+        <h1 class="text-primary">
+            How To GamesOnMyLan
+        </h1>
+
+        <nav class="nav">
+            <a class="nav-link text-tertiary" href="index.html">
+                Inicio
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <main class="main-panel container mt-5">
+
+        <h1 class="text-secondary">
+            Problemas Comunes y su Solución de GamesOnMyLAN
+        </h1>
+
+        <p class="text-tertiary">
+            Breve mención de problemas con solución conocida.
+        </p>
+
+        <script src="./js/imageTwoCard.js" defer></script>
+
+        <image-two-card
+            img="./img/problems/noSettingsJSON.png"
+            titulo1="Error ENOENT / No such file or directory"
+            desc1="No se encontró el archivo settings.json."
+            titulo2="Generar settings.json con install.js"
+            desc2="Ejecuta el siguiente comando(asumiendo que estas en la raiz del proyecto node)"
+        >
+            <code>cd admin</code>
+            <code>node install.js</code>
+        </image-two-card>
+    
+        <image-two-card
+            img="./img/problems/noCerts.png"
+            titulo1="No se encontraron los certificados HTTPS"
+            desc1="GamesOnMyLAN no puede iniciar porque no encuentra los certificados HTTPS. Esto ocurre cuando los certificados aún no han sido generados o no se encuentran en la ubicación esperada."
+            titulo2="Generar y mover los certificados HTTPS"
+            desc2="Desde la raíz del proyecto, ejecuta el siguiente comando. El script generará los certificados. Después si certs/ no esta en la raiz, debes mover manualmente la carpeta certs al directorio raíz del proyecto GamesOnMyLAN."
+        >
+            <code>node admin/generate_cert.js</code>
+            <code>ls (verificar que certs aparezca en la raiz)</code>
+            <code>mv admin/certs ./certs (Si certs no esta en la raiz)</code>
+        </image-two-card>
+
+    </main>
+
+</body>
+
+</html>
