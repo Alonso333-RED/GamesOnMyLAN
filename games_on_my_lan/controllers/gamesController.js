@@ -149,6 +149,56 @@ async function getEditGame(req, res) {
     });
 }
 
+async function updateGame(req, res) {
+
+    try {
+
+        const gameId = req.params.id;
+
+        const currentGame = await gamesService.getGameById(gameId);
+
+        if (!currentGame) {
+            return res.status(404).send("Juego no encontrado");
+        }
+
+        const updatedGame = await gamesService.updateGame(gameId, {
+            game_name: req.body.game_name,
+            game_description: req.body.game_description,
+            entry_file: req.body.entry_file
+        });
+
+        // Si subieron un zip nuevo, reemplaza los archivos del juego
+        if (req.files?.gameFile?.[0]) {
+
+            await storageService.deleteGameFolder(gameId);
+
+            await storageService.extractGame(
+                req.files.gameFile[0],
+                updatedGame.id_game,
+                updatedGame.entry_file
+            );
+        }
+
+        // Si subieron una miniatura nueva, reemplázala
+        if (req.files?.thumbnail?.[0]) {
+
+            await storageService.storeThumbnail(
+                req.files.thumbnail[0],
+                updatedGame.id_game
+            );
+        }
+
+        res.redirect(`/games/game-details/${gameId}`);
+
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).send("Error actualizando el juego");
+
+    }
+
+}
+
 
 export default {
     createGame,
@@ -156,5 +206,6 @@ export default {
     playGame,
     getGameById,
     deleteGame,
-    getEditGame
+    getEditGame,
+    updateGame
 };

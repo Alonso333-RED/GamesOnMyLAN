@@ -34,10 +34,10 @@
 </header>
 <main class="main-panel container mt-5">
 
-    <form 
-        action="/games" 
-        method="POST"
-        enctype="multipart/form-data">
+        <form 
+            action="/games/{{game.id_game}}?_method=PUT" 
+            method="POST"
+            enctype="multipart/form-data">
 
         <div class="row">
 
@@ -110,7 +110,7 @@
                         class="form-control"
                         name="gameFile"
                         accept=".zip"
-                        required>
+                        >
 
                 </div>
 
@@ -131,7 +131,7 @@
                 <button 
                     class="btn btn-primary"
                     type="submit">
-                    Registrar Juego
+                    Modificar
                 </button>
             </div>
         </div>

@@ -49,5 +49,16 @@ router.get(
     gamesController.getEditGame
 );
 
+router.put(
+    "/:id",
+    requireLogin,
+    requireOwnership,
+    upload.fields([
+        { name: "gameFile", maxCount: 1 },
+        { name: "thumbnail", maxCount: 1 }
+    ]),
+    gamesController.updateGame
+);
+
 
 export default router;
