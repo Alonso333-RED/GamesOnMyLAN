@@ -86,3 +86,18 @@ a {
     color: #ff0000;
     text-decoration: underline;
 }
+
+.xDiv {
+    display: flex;
+    flex-direction: row;
+}
+
+.yDiv {
+    text-align: center;
+
+}
+
+.yDiv button {
+    width: 100%;
+    height: auto;
+}
