@@ -123,3 +123,73 @@ image-two-card {
     padding: 20px;
     margin-bottom: 20px;
 }
+
+.console-card {
+    margin: 30px 0;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.console-card-header {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 15px;
+    background-color: #2b2b2b;
+}
+
+.console-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.console-dot.red {
+    background-color: #ff5f56;
+}
+
+.console-dot.yellow {
+    background-color: #ffbd2e;
+}
+
+.console-dot.green {
+    background-color: #27c93f;
+}
+
+.console-title {
+    margin-left: 8px;
+    color: #aaa;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.console-card-body {
+    padding: 20px;
+}
+
+.console-card-body h3 {
+    color: white;
+    margin-top: 0;
+}
+
+.console-card-body p {
+    color: #ccc;
+}
+
+.console {
+    padding: 15px;
+    border-radius: 6px;
+    background-color: #111;
+    color: #eee;
+    font-family: "Courier New", monospace;
+    overflow-x: auto;
+}
+
+.console code {
+    display: block;
+    margin: 5px 0;
+    color: #eee;
+}

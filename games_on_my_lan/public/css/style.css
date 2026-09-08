@@ -101,3 +101,13 @@ a {
     width: 100%;
     height: auto;
 }
+
+.mySearcher {
+    background-color: #000000;
+    color: #ffbfbf;
+    border: 1px solid #ffbfbf;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}

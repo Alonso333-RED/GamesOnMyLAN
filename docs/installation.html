@@ -2,7 +2,7 @@
 <html>
 
 <head>
-
+    <meta charset="utf-8">   
     <title>HowToGOML</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
@@ -41,49 +41,71 @@
             Pasos de como se debe configurar y instalar GOML.
         </p>
 
-        <script src="./js/imageTwoCard.js" defer></script>
+        <script src="./js/consoleCard.js" defer></script>
 
-        <image-two-card
-            img="./img/installation/postgresConfiguration.png"
-            titulo1="Configuración de la base de datos PostgreSQL"
-            desc1="GamesOnMyLAN requiere una base de datos PostgreSQL y un usuario con permisos para acceder a ella. Antes de ejecutar el instalador, debes crear ambos. Puedes hacerlo desde la terminal mediante PostgreSQL o utilizando una herramienta gráfica como pgAdmin."
-            titulo2="Crear el usuario y la base de datos"
-            desc2="Crea el usuario y la base de datos que utilizará GamesOnMyLAN. El usuario creado será el propietario de la base de datos y podrá utilizarse posteriormente durante la configuración del proyecto."
-        >
-            <code>sudo -u postgres psql</code>
-            <code>CREATE USER goml WITH PASSWORD 'goml_psw';</code>
-            <code>CREATE DATABASE goml_db OWNER goml;</code>
-        </image-two-card>
+        <console-card titulo="Configuración de PostgreSQL">
 
-        <image-two-card
-            img="./img/installation/NPMinitialization.png"
-            titulo1="Instalar las dependencias con npm"
-            desc1="npm se instala junto con Node.js y es el gestor de paquetes utilizado por el proyecto. Para instalar todas las dependencias necesarias, ejecuta el siguiente comando desde la raíz del proyecto."
-            titulo2=""
-            desc2=""
-        >
-            <code>npm install</code>
-        </image-two-card>
+            <code>$ sudo -u postgres psql</code>
 
-        <image-two-card
-            img="./img/installation/install.png"
-            titulo1="Crear el usuario propietario"
-            desc1="Una vez completada la configuración necesaria, ejecuta el instalador para crear el primer usuario de GamesOnMyLAN. Este usuario será el propietario de la instancia y tendrá los permisos correspondientes."
-            titulo2="Ejecutar el instalador"
-            desc2="Desde la raíz del proyecto, ejecuta el siguiente comando:"
-        >
-            <code>node admin/install.js</code>
-        </image-two-card>
+            <output>
+                postgres=# CREATE USER goml WITH PASSWORD 'goml_psw';<br>
+                CREATE ROLE
+            </output>
 
-        <image-two-card
-            img="./img/installation/cert.png"
-            titulo1="Generar los certificados HTTPS"
-            desc1="GamesOnMyLAN utiliza certificados HTTPS para funcionar correctamente. Ejecuta el script de generación de certificados para crear los archivos necesarios."
-            titulo2="Mover la carpeta certs a la raíz del proyecto"
-            desc2="Después de generar los certificados, si certs no esta en la raiz, debes mover manualmente la carpeta certs al directorio raíz del proyecto, al mismo nivel que app.js."
-        >
-            <code>node admin/generate_cert.js</code>
-        </image-two-card>
+            <code>postgres=# CREATE DATABASE goml_db OWNER goml;</code>
+
+            <output>
+                CREATE DATABASE
+            </output>
+
+        </console-card>
+
+
+        <console-card titulo="Instalar las dependencias con npm">
+
+            <code>$ npm install</code>
+
+            <output>
+                added 152 packages
+            </output>
+
+        </console-card>
+
+
+        <console-card titulo="Crear el usuario propietario">
+
+            <code>$ node admin/install.js</code>
+
+            <output>
+                Instalando GamesOnMyLAN...<br>
+                Usuario propietario creado correctamente.
+            </output>
+
+        </console-card>
+
+
+        <console-card titulo="Generar los certificados HTTPS">
+
+            <code>$ node admin/generate_cert.js</code>
+
+            <output>
+                Generando certificados...<br>
+                Certificados generados correctamente.
+            </output>
+
+        </console-card>
+
+
+        <console-card titulo="Mover la carpeta certs a la raíz del proyecto">
+
+            <code>$ mv certs /ruta/al/proyecto/</code>
+
+            <output>
+                La carpeta certs debe quedar en la raíz del proyecto,
+                al mismo nivel que app.js.
+            </output>
+
+        </console-card>
 
     </main>
 
