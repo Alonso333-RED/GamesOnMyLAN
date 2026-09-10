@@ -5,14 +5,25 @@
     <meta charset="utf-8">
     <title>HowToGOML · Problemas</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/style.css">
+    <script>
+        (function () {
+            if (location.protocol === "file:") return;
+            var host = location.hostname;
+            if (host === "htmlpreview.github.io" || host === "raw.githubusercontent.com") {
+                var base = document.createElement("base");
+                base.href = "https://cdn.jsdelivr.net/gh/Alonso333-RED/GamesOnMyLAN@main/docs/";
+                document.head.insertBefore(base, document.head.firstChild);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body data-page="problemas">
     <header class="site-header">
         <a class="brand" href="index.html">
-            <img src="./img/logo.png" alt="GamesOnMyLan Logo" class="logo">
+            <img src="img/logo.png" alt="GamesOnMyLan Logo" class="logo">
             <h1 class="brand-title">How To GamesOnMyLan</h1>
         </a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menú</button>
@@ -21,7 +32,7 @@
             <a href="requirements.html" data-page="requisitos">Antes de instalar</a>
             <a href="installation.html" data-page="instalacion">Instalación</a>
             <a href="solutions.html" data-page="problemas">Problemas</a>
-            <a href="https://github.com/Alonso333-RED/GamesOnMyLAN.git" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://github.com/Alonso333-RED/GamesOnMyLAN" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
     </header>
 
@@ -32,49 +43,68 @@
             Breve mención de problemas conocidos y sus respectivas soluciones. Usa Copiar para llevar el comando a la terminal.
         </p>
 
-        <console-card
-            titulo="Error ENOENT / No such file or directory"
-            descripcion="No se encontró el archivo settings.json. Esto ocurre cuando el archivo de configuración aún no ha sido generado."
-        >
-            <code>$ cd admin</code>
-            <code>$ node install.js</code>
-            <output>
-                Instalando GamesOnMyLAN...<br>
-                settings.json generado correctamente.
-            </output>
-        </console-card>
+        <article class="console-card reveal">
+            <div class="console-card-header">
+                <span class="console-dot red"></span>
+                <span class="console-dot yellow"></span>
+                <span class="console-dot green"></span>
+                <span class="console-title">Terminal</span>
+                <button type="button" class="copy-btn" data-copy>Copiar</button>
+            </div>
+            <div class="console-card-body">
+                <h3>Error ENOENT / No such file or directory</h3>
+                <p>No se encontró el archivo settings.json. Esto ocurre cuando el archivo de configuración aún no ha sido generado.</p>
+                <div class="console">
+                    <code>$ cd admin</code>
+                    <code>$ node install.js</code>
+                    <output>Instalando GamesOnMyLAN...<br>settings.json generado correctamente.</output>
+                </div>
+            </div>
+        </article>
 
-        <console-card
-            titulo="No se encontraron los certificados HTTPS"
-            descripcion="GamesOnMyLAN no puede iniciar porque no encuentra los certificados HTTPS. Esto ocurre cuando los certificados aún no han sido generados o no se encuentran en la ubicación esperada."
-        >
-            <code>$ node admin/generate_cert.js</code>
-            <output>
-                Generando certificados...<br>
-                Certificados generados correctamente.
-            </output>
-        </console-card>
+        <article class="console-card reveal">
+            <div class="console-card-header">
+                <span class="console-dot red"></span>
+                <span class="console-dot yellow"></span>
+                <span class="console-dot green"></span>
+                <span class="console-title">Terminal</span>
+                <button type="button" class="copy-btn" data-copy>Copiar</button>
+            </div>
+            <div class="console-card-body">
+                <h3>No se encontraron los certificados HTTPS</h3>
+                <p>GamesOnMyLAN no puede iniciar porque no encuentra los certificados HTTPS. Esto ocurre cuando los certificados aún no han sido generados o no se encuentran en la ubicación esperada.</p>
+                <div class="console">
+                    <code>$ node admin/generate_cert.js</code>
+                    <output>Generando certificados...<br>Certificados generados correctamente.</output>
+                </div>
+            </div>
+        </article>
 
-        <console-card
-            titulo="La carpeta certs no está en la raíz del proyecto"
-            descripcion="Si los certificados fueron generados dentro de admin/certs, debes mover la carpeta certs al directorio raíz de GamesOnMyLAN."
-        >
-            <code>$ ls</code>
-            <output>
-                Verifica que la carpeta certs aparezca en la raíz del proyecto.
-            </output>
-            <code>$ mv admin/certs ./certs</code>
-            <output>
-                La carpeta certs ahora se encuentra en la raíz del proyecto.
-            </output>
-        </console-card>
+        <article class="console-card reveal">
+            <div class="console-card-header">
+                <span class="console-dot red"></span>
+                <span class="console-dot yellow"></span>
+                <span class="console-dot green"></span>
+                <span class="console-title">Terminal</span>
+                <button type="button" class="copy-btn" data-copy>Copiar</button>
+            </div>
+            <div class="console-card-body">
+                <h3>La carpeta certs no está en la raíz del proyecto</h3>
+                <p>Si los certificados fueron generados dentro de admin/certs, debes mover la carpeta certs al directorio raíz de GamesOnMyLAN.</p>
+                <div class="console">
+                    <code>$ ls</code>
+                    <output>Verifica que la carpeta certs aparezca en la raíz del proyecto.</output>
+                    <code>$ mv admin/certs ./certs</code>
+                    <output>La carpeta certs ahora se encuentra en la raíz del proyecto.</output>
+                </div>
+            </div>
+        </article>
     </main>
 
     <footer class="site-footer">GamesOnMyLAN · self-hosted en tu LAN</footer>
 
-    <script src="./js/consoleCard.js"></script>
-    <script src="./js/docs.js"></script>
-    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="js/docs.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

@@ -5,14 +5,25 @@
     <meta charset="utf-8">
     <title>HowToGOML · Requisitos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/style.css">
+    <script>
+        (function () {
+            if (location.protocol === "file:") return;
+            var host = location.hostname;
+            if (host === "htmlpreview.github.io" || host === "raw.githubusercontent.com") {
+                var base = document.createElement("base");
+                base.href = "https://cdn.jsdelivr.net/gh/Alonso333-RED/GamesOnMyLAN@main/docs/";
+                document.head.insertBefore(base, document.head.firstChild);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body data-page="requisitos">
     <header class="site-header">
         <a class="brand" href="index.html">
-            <img src="./img/logo.png" alt="GamesOnMyLan Logo" class="logo">
+            <img src="img/logo.png" alt="GamesOnMyLan Logo" class="logo">
             <h1 class="brand-title">How To GamesOnMyLan</h1>
         </a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menú</button>
@@ -21,7 +32,7 @@
             <a href="requirements.html" data-page="requisitos">Antes de instalar</a>
             <a href="installation.html" data-page="instalacion">Instalación</a>
             <a href="solutions.html" data-page="problemas">Problemas</a>
-            <a href="https://github.com/Alonso333-RED/GamesOnMyLAN.git" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://github.com/Alonso333-RED/GamesOnMyLAN" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
     </header>
 
@@ -33,33 +44,56 @@
             Si bien no es necesario que seas un experto en ellas, sí es recomendable que tengas un conocimiento básico de su funcionamiento.
         </p>
 
-        <requirement-item
-            img="./img/requirements/nodejs.webp"
-            titulo="Node JS"
-            desc="Node.js es el entorno que permite ejecutar JavaScript en un servidor, y es lo que hace funcionar el backend de GamesOnMyLAN. Sin Node.js instalado, no es posible correr el proyecto, por lo que es el primer requisito a cumplir antes de la instalación."
-            link="https://nodejs.org/">
-        </requirement-item>
+        <article class="requirement-card reveal">
+            <div class="row align-items-center text-center text-md-start">
+                <div class="col-12 col-md-3 mb-3 mb-md-0">
+                    <img src="img/requirements/nodejs.webp" alt="Node JS" style="width: 150px; height: 150px; max-width: 100%; object-fit: contain;">
+                </div>
+                <div class="col-12 col-md-7 mb-3 mb-md-0">
+                    <p class="card-title">Node JS</p>
+                    <p class="text-tertiary mb-0">Node.js es el entorno que permite ejecutar JavaScript en un servidor, y es lo que hace funcionar el backend de GamesOnMyLAN. Sin Node.js instalado, no es posible correr el proyecto, por lo que es el primer requisito a cumplir antes de la instalación.</p>
+                </div>
+                <div class="col-12 col-md-2">
+                    <a href="https://nodejs.org/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Sitio principal</a>
+                </div>
+            </div>
+        </article>
 
-        <requirement-item
-            img="./img/requirements/elephant.png"
-            titulo="PostgreSQL"
-            desc="PostgreSQL es el sistema de base de datos donde GamesOnMyLAN guarda toda su información: usuarios, sesiones y datos de los juegos subidos. El servidor se conecta a esta base de datos para funcionar, por lo que sin PostgreSQL instalado y corriendo, GOML no tiene dónde almacenar ni leer esos datos."
-            link="https://www.postgresql.org/">
-        </requirement-item>
+        <article class="requirement-card reveal">
+            <div class="row align-items-center text-center text-md-start">
+                <div class="col-12 col-md-3 mb-3 mb-md-0">
+                    <img src="img/requirements/elephant.png" alt="PostgreSQL" style="width: 150px; height: 150px; max-width: 100%; object-fit: contain;">
+                </div>
+                <div class="col-12 col-md-7 mb-3 mb-md-0">
+                    <p class="card-title">PostgreSQL</p>
+                    <p class="text-tertiary mb-0">PostgreSQL es el sistema de base de datos donde GamesOnMyLAN guarda toda su información: usuarios, sesiones y datos de los juegos subidos. El servidor se conecta a esta base de datos para funcionar, por lo que sin PostgreSQL instalado y corriendo, GOML no tiene dónde almacenar ni leer esos datos.</p>
+                </div>
+                <div class="col-12 col-md-2">
+                    <a href="https://www.postgresql.org/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Sitio principal</a>
+                </div>
+            </div>
+        </article>
 
-        <requirement-item
-            img="./img/requirements/openssl.png"
-            titulo="OpenSSL"
-            desc="OpenSSL es la herramienta que GamesOnMyLAN usa para generar el certificado y la llave que permiten que el servidor corra bajo HTTPS (conexión cifrada). En Linux normalmente ya viene instalado por defecto, pero en Windows es necesario descargarlo aparte antes de poder generar esos archivos e iniciar el servidor."
-            link="https://www.openssl.org/">
-        </requirement-item>
+        <article class="requirement-card reveal">
+            <div class="row align-items-center text-center text-md-start">
+                <div class="col-12 col-md-3 mb-3 mb-md-0">
+                    <img src="img/requirements/openssl.png" alt="OpenSSL" style="width: 150px; height: 150px; max-width: 100%; object-fit: contain;">
+                </div>
+                <div class="col-12 col-md-7 mb-3 mb-md-0">
+                    <p class="card-title">OpenSSL</p>
+                    <p class="text-tertiary mb-0">OpenSSL es la herramienta que GamesOnMyLAN usa para generar el certificado y la llave que permiten que el servidor corra bajo HTTPS (conexión cifrada). En Linux normalmente ya viene instalado por defecto, pero en Windows es necesario descargarlo aparte antes de poder generar esos archivos e iniciar el servidor.</p>
+                </div>
+                <div class="col-12 col-md-2">
+                    <a href="https://www.openssl.org/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Sitio principal</a>
+                </div>
+            </div>
+        </article>
     </main>
 
     <footer class="site-footer">GamesOnMyLAN · self-hosted en tu LAN</footer>
 
-    <script src="./js/requirementItem.js"></script>
-    <script src="./js/docs.js"></script>
-    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="js/docs.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

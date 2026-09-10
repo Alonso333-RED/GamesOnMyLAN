@@ -5,14 +5,25 @@
     <meta charset="utf-8">
     <title>HowToGOML</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/style.css">
+    <script>
+        (function () {
+            if (location.protocol === "file:") return;
+            var host = location.hostname;
+            if (host === "htmlpreview.github.io" || host === "raw.githubusercontent.com") {
+                var base = document.createElement("base");
+                base.href = "https://cdn.jsdelivr.net/gh/Alonso333-RED/GamesOnMyLAN@main/docs/";
+                document.head.insertBefore(base, document.head.firstChild);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body data-page="inicio">
     <header class="site-header">
         <a class="brand" href="index.html">
-            <img src="./img/logo.png" alt="GamesOnMyLan Logo" class="logo">
+            <img src="img/logo.png" alt="GamesOnMyLan Logo" class="logo">
             <h1 class="brand-title">How To GamesOnMyLan</h1>
         </a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menú</button>
@@ -21,7 +32,7 @@
             <a href="requirements.html" data-page="requisitos">Antes de instalar</a>
             <a href="installation.html" data-page="instalacion">Instalación</a>
             <a href="solutions.html" data-page="problemas">Problemas</a>
-            <a href="https://github.com/Alonso333-RED/GamesOnMyLAN.git" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://github.com/Alonso333-RED/GamesOnMyLAN" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
     </header>
 
@@ -35,13 +46,19 @@
             y una sección de solución de problemas para los errores más frecuentes.
         </p>
 
-        <img class="hero-art d-block" src="./img/goml.png" alt="Captura de GamesOnMyLAN">
+        <img class="hero-art d-block" src="img/goml.png" alt="Captura de GamesOnMyLAN">
 
-        <horizontal-card
-            img="./img/logo.png"
-            titulo="¿Qué es GamesOnMyLAN?"
-            desc="GamesOnMyLAN es un servicio self-hosted cuyo rol principal es almacenar, servir y conservar videojuegos web o cualquier aplicación estática creada por los usuarios. Permite centralizar estos proyectos en un servidor propio, facilitando su administración, acceso y distribución dentro de una red local, sin depender de servicios externos de alojamiento. De esta forma, los usuarios pueden publicar y mantener sus propios proyectos de manera sencilla, manteniendo el control sobre sus archivos y recursos."
-        ></horizontal-card>
+        <article class="horizontal-card reveal">
+            <div class="row align-items-center text-center text-md-start">
+                <div class="col-12 col-md-3 mb-3 mb-md-0">
+                    <img src="img/logo.png" alt="¿Qué es GamesOnMyLAN?">
+                </div>
+                <div class="col-12 col-md-9">
+                    <p class="card-title">¿Qué es GamesOnMyLAN?</p>
+                    <p class="text-tertiary mb-0">GamesOnMyLAN es un servicio self-hosted cuyo rol principal es almacenar, servir y conservar videojuegos web o cualquier aplicación estática creada por los usuarios. Permite centralizar estos proyectos en un servidor propio, facilitando su administración, acceso y distribución dentro de una red local, sin depender de servicios externos de alojamiento. De esta forma, los usuarios pueden publicar y mantener sus propios proyectos de manera sencilla, manteniendo el control sobre sus archivos y recursos.</p>
+                </div>
+            </div>
+        </article>
 
         <div class="action-grid">
             <a href="requirements.html" class="action-card">
@@ -56,7 +73,7 @@
                 <span>Paso 3</span>
                 <strong>Problemas comunes</strong>
             </a>
-            <a href="https://github.com/Alonso333-RED/GamesOnMyLAN.git" class="action-card" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/Alonso333-RED/GamesOnMyLAN" class="action-card" target="_blank" rel="noopener noreferrer">
                 <span>Código</span>
                 <strong>Repositorio GitHub</strong>
             </a>
@@ -69,9 +86,8 @@
 
     <footer class="site-footer">GamesOnMyLAN · self-hosted en tu LAN</footer>
 
-    <script src="./js/horizontalCard.js"></script>
-    <script src="./js/docs.js"></script>
-    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="js/docs.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

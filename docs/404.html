@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Redirigiendo al manual</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function () {
+            var parts = location.pathname.split("/").filter(Boolean);
+            if (location.hostname.indexOf("github.io") !== -1 && parts[0]) {
+                location.replace("/" + parts[0] + "/");
+                return;
+            }
+            location.replace("index.html");
+        })();
+    </script>
+</head>
+<body>
+    <p><a href="index.html">Ir al manual de GamesOnMyLAN</a></p>
+</body>
+</html>

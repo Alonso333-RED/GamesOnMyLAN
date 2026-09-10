@@ -32,4 +32,41 @@
             chip.classList.add("is-current");
         });
     });
+
+    document.querySelectorAll("[data-copy]").forEach((button) => {
+        button.addEventListener("click", async () => {
+            const card = button.closest(".console-card");
+            const commands = card
+                ? Array.from(card.querySelectorAll("code"))
+                    .map((node) => node.textContent.trim())
+                    .filter(Boolean)
+                    .join("\n")
+                : "";
+            const copied = await copyText(commands);
+            button.textContent = copied ? "Copiado" : "Selecciona el texto";
+            button.classList.toggle("is-copied", copied);
+            setTimeout(() => {
+                button.textContent = "Copiar";
+                button.classList.remove("is-copied");
+            }, 1400);
+        });
+    });
+
+    async function copyText(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            return true;
+        } catch (_error) {
+            const field = document.createElement("textarea");
+            field.value = text;
+            field.setAttribute("readonly", "");
+            field.style.position = "fixed";
+            field.style.left = "-9999px";
+            document.body.appendChild(field);
+            field.select();
+            const ok = document.execCommand("copy");
+            field.remove();
+            return ok;
+        }
+    }
 })();
