@@ -1,136 +1,78 @@
-<header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
+{{> header activeProfile=isOwnProfile}}
 
-    <img src="/img/logo.png" 
-         alt="GamesOnMyLan Logo" 
-         class="logo mb-2 mb-md-0">
-
-    <h1 class="text-primary">
-        GamesOnMyLan
-    </h1>
-
-    <h1 class="text-primary ms-md-5 mt-3 mt-md-0">
-        Perfil
-    </h1>
-
-    <nav class="nav">
-        <a class="nav-link text-tertiary" href="/games">
-            Galería
-        </a>
-
-        <a class="nav-link text-tertiary" href="/">
-            Inicio
-        </a>
-
-        <form action="/logout" method="POST">
-            <button class="nav-link text-tertiary" type="submit">
-                Cerrar sesión
-            </button>
-
-        </form>
-    </nav>
-
-</header>
 <main class="main-panel container mt-5">
 
-    <div class="d-flex flex-column flex-md-row">
+    <div class="profile-header">
 
-        <div class="me-md-4 mb-3 mb-md-0 text-center">
+        <div class="profile-avatar-wrap">
             <img src="/img/default_profile.png"
-                 alt="Profile Image"
-                 class="thumbnail">
+                 alt="Foto de perfil"
+                 class="thumbnail"
+                 style="width:140px;height:140px;">
+            <span class="profile-role-badge">{{profileUser.role_name}}</span>
         </div>
 
         <div class="flex-grow-1">
-
-            <h1 class="text-primary">
-
-                {{user.username}}
-
+            <h1 class="text-primary mb-1">
+                {{profileUser.username}}
             </h1>
-            <p>
-                <strong>Rol:</strong>
-                {{user.role_name}}
-            </p>
-            <p>
-                <strong>Fecha de registro:</strong>
-                {{user.registered_at}}
+            <p class="text-tertiary mb-0">
+                <strong>Miembro desde:</strong> {{profileUser.registered_at}}
             </p>
         </div>
+
     </div>
+
     <h1 class="text-secondary">
-        Mis Juegos
+        {{#if isOwnProfile}}Mis juegos{{else}}Juegos de {{profileUser.username}}{{/if}}
     </h1>
 
-    <div class="table-responsive mt-4">
+    <div class="game-grid mt-4">
 
-        <table class="table table-dark table-hover align-middle">
+        {{#each games}}
+            <article class="game-card">
 
-            <thead>
-                <tr>
-                    <th>
-                        Imagen
-                    </th>
+                <div class="game-card-media">
+                    <img
+                        src="/thumbnails/{{id_game}}.png"
+                        alt="{{game_name}}"
+                        loading="lazy"
+                        onerror="this.onerror=null;this.src='/img/default_game.png';">
 
-                    <th>
-                        Nombre
-                    </th>
-
-                    <th>
-                        Última actualización
-                    </th>
-
-                    <th>
-                        Acciones
-                    </th>
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-            {{#each games}}
-                <tr>
-                    <td>
-                        <img 
-                            src="/thumbnails/{{id_game}}.png"
-                            alt="Thumbnail"
-                            class="thumbnail"
-                            style="width:80px;height:80px;margin:0;">
-                    </td>
-
-                    <td class="text-primary">
-                        {{game_name}}
-                    </td>
-
-                    <td>
-                        {{updated_at}}
-                    </td>
-
-                    <td>
-                        <a
-                            href="/games/game-details/{{id_game}}" 
-                            class="btn btn-primary me-2">
-                            Detalles
-                        </a> 
-                        <a
-                            href="/game-files/{{id_game}}/{{entry_file}}"
-                            class="btn btn-primary">
-                            Jugar
+                    <div class="game-card-overlay">
+                        <a href="/game-files/{{id_game}}/{{entry_file}}" class="btn btn-primary">
+                            ▶️ Jugar
                         </a>
-                    </td>
-                </tr>
+                        <a href="/games/game-details/{{id_game}}" class="btn btn-outline-light">
+                            Detalles
+                        </a>
+                    </div>
+                </div>
 
-            {{else}}
+                <div class="game-card-body">
+                    <p class="game-card-title" title="{{game_name}}">{{game_name}}</p>
+                    <span class="game-card-date">Actualizado: {{updated_at}}</span>
 
-                <tr>
-                    <td colspan="5" class="text-center">
-                        No hay juegos registrados.
-                    </td>
-                </tr>
+                    {{#if ../isOwnProfile}}
+                        <a href="/games/game-details/{{id_game}}/edit" class="btn btn-outline-light mt-2" style="font-size:0.8rem;">
+                            ✎ Editar
+                        </a>
+                    {{/if}}
+                </div>
 
-            {{/each}}
+            </article>
+        {{else}}
+            <div class="empty-state">
+                <span class="empty-icon">🎮</span>
+                {{#if isOwnProfile}}
+                    Todavía no has subido ningún juego.<br>
+                    <a href="/games/new">Sube el primero</a>
+                {{else}}
+                    Este usuario no ha subido juegos todavía.
+                {{/if}}
+            </div>
+        {{/each}}
 
-            </tbody>
-        </table>
     </div>
+
 </main>

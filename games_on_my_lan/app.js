@@ -13,6 +13,9 @@ import authRouter from "./routes/authRouter.js";
 import gamesRouter from "./routes/gamesRouter.js";
 import userRouter from "./routes/userRouter.js";
 
+import gamesService from "./services/gamesService.js";
+import userService from "./services/userService.js";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -61,10 +64,31 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, "public")));
 
 // Vistas
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+
+    // Las estadísticas son solo decorativas: si la base de datos
+    // no responde, la portada igual se muestra con normalidad.
+    let stats = null;
+
+    try {
+
+        const [games, users] = await Promise.all([
+            gamesService.getAllGames(),
+            userService.getAllUsers()
+        ]);
+
+        stats = {
+            totalGames: games.length,
+            totalUsers: users.length
+        };
+
+    } catch (error) {
+        console.error("No se pudieron cargar las estadísticas de la portada:", error);
+    }
 
     res.render("index", {
-        title: "GamesOnMyLan"
+        title: "GamesOnMyLan",
+        stats
     });
 
 });

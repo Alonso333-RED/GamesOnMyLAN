@@ -9,7 +9,7 @@ async function login(req,res) {
     );
 
     if (!user) {
-        return res.status(401).send("Usuario o contraseña incorrectos");
+        return res.redirect("/login?error=1");
     }
 
 
@@ -39,7 +39,8 @@ function logout(req, res) {
 function showLogin(req, res) {
 
     res.render("login", {
-        title: "Iniciar sesión"
+        title: "Iniciar sesión",
+        error: req.query.error === "1"
     });
 
 }

@@ -1,135 +1,99 @@
-<header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
+{{> header activeNew=true}}
 
-    <img src="/img/logo.png"
-         alt="GamesOnMyLan Logo"
-         class="logo mb-2 mb-md-0">
-
-    <h1 class="text-primary">
-        GamesOnMyLan
-    </h1>
-
-    <h1 class="text-primary ms-md-5 mt-3 mt-md-0">
-        Nuevo Juego
-    </h1>
-
-    <nav class="nav">
-        <a class="nav-link text-tertiary" href="/games">
-            Galería
-        </a>
-
-        <a class="nav-link text-tertiary" href="/">
-            Inicio
-        </a>
-        {{#if user}}
-            <a class="nav-link text-tertiary" href="/profile">
-                Perfil
-            </a>
-        {{else}}
-            <a class="nav-link text-tertiary" href="/login">
-                Ingresar
-            </a>
-        {{/if}}
-    </nav>
-
-</header>
 <main class="main-panel container mt-5">
 
-    <form 
-        action="/games" 
+    <h1 class="text-secondary mb-4">
+        ⬆️ Subir nuevo juego
+    </h1>
+
+    <form
+        action="/games"
         method="POST"
         enctype="multipart/form-data">
 
-        <div class="row">
+        <div class="row g-4">
 
-            <div class="col-md-4 mb-4 text-center">
-                <img 
-                    src="/img/default_game.png"
-                    alt="Game Thumbnail"
-                    class="thumbnail mb-3"
-                    id="thumbnailPreview">
+            <div class="col-md-4 text-center">
 
-                <div>
+                <label class="thumb-dropzone" for="thumbnail" title="Haz clic para elegir una imagen">
+                    <img
+                        src="/img/default_game.png"
+                        alt="Vista previa de la miniatura"
+                        class="thumbnail mb-2"
+                        id="thumbnailPreview">
+                    <span class="thumb-hint">📷 Cambiar imagen</span>
+                </label>
 
-                    <label class="form-label">
-                        Imagen del juego
-                    </label>
+                <input
+                    type="file"
+                    class="form-control mt-2"
+                    name="thumbnail"
+                    id="thumbnail"
+                    accept=".png">
 
-                    <input
-                        type="file"
-                        class="form-control"
-                        name="thumbnail"
-                        id="thumbnail"
-                        accept=".png">
-
-                </div>
+                <p class="field-hint">Formato PNG. Cuadrada se ve mejor.</p>
 
             </div>
 
             <div class="col-md-8">
 
-                <h1 class="text-primary">
+                <h2 class="text-primary" style="font-size:1.3rem;">
                     Información del juego
-                </h1>
+                </h2>
 
                 <div class="mb-3">
-
-                    <label class="form-label">
-                        Nombre del juego
-                    </label>
-
+                    <label class="form-label">Nombre del juego</label>
                     <input
                         type="text"
                         class="form-control"
                         name="game_name"
+                        placeholder="Ej: Naval Warfare"
                         required>
                 </div>
 
                 <div class="mb-3">
-
-                    <label class="form-label">
-                        Descripción
-                    </label>
-
+                    <label class="form-label">Descripción</label>
                     <textarea
                         class="form-control"
                         name="game_description"
-                        rows="1"></textarea>
-
+                        id="gameDescription"
+                        maxlength="400"
+                        rows="3"
+                        placeholder="Cuenta de qué trata tu juego..."></textarea>
+                    <div class="char-counter"><span id="descCount">0</span>/400</div>
                 </div>
 
                 <div class="mb-3">
-
-                    <label class="form-label">
-                        Archivo del juego (.zip)
-                    </label>
-
-                    <input
-                        type="file"
-                        class="form-control"
-                        name="gameFile"
-                        accept=".zip"
-                        required>
-
+                    <label class="form-label">Archivo del juego (.zip)</label>
+                    <div class="file-drop" id="gameFileDrop">
+                        <span class="file-drop-icon">📦</span>
+                        Arrastra tu .zip aquí o haz clic para elegirlo
+                        <input
+                            type="file"
+                            name="gameFile"
+                            id="gameFile"
+                            accept=".zip"
+                            required>
+                        <span class="file-drop-name" id="gameFileName"></span>
+                    </div>
+                    <p class="field-hint">Debe contener tu juego web (HTML/JS/CSS) comprimido en un .zip.</p>
                 </div>
 
-                <div class="mb-3">
-
-                    <label class="form-label">
-                        Archivo principal
-                    </label>
-
+                <div class="mb-4">
+                    <label class="form-label">Archivo principal</label>
                     <input
                         type="text"
                         class="form-control"
                         name="entry_file"
                         value="index.html"
                         required>
+                    <p class="field-hint">El archivo que se abrirá al jugar (normalmente index.html).</p>
                 </div>
 
-                <button 
+                <button
                     class="btn btn-primary"
                     type="submit">
-                    Registrar Juego
+                    ⬆️ Registrar juego
                 </button>
             </div>
         </div>

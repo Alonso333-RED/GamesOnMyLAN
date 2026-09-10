@@ -22,6 +22,7 @@ async function getUserById(userId) {
     const result = await pool.query(
         `
         SELECT 
+            users.id_user,
             users.username,
             roles.role_name,
             users.registered_at
@@ -47,6 +48,7 @@ async function getAllUsers() {
     const result = await pool.query(
         `
         SELECT 
+            users.id_user,
             users.username,
             roles.role_name,
             users.registered_at

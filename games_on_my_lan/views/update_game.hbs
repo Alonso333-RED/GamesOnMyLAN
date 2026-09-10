@@ -1,83 +1,47 @@
-<header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
+{{> header activeGames=true}}
 
-    <img src="/img/logo.png"
-         alt="GamesOnMyLan Logo"
-         class="logo mb-2 mb-md-0">
-
-    <h1 class="text-primary">
-        GamesOnMyLan
-    </h1>
-
-    <h1 class="text-primary ms-md-5 mt-3 mt-md-0">
-        Editar Juego: {{game.game_name}}
-    </h1>
-
-    <nav class="nav">
-        <a class="nav-link text-tertiary" href="/games">
-            Galería
-        </a>
-
-        <a class="nav-link text-tertiary" href="/">
-            Inicio
-        </a>
-        {{#if user}}
-            <a class="nav-link text-tertiary" href="/profile">
-                Perfil
-            </a>
-        {{else}}
-            <a class="nav-link text-tertiary" href="/login">
-                Ingresar
-            </a>
-        {{/if}}
-    </nav>
-
-</header>
 <main class="main-panel container mt-5">
 
-        <form 
-            action="/games/{{game.id_game}}?_method=PUT" 
-            method="POST"
-            enctype="multipart/form-data">
+    <h1 class="text-secondary mb-4">
+        ✎ Editar: {{game.game_name}}
+    </h1>
 
-        <div class="row">
+    <form
+        action="/games/{{game.id_game}}?_method=PUT"
+        method="POST"
+        enctype="multipart/form-data">
 
-            <div class="col-md-4 mb-4 text-center">
-                <img
-                    src="/thumbnails/{{game.id_game}}.png"
-                    alt="Game Thumbnail"
-                    class="thumbnail mb-3"
-                    id="thumbnailPreview"
-                    style="width:275px;height:275px;">
+        <div class="row g-4">
 
-                <div>
+            <div class="col-md-4 text-center">
 
-                    <label class="form-label">
-                        Imagen del juego
-                    </label>
+                <label class="thumb-dropzone" for="thumbnail" title="Haz clic para cambiar la imagen">
+                    <img
+                        src="/thumbnails/{{game.id_game}}.png"
+                        alt="Vista previa de la miniatura"
+                        class="thumbnail mb-2"
+                        id="thumbnailPreview"
+                        onerror="this.onerror=null;this.src='/img/default_game.png';">
+                    <span class="thumb-hint">📷 Cambiar imagen</span>
+                </label>
 
-                    <input
-                        type="file"
-                        class="form-control"
-                        name="thumbnail"
-                        id="thumbnail"
-                        accept=".png">
-
-                </div>
+                <input
+                    type="file"
+                    class="form-control mt-2"
+                    name="thumbnail"
+                    id="thumbnail"
+                    accept=".png">
 
             </div>
 
             <div class="col-md-8">
 
-                <h1 class="text-primary">
+                <h2 class="text-primary" style="font-size:1.3rem;">
                     Información del juego
-                </h1>
+                </h2>
 
                 <div class="mb-3">
-
-                    <label class="form-label">
-                        Nombre del juego
-                    </label>
-
+                    <label class="form-label">Nombre del juego</label>
                     <input
                         type="text"
                         class="form-control"
@@ -87,39 +51,33 @@
                 </div>
 
                 <div class="mb-3">
-
-                    <label class="form-label">
-                        Descripción
-                    </label>
-
+                    <label class="form-label">Descripción</label>
                     <textarea
                         class="form-control"
                         name="game_description"
+                        id="gameDescription"
+                        maxlength="400"
                         rows="3">{{game.game_description}}</textarea>
-
+                    <div class="char-counter"><span id="descCount">0</span>/400</div>
                 </div>
 
                 <div class="mb-3">
-
-                    <label class="form-label">
-                        Archivo del juego (.zip) (se actualizara el archivo principal si se sube uno nuevo)
-                    </label>
-
-                    <input
-                        type="file"
-                        class="form-control"
-                        name="gameFile"
-                        accept=".zip"
-                        >
-
+                    <label class="form-label">Archivo del juego (.zip)</label>
+                    <div class="file-drop" id="gameFileDrop">
+                        <span class="file-drop-icon">📦</span>
+                        Arrastra un nuevo .zip aquí o haz clic para reemplazarlo
+                        <input
+                            type="file"
+                            name="gameFile"
+                            id="gameFile"
+                            accept=".zip">
+                        <span class="file-drop-name" id="gameFileName"></span>
+                    </div>
+                    <p class="field-hint">Déjalo vacío si no quieres reemplazar los archivos del juego.</p>
                 </div>
 
-                <div class="mb-3">
-
-                    <label class="form-label">
-                        Archivo principal
-                    </label>
-
+                <div class="mb-4">
+                    <label class="form-label">Archivo principal</label>
                     <input
                         type="text"
                         class="form-control"
@@ -128,10 +86,10 @@
                         required>
                 </div>
 
-                <button 
+                <button
                     class="btn btn-primary"
                     type="submit">
-                    Modificar
+                    💾 Guardar cambios
                 </button>
             </div>
         </div>

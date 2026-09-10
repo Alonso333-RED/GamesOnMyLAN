@@ -1,66 +1,75 @@
-<header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
+{{> header}}
 
-    <img src="/img/logo.png" 
-         alt="GamesOnMyLan Logo" 
-         class="logo mb-2 mb-md-0">
-
-    <h2 class="text-primary">
-        GamesOnMyLan
-    </h2>
-
-    <h1 class="text-primary ms-md-5 mt-3 mt-md-0">
-        Crear usuario
-    </h1>
-
-    <nav class="nav">
-        <a class="nav-link text-tertiary" href="/games">
-            Galería
-        </a>
-        <a class="nav-link text-tertiary" href="/">
-            Inicio
-        </a>
-    </nav>
-
-</header>
 <main class="main-panel container mt-5">
-    <h1 class="text-secondary">
-        Crear usuario
-    </h1>
-    <p class="text-tertiary">
-        Para crear un usuario, crea un nombre de usuario y una contraseña, procura recordar estos datos ya que se te preguntaran cad avez que quieras inciar sesión.
-    </p>
 
-    <form class="mt-4" action="/register" method="POST">
-        <div class="mb-3">
-            <label for="username" class="form-label">
-                Nombre de usuario
-            </label>
-            <input 
-                type="text"
-                class="form-control"
-                id="username"
-                name="username"
-                required>
+    <div class="form-panel">
+
+        <div class="text-center mb-4">
+            <div class="form-panel-icon">📝</div>
+            <h1 class="text-secondary">Crear usuario</h1>
+            <p class="text-tertiary">
+                Elige un nombre de usuario y una contraseña. Procura recordarlos, ya que
+                se te pedirán cada vez que quieras iniciar sesión.
+            </p>
         </div>
 
-        <div class="mb-3">
-            <label for="password" class="form-label">
-                Contraseña
-            </label>
-            <input 
-                type="password"
-                class="form-control"
-                id="password"
-                name="password"
-                required>
-        </div>
-        
-        <button 
-            type="submit"
-            class="btn btn-primary">
-            Registrarse
-        </button>
-        
-    </form>
-    ya tienes un usuario? inicia sesión <a href="/login">aquí</a>
+        {{#if error}}
+            <div class="alert-box">
+                <span class="alert-icon">⚠️</span>
+                {{#if errorTaken}}
+                    <span>Ese nombre de usuario ya está en uso. Prueba con otro.</span>
+                {{else}}
+                    <span>No se pudo crear el usuario. Inténtalo de nuevo.</span>
+                {{/if}}
+            </div>
+        {{/if}}
+
+        <form action="/register" method="POST">
+
+            <div class="mb-3">
+                <label for="username" class="form-label">
+                    Nombre de usuario
+                </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="username"
+                    name="username"
+                    autofocus
+                    required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">
+                    Contraseña
+                </label>
+                <div class="password-field">
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                        minlength="8"
+                        required>
+                    <button type="button" class="password-toggle" data-target="password" aria-label="Mostrar contraseña">
+                        👁️
+                    </button>
+                </div>
+                <span class="field-hint">Mínimo 8 caracteres.</span>
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-primary w-100">
+                Registrarse
+            </button>
+
+        </form>
+
+        <p class="form-switch-link">
+            ¿Ya tienes un usuario? <a href="/login">Inicia sesión aquí</a>
+        </p>
+
+    </div>
+
 </main>

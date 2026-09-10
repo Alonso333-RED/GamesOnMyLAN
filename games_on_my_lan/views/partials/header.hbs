@@ -1,0 +1,56 @@
+<header class="site-header">
+    <div class="site-header-inner">
+
+        <a href="/" class="brand">
+            <img src="/img/logo.png" alt="GamesOnMyLan Logo" class="logo">
+            <span class="brand-text">GamesOnMyLan</span>
+        </a>
+
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="siteNav">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="nav site-nav" id="siteNav">
+
+            <a class="nav-link {{#if activeHome}}active{{/if}}" href="/">
+                <span class="nav-icon">🏠</span> Inicio
+            </a>
+
+            <a class="nav-link {{#if activeGames}}active{{/if}}" href="/games">
+                <span class="nav-icon">🎮</span> Galería
+            </a>
+
+            <a class="nav-link {{#if activeNew}}active{{/if}}" href="/games/new">
+                <span class="nav-icon">⬆️</span> Subir
+            </a>
+
+            <a class="nav-link {{#if activeUsers}}active{{/if}}" href="/users">
+                <span class="nav-icon">👥</span> Usuarios
+            </a>
+
+            {{#if user}}
+
+                <a class="nav-link {{#if activeProfile}}active{{/if}}" href="/profile">
+                    <span class="nav-icon">👤</span> Perfil
+                </a>
+
+                <form action="/logout" method="POST" class="nav-logout-form">
+                    <button class="nav-link nav-link-btn" type="submit">
+                        <span class="nav-icon">🚪</span> Salir
+                    </button>
+                </form>
+
+            {{else}}
+
+                <a class="nav-link {{#if activeLogin}}active{{/if}}" href="/login">
+                    <span class="nav-icon">🔑</span> Ingresar
+                </a>
+
+            {{/if}}
+
+        </nav>
+
+    </div>
+</header>

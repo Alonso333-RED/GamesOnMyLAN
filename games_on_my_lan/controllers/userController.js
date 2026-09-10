@@ -15,13 +15,23 @@ async function register(req, res) {
         res.redirect("/profile");
     } catch (error) {
         console.error("Error al registrar usuario:", error);
-        res.status(500).send("Error al registrar usuario");
+
+        if (error.code === "23505") {
+            return res.redirect("/register?error=taken");
+        }
+
+        res.redirect("/register?error=1");
     }
 }
 
 async function showRegister(req, res) {
+
+    const errorParam = req.query.error;
+
     res.render("register", {
-        title: "Registro de usuario"
+        title: "Registro de usuario",
+        error: Boolean(errorParam),
+        errorTaken: errorParam === "taken"
     });
 }
 
@@ -46,7 +56,8 @@ async function getSelfUser(req, res) {
     gamesService.getGamesByAuthorId(req.session.user.id).then(games => {
         res.render("profile", {
             title: "Perfil",
-            user,
+            profileUser: user,
+            isOwnProfile: true,
             games
         });
     });
@@ -63,14 +74,20 @@ async function getUserById(req, res) {
         );
     }
 
-    userService.getUserById(userId).then(user => {
-        res.render("profile", {
-            title: "Perfil",
-            user: anotherUser,
-            games: user.games
-        });
+    const isOwnProfile = Boolean(
+        req.session.user &&
+        req.session.user.id === anotherUser.id_user
+    );
+
+    const games = await gamesService.getGamesByAuthorId(anotherUser.id_user);
+
+    res.render("profile", {
+        title: "Perfil",
+        profileUser: anotherUser,
+        isOwnProfile,
+        games
     });
-    
+
 }
 
 async function getAllUsers(req, res) {

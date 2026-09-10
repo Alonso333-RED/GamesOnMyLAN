@@ -1,27 +1,42 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     const searchInput = document.getElementById("gameSearch");
-    const rows = document.querySelectorAll("table tbody tr");
+    const cards = Array.from(document.querySelectorAll(".game-card"));
+    const noResults = document.getElementById("noResults");
+    const resultCount = document.getElementById("resultCount");
 
-    if (!searchInput) return;
+    if (!searchInput || !cards.length) return;
+
+    const updateCount = (visible, total) => {
+        if (!resultCount) return;
+        resultCount.textContent = `${visible} de ${total} juegos`;
+    };
+
+    updateCount(cards.length, cards.length);
 
     searchInput.addEventListener("input", () => {
 
         const query = searchInput.value.trim().toLowerCase();
+        let visibleCount = 0;
 
-        rows.forEach(row => {
+        cards.forEach((card) => {
 
-            const gameName = row.querySelector(".text-primary")
-                ?.textContent.trim().toLowerCase() || "";
-
-            const authorName = row.children[2]
-                ?.textContent.trim().toLowerCase() || "";
+            const gameName = (card.dataset.name || "").toLowerCase();
+            const authorName = (card.dataset.author || "").toLowerCase();
 
             const matches = gameName.includes(query) || authorName.includes(query);
 
-            row.style.display = matches ? "" : "none";
+            card.style.display = matches ? "" : "none";
+
+            if (matches) visibleCount++;
 
         });
+
+        updateCount(visibleCount, cards.length);
+
+        if (noResults) {
+            noResults.style.display = visibleCount === 0 ? "" : "none";
+        }
 
     });
 

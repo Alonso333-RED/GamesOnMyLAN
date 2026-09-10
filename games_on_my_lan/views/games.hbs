@@ -1,34 +1,4 @@
-<header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
-
-    <img src="/img/logo.png" 
-         alt="GamesOnMyLan Logo" 
-         class="logo mb-2 mb-md-0">
-
-    <h1 class="text-primary">
-        GamesOnMyLan
-    </h1>
-
-    <nav class="nav">
-
-        <a class="nav-link text-tertiary" href="/">
-            Inicio
-        </a>
-
-        <a class="nav-link text-tertiary" href="/games/new">
-            Nuevo
-        </a>
-
-        {{#if user}}
-            <a class="nav-link text-tertiary" href="/profile">
-                Perfil
-            </a>
-        {{else}}
-            <a class="nav-link text-tertiary" href="/login">
-                Ingresar
-            </a>
-        {{/if}}
-    </nav>
-</header>
+{{> header activeGames=true}}
 
 <main class="main-panel container mt-5">
 
@@ -36,94 +6,65 @@
         Juegos registrados
     </h1>
 
-    <input class="mySearcher"
-        type="search"
-        id="gameSearch"
-        placeholder="Buscar juegos..."
-        autocomplete="off"
-    >
+    <div class="gallery-toolbar">
 
-    <div class="table-responsive mt-4">
+        <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input class="mySearcher"
+                type="search"
+                id="gameSearch"
+                placeholder="Buscar por nombre o autor..."
+                autocomplete="off">
+        </div>
 
-        <table class="table table-dark table-hover align-middle">
+        <span class="result-count" id="resultCount"></span>
 
-            <thead>
-                <tr>
-                    <th>
-                        Imagen
-                    </th>
+    </div>
 
-                    <th>
-                        Nombre
-                    </th>
+    <div class="game-grid" id="gameGrid">
 
-                    <th>
-                        Autor
-                    </th>
+        {{#each games}}
+            <article class="game-card" data-name="{{game_name}}" data-author="{{author_name}}">
 
-                    <th>
-                        Última actualización
-                    </th>
+                <div class="game-card-media">
+                    <img
+                        src="/thumbnails/{{id_game}}.png"
+                        alt="{{game_name}}"
+                        loading="lazy"
+                        onerror="this.onerror=null;this.src='/img/default_game.png';">
 
-                    <th>
-                        Acciones
-                    </th>
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-            {{#each games}}
-                <tr>
-                    <td>
-                        <img 
-                            src="/thumbnails/{{id_game}}.png"
-                            alt="Thumbnail"
-                            class="thumbnail"
-                            style="width:80px;height:80px;margin:0;">
-                    </td>
-
-                    <td class="text-primary">
-                        {{game_name}}
-                    </td>
-
-                    <td>
-                        {{author_name}}
-                    </td>
-
-                    <td>
-                        {{updated_at}}
-                    </td>
-
-                    <td>
-                        <a
-                            href="/games/game-details/{{id_game}}" 
-                            class="btn btn-primary me-2">
+                    <div class="game-card-overlay">
+                        <a href="/game-files/{{id_game}}/{{entry_file}}" class="btn btn-primary">
+                            ▶️ Jugar
+                        </a>
+                        <a href="/games/game-details/{{id_game}}" class="btn btn-outline-light">
                             Detalles
                         </a>
+                    </div>
+                </div>
 
-                        <a
-                            href="/game-files/{{id_game}}/{{entry_file}}"
-                            class="btn btn-primary">
-                            Jugar
-                        </a>
-                    </td>
-                </tr>
+                <div class="game-card-body">
+                    <p class="game-card-title" title="{{game_name}}">{{game_name}}</p>
+                    <p class="game-card-author">por {{author_name}}</p>
+                    <span class="game-card-date">Actualizado: {{updated_at}}</span>
+                </div>
 
-            {{else}}
+            </article>
+        {{else}}
+            <div class="empty-state">
+                <span class="empty-icon">🎮</span>
+                Aún no hay juegos registrados.<br>
+                ¡Sé el primero en <a href="/games/new">subir uno</a>!
+            </div>
+        {{/each}}
 
-                <tr>
-                    <td colspan="5" class="text-center">
-                        No hay juegos registrados.
-                    </td>
-                </tr>
-
-            {{/each}}
-
-            </tbody>
-        </table>
     </div>
+
+    <div class="empty-state" id="noResults" style="display:none;">
+        <span class="empty-icon">🔎</span>
+        No se encontraron juegos que coincidan con tu búsqueda.
+    </div>
+
 </main>
 
 <script src="/js/games.js"></script>

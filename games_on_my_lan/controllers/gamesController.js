@@ -97,9 +97,15 @@ async function getGameById(req, res) {
             return res.status(404).send("Juego no encontrado");
         }
 
+        const isOwner = Boolean(
+            req.session.user &&
+            req.session.user.id === game.author_id
+        );
+
         res.render("game", {
             title: "Detalles del juego",
-            game
+            game,
+            isOwner
         });
 
     } catch (error) {
