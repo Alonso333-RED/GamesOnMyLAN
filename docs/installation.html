@@ -1,114 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 
 <head>
-    <meta charset="utf-8">   
-    <title>HowToGOML</title>
+    <meta charset="utf-8">
+    <title>HowToGOML · Instalación</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/style.css">
-
 </head>
 
-
-<body>
-    <header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
-        <img src="./img/logo.png" 
-            alt="GamesOnMyLan Logo" 
-            class="logo mb-2 mb-md-0">
-
-        <h1 class="text-primary">
-            How To GamesOnMyLan
-        </h1>
-
-        <nav class="nav">
-            <a class="nav-link text-tertiary" href="index.html">
-                Inicio
-            </a>
-
+<body data-page="instalacion">
+    <header class="site-header">
+        <a class="brand" href="index.html">
+            <img src="./img/logo.png" alt="GamesOnMyLan Logo" class="logo">
+            <h1 class="brand-title">How To GamesOnMyLan</h1>
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menú</button>
+        <nav id="site-nav" class="site-nav">
+            <a href="index.html" data-page="inicio">Inicio</a>
+            <a href="requirements.html" data-page="requisitos">Antes de instalar</a>
+            <a href="installation.html" data-page="instalacion">Instalación</a>
+            <a href="solutions.html" data-page="problemas">Problemas</a>
+            <a href="https://github.com/Alonso333-RED/GamesOnMyLAN.git" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
-
     </header>
 
-
-    <main class="main-panel container mt-5">
-
-        <h1 class="text-secondary">
-            Instalación del Proyecto
-        </h1>
-
-        <p class="text-tertiary">
-            Pasos de como se debe configurar y instalar GOML.
+    <main class="main-panel container mt-4 mt-md-5">
+        <p class="page-kicker">Instalación</p>
+        <h1 class="text-secondary">Instalación del proyecto</h1>
+        <p class="text-tertiary lead-copy">
+            Pasos de cómo se debe configurar e instalar GOML. Copia cada bloque y síguelos en orden.
         </p>
 
-        <script src="./js/consoleCard.js" defer></script>
+        <div class="step-rail">
+            <a class="step-chip is-current" href="#paso-1">1. PostgreSQL</a>
+            <a class="step-chip" href="#paso-2">2. npm</a>
+            <a class="step-chip" href="#paso-3">3. Usuario</a>
+            <a class="step-chip" href="#paso-4">4. Certificados</a>
+            <a class="step-chip" href="#paso-5">5. Carpeta certs</a>
+        </div>
 
-        <console-card titulo="Configuración de PostgreSQL">
-
+        <console-card paso="1" titulo="Configuración de PostgreSQL">
             <code>$ sudo -u postgres psql</code>
-
             <output>
                 postgres=# CREATE USER goml WITH PASSWORD 'goml_psw';<br>
                 CREATE ROLE
             </output>
-
             <code>postgres=# CREATE DATABASE goml_db OWNER goml;</code>
-
             <output>
                 CREATE DATABASE
             </output>
-
         </console-card>
 
-
-        <console-card titulo="Instalar las dependencias con npm">
-
+        <console-card paso="2" titulo="Instalar las dependencias con npm">
             <code>$ npm install</code>
-
             <output>
                 added 152 packages
             </output>
-
         </console-card>
 
-
-        <console-card titulo="Crear el usuario propietario">
-
+        <console-card paso="3" titulo="Crear el usuario propietario">
             <code>$ node admin/install.js</code>
-
             <output>
                 Instalando GamesOnMyLAN...<br>
                 Usuario propietario creado correctamente.
             </output>
-
         </console-card>
 
-
-        <console-card titulo="Generar los certificados HTTPS">
-
+        <console-card paso="4" titulo="Generar los certificados HTTPS">
             <code>$ node admin/generate_cert.js</code>
-
             <output>
                 Generando certificados...<br>
                 Certificados generados correctamente.
             </output>
-
         </console-card>
 
-
-        <console-card titulo="Mover la carpeta certs a la raíz del proyecto">
-
+        <console-card paso="5" titulo="Mover la carpeta certs a la raíz del proyecto">
             <code>$ mv certs /ruta/al/proyecto/</code>
-
             <output>
                 La carpeta certs debe quedar en la raíz del proyecto,
                 al mismo nivel que app.js.
             </output>
-
         </console-card>
-
     </main>
 
+    <footer class="site-footer">GamesOnMyLAN · self-hosted en tu LAN</footer>
+
+    <script src="./js/consoleCard.js"></script>
+    <script src="./js/docs.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

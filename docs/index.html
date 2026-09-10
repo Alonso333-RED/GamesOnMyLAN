@@ -1,70 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 
 <head>
-
+    <meta charset="utf-8">
     <title>HowToGOML</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/style.css">
-
 </head>
 
-
-<body>
-    <header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
-        <img src="./img/logo.png" 
-            alt="GamesOnMyLan Logo" 
-            class="logo mb-2 mb-md-0">
-
-        <h1 class="text-primary">
-            How To GamesOnMyLan
-        </h1>
-
-        <nav class="nav">
-
+<body data-page="inicio">
+    <header class="site-header">
+        <a class="brand" href="index.html">
+            <img src="./img/logo.png" alt="GamesOnMyLan Logo" class="logo">
+            <h1 class="brand-title">How To GamesOnMyLan</h1>
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menú</button>
+        <nav id="site-nav" class="site-nav">
+            <a href="index.html" data-page="inicio">Inicio</a>
+            <a href="requirements.html" data-page="requisitos">Antes de instalar</a>
+            <a href="installation.html" data-page="instalacion">Instalación</a>
+            <a href="solutions.html" data-page="problemas">Problemas</a>
+            <a href="https://github.com/Alonso333-RED/GamesOnMyLAN.git" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
-
     </header>
 
-
-    <main class="main-panel container mt-5">
-
-        <h1 class="text-secondary">
-            Manual de uso de GamesOnMyLAN
-        </h1>
-
-        <p class="text-tertiary">
+    <main class="main-panel container mt-4 mt-md-5">
+        <p class="page-kicker">Manual de uso</p>
+        <h1 class="text-secondary">Manual de uso de GamesOnMyLAN</h1>
+        <p class="text-tertiary lead-copy">
             Este manual explica cómo instalar, configurar y poner en marcha GamesOnMyLan en tu propio equipo,
             además de cómo resolver los problemas más comunes que pueden aparecer durante el proceso.
-
             Aquí encontrarás los requisitos previos que necesitas cumplir, los pasos de instalación en orden,
             y una sección de solución de problemas para los errores más frecuentes.
         </p>
 
-        <a href="https://github.com/Alonso333-RED/GamesOnMyLAN.git" target="_blank" rel="noopener noreferrer">
-        Repositorio GitHub de GamesOnMyLAN
-        </a>
+        <img class="hero-art d-block" src="./img/goml.png" alt="Captura de GamesOnMyLAN">
 
-        <div class="yDiv">
-            <a href="requirements.html" class="btn btn-primary" role="button">
-                Antes de instalar
+        <horizontal-card
+            img="./img/logo.png"
+            titulo="¿Qué es GamesOnMyLAN?"
+            desc="GamesOnMyLAN es un servicio self-hosted cuyo rol principal es almacenar, servir y conservar videojuegos web o cualquier aplicación estática creada por los usuarios. Permite centralizar estos proyectos en un servidor propio, facilitando su administración, acceso y distribución dentro de una red local, sin depender de servicios externos de alojamiento. De esta forma, los usuarios pueden publicar y mantener sus propios proyectos de manera sencilla, manteniendo el control sobre sus archivos y recursos."
+        ></horizontal-card>
+
+        <div class="action-grid">
+            <a href="requirements.html" class="action-card">
+                <span>Paso 1</span>
+                <strong>Antes de instalar</strong>
             </a>
-            <a href="installation.html" class="btn btn-primary" role="button">
-                Instalación
+            <a href="installation.html" class="action-card">
+                <span>Paso 2</span>
+                <strong>Instalación</strong>
             </a>
-            <a href="solutions.html" class="btn btn-primary" role="button">
-                Problemas Comunes
+            <a href="solutions.html" class="action-card">
+                <span>Paso 3</span>
+                <strong>Problemas comunes</strong>
             </a>
-            <a href="https://alonso333-red.github.io/AlonsoSpace/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                Sobre el autor
+            <a href="https://github.com/Alonso333-RED/GamesOnMyLAN.git" class="action-card" target="_blank" rel="noopener noreferrer">
+                <span>Código</span>
+                <strong>Repositorio GitHub</strong>
+            </a>
+            <a href="https://alonso333-red.github.io/AlonsoSpace/" class="action-card" target="_blank" rel="noopener noreferrer">
+                <span>Créditos</span>
+                <strong>Sobre el autor</strong>
             </a>
         </div>
-
     </main>
 
-    <script src="./js/bootstrap.bundle.min.js"></script>
+    <footer class="site-footer">GamesOnMyLAN · self-hosted en tu LAN</footer>
 
+    <script src="./js/horizontalCard.js"></script>
+    <script src="./js/docs.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

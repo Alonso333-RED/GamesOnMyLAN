@@ -1,51 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 
 <head>
-
-    <title>HowToGOML</title>
+    <meta charset="utf-8">
+    <title>HowToGOML · Requisitos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/style.css">
-
 </head>
 
-
-<body>
-    <header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
-        <img src="./img/logo.png" 
-            alt="GamesOnMyLan Logo" 
-            class="logo mb-2 mb-md-0">
-
-        <h1 class="text-primary">
-            How To GamesOnMyLan
-        </h1>
-        <h1 class="text-primary ms-md-5 mt-3 mt-md-0">
-            Requisitos Previos
-        </h1>
-
-        <nav class="nav">
-            <a class="nav-link text-tertiary" href="index.html">
-                Inicio
-            </a>
-
+<body data-page="requisitos">
+    <header class="site-header">
+        <a class="brand" href="index.html">
+            <img src="./img/logo.png" alt="GamesOnMyLan Logo" class="logo">
+            <h1 class="brand-title">How To GamesOnMyLan</h1>
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menú</button>
+        <nav id="site-nav" class="site-nav">
+            <a href="index.html" data-page="inicio">Inicio</a>
+            <a href="requirements.html" data-page="requisitos">Antes de instalar</a>
+            <a href="installation.html" data-page="instalacion">Instalación</a>
+            <a href="solutions.html" data-page="problemas">Problemas</a>
+            <a href="https://github.com/Alonso333-RED/GamesOnMyLAN.git" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
-
     </header>
 
-
-    <main class="main-panel container mt-5">
-
-        <h1 class="text-secondary">
-            Requisitos Tecnicos y Conocimientos Previos
-        </h1>
-
-        <p class="text-tertiary">
-            Antes de intentar instalar GOML se nececita que conozcas y configures ciertas herramientas.
-            Si bien no es necesario que seas un experto en ellas, si es recomendable que tengas un conocimiento básico de su funcionamiento.
+    <main class="main-panel container mt-4 mt-md-5">
+        <p class="page-kicker">Antes de instalar</p>
+        <h1 class="text-secondary">Requisitos técnicos y conocimientos previos</h1>
+        <p class="text-tertiary lead-copy">
+            Antes de intentar instalar GOML se necesita que conozcas y configures ciertas herramientas.
+            Si bien no es necesario que seas un experto en ellas, sí es recomendable que tengas un conocimiento básico de su funcionamiento.
         </p>
 
-        <script src="./js/requirementItem.js" defer></script>
         <requirement-item
             img="./img/requirements/nodejs.webp"
             titulo="Node JS"
@@ -66,13 +53,13 @@
             desc="OpenSSL es la herramienta que GamesOnMyLAN usa para generar el certificado y la llave que permiten que el servidor corra bajo HTTPS (conexión cifrada). En Linux normalmente ya viene instalado por defecto, pero en Windows es necesario descargarlo aparte antes de poder generar esos archivos e iniciar el servidor."
             link="https://www.openssl.org/">
         </requirement-item>
-
-        </div>
-
     </main>
 
-    <script src="./js/bootstrap.bundle.min.js"></script>
+    <footer class="site-footer">GamesOnMyLAN · self-hosted en tu LAN</footer>
 
+    <script src="./js/requirementItem.js"></script>
+    <script src="./js/docs.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

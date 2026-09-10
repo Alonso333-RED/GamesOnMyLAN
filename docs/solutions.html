@@ -1,73 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 
 <head>
-
-    <title>HowToGOML</title>
+    <meta charset="utf-8">
+    <title>HowToGOML · Problemas</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/style.css">
-
 </head>
 
-
-<body>
-    <header class="header bg-primary p-3 d-flex flex-column flex-md-row align-items-center justify-content-between">
-        <img src="./img/logo.png" 
-            alt="GamesOnMyLan Logo" 
-            class="logo mb-2 mb-md-0">
-
-        <h1 class="text-primary">
-            How To GamesOnMyLan
-        </h1>
-
-        <nav class="nav">
-            <a class="nav-link text-tertiary" href="index.html">
-                Inicio
-            </a>
-
+<body data-page="problemas">
+    <header class="site-header">
+        <a class="brand" href="index.html">
+            <img src="./img/logo.png" alt="GamesOnMyLan Logo" class="logo">
+            <h1 class="brand-title">How To GamesOnMyLan</h1>
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menú</button>
+        <nav id="site-nav" class="site-nav">
+            <a href="index.html" data-page="inicio">Inicio</a>
+            <a href="requirements.html" data-page="requisitos">Antes de instalar</a>
+            <a href="installation.html" data-page="instalacion">Instalación</a>
+            <a href="solutions.html" data-page="problemas">Problemas</a>
+            <a href="https://github.com/Alonso333-RED/GamesOnMyLAN.git" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
-
     </header>
 
-
-    <main class="main-panel container mt-5">
-
-        <h1 class="text-secondary">
-            Problemas Comunes y su Solución de GamesOnMyLAN
-        </h1>
-
-        <p class="text-tertiary">
-            Breve mención de problemas con solución conocida.
+    <main class="main-panel container mt-4 mt-md-5">
+        <p class="page-kicker">Soporte</p>
+        <h1 class="text-secondary">Problemas comunes y su solución</h1>
+        <p class="text-tertiary lead-copy">
+            Breve mención de problemas conocidos y sus respectivas soluciones. Usa Copiar para llevar el comando a la terminal.
         </p>
 
-        <script src="./js/imageTwoCard.js" defer></script>
-
-        <image-two-card
-            img="./img/problems/noSettingsJSON.png"
-            titulo1="Error ENOENT / No such file or directory"
-            desc1="No se encontró el archivo settings.json."
-            titulo2="Generar settings.json con install.js"
-            desc2="Ejecuta el siguiente comando(asumiendo que estas en la raiz del proyecto node)"
+        <console-card
+            titulo="Error ENOENT / No such file or directory"
+            descripcion="No se encontró el archivo settings.json. Esto ocurre cuando el archivo de configuración aún no ha sido generado."
         >
-            <code>cd admin</code>
-            <code>node install.js</code>
-        </image-two-card>
-    
-        <image-two-card
-            img="./img/problems/noCerts.png"
-            titulo1="No se encontraron los certificados HTTPS"
-            desc1="GamesOnMyLAN no puede iniciar porque no encuentra los certificados HTTPS. Esto ocurre cuando los certificados aún no han sido generados o no se encuentran en la ubicación esperada."
-            titulo2="Generar y mover los certificados HTTPS"
-            desc2="Desde la raíz del proyecto, ejecuta el siguiente comando. El script generará los certificados. Después si certs/ no esta en la raiz, debes mover manualmente la carpeta certs al directorio raíz del proyecto GamesOnMyLAN."
-        >
-            <code>node admin/generate_cert.js</code>
-            <code>ls (verificar que certs aparezca en la raiz)</code>
-            <code>mv admin/certs ./certs (Si certs no esta en la raiz)</code>
-        </image-two-card>
+            <code>$ cd admin</code>
+            <code>$ node install.js</code>
+            <output>
+                Instalando GamesOnMyLAN...<br>
+                settings.json generado correctamente.
+            </output>
+        </console-card>
 
+        <console-card
+            titulo="No se encontraron los certificados HTTPS"
+            descripcion="GamesOnMyLAN no puede iniciar porque no encuentra los certificados HTTPS. Esto ocurre cuando los certificados aún no han sido generados o no se encuentran en la ubicación esperada."
+        >
+            <code>$ node admin/generate_cert.js</code>
+            <output>
+                Generando certificados...<br>
+                Certificados generados correctamente.
+            </output>
+        </console-card>
+
+        <console-card
+            titulo="La carpeta certs no está en la raíz del proyecto"
+            descripcion="Si los certificados fueron generados dentro de admin/certs, debes mover la carpeta certs al directorio raíz de GamesOnMyLAN."
+        >
+            <code>$ ls</code>
+            <output>
+                Verifica que la carpeta certs aparezca en la raíz del proyecto.
+            </output>
+            <code>$ mv admin/certs ./certs</code>
+            <output>
+                La carpeta certs ahora se encuentra en la raíz del proyecto.
+            </output>
+        </console-card>
     </main>
 
+    <footer class="site-footer">GamesOnMyLAN · self-hosted en tu LAN</footer>
+
+    <script src="./js/consoleCard.js"></script>
+    <script src="./js/docs.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
