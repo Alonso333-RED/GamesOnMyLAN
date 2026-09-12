@@ -3,6 +3,7 @@ import readline from "readline";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import crypto from "crypto";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,7 +27,8 @@ if (!fs.existsSync(settingsPath)) {
         db_password: "goml_psw",
         db_database: "goml_db",
         app_port: 3000,
-        guest_register: true
+        guest_register: true,
+        session_secret: crypto.randomBytes(64).toString("hex")
     };
 
     fs.writeFileSync(
@@ -138,7 +140,7 @@ async function main() {
     IMPORTANTE:
     Antes de iniciar GamesOnMyLAN debes generar los certificados HTTPS:
 
-        node admin/generate_cert.js
+        node admin/cert.js
 
     Esto creará la carpeta "certs" en el directorio raíz
     del proyecto, de no ser asi, muevela a la raiz.

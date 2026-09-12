@@ -43,7 +43,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
 app.use(session({
-    secret: "SECRET_REMOVED",
+    secret: settings.session_secret,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -66,8 +66,6 @@ app.use(express.static(path.join(__dirname, "public")));
 // Vistas
 app.get("/", async (req, res) => {
 
-    // Las estadísticas son solo decorativas: si la base de datos
-    // no responde, la portada igual se muestra con normalidad.
     let stats = null;
 
     try {
@@ -192,7 +190,7 @@ try {
             IMPORTANTE:
             Antes de iniciar GamesOnMyLAN debes generar los certificados HTTPS:
 
-                node admin/generate_cert.js
+                node admin/cert.js
 
             Esto creará la carpeta "certs" en el directorio raíz
             del proyecto, de no ser asi, muevela a la raiz.

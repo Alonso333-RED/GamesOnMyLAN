@@ -26,6 +26,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    /* ---------- Brillo ambiental que sigue el puntero ---------- */
+    const moveGlow = (event) => {
+        document.body.style.setProperty("--pointer-x", `${event.clientX}px`);
+        document.body.style.setProperty("--pointer-y", `${event.clientY}px`);
+    };
+
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        window.addEventListener("pointermove", moveGlow, { passive: true });
+    }
+
     /* ---------- Header con sombra al hacer scroll ---------- */
     const header = document.querySelector(".site-header");
 

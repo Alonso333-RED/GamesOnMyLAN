@@ -16,6 +16,7 @@
     --text: #ffffff;
     --text-muted: rgba(255, 255, 255, 0.65);
     --border-soft: rgba(255, 191, 191, 0.18);
+    --glow: rgba(255, 0, 0, 0.35);
     --radius-lg: 20px;
     --radius-md: 14px;
     --radius-sm: 8px;
@@ -37,19 +38,68 @@ body {
     color: var(--text);
     font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-    background-image: url("/img/bg.png");
+    background-image:
+        radial-gradient(1200px 600px at 50% -10%, rgba(255, 0, 0, 0.18), transparent 60%),
+        url("/img/bg.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
 
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.015) 0px,
+            rgba(255, 255, 255, 0.015) 1px,
+            transparent 1px,
+            transparent 4px
+        );
+    animation: scan 12s linear infinite;
+    opacity: 0.35;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(circle, var(--glow), transparent 68%);
+    left: var(--pointer-x, 50%);
+    top: var(--pointer-y, 20%);
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease;
+    opacity: 0.45;
+}
+
+.site-header,
 .main-panel {
-    background-color: var(--panel);
+    position: relative;
+    z-index: 1;
+}
+
+.main-panel {
+    background:
+        linear-gradient(180deg, rgba(64, 0, 0, 0.22), transparent 90px),
+        var(--panel);
     padding: 40px;
     border-radius: var(--radius-lg);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
-    position: relative;
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), inset 0 0 40px rgba(64, 0, 0, 0.18);
+}
+
+@keyframes scan {
+    from { background-position: 0 0; }
+    to { background-position: 0 80px; }
 }
 
 .text-primary {
@@ -155,6 +205,12 @@ a:hover {
 .logo {
     width: 100px;
     height: auto;
+    filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.35));
+    transition: transform 0.25s ease;
+}
+
+.brand:hover .logo {
+    transform: rotate(-6deg) scale(1.05);
 }
 
 
@@ -994,5 +1050,26 @@ img {
         bottom: 14px;
         width: 40px;
         height: 40px;
+    }
+}
+
+@media (max-width: 767px) {
+    body {
+        background-attachment: scroll;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+
+    body::before,
+    body::after {
+        animation: none;
     }
 }
