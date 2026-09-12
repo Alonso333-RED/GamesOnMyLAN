@@ -3,29 +3,28 @@ import storageService from "../services/storageService.js";
 
 async function createGame(req, res) {
 
+    let game = null;
+
     try {
 
-        const game = await gamesService.createGame({
-
+        game = await gamesService.createGame({
             game_name: req.body.game_name,
             game_description: req.body.game_description,
             entry_file: req.body.entry_file,
             author_id: req.session.user.id
-
         });
 
-
-        const gameFolder = await storageService.extractGame(
+        await storageService.extractGame(
             req.files.gameFile[0],
             game.id_game,
             game.entry_file
         );
 
+        // La miniatura es opcional: si no se subió, usamos la imagen por defecto.
         await storageService.storeThumbnail(
-            req.files.thumbnail[0],
+            req.files.thumbnail?.[0] ?? null,
             game.id_game
         );
-
 
         res.redirect("/games");
 
@@ -33,10 +32,17 @@ async function createGame(req, res) {
 
         console.error(error);
 
+        if (game) {
+            await gamesService.deleteGame(game.id_game).catch((cleanupError) => {
+                console.error("Error limpiando registro huérfano:", cleanupError);
+            });
+            await storageService.deleteGameFiles(game.id_game).catch((cleanupError) => {
+                console.error("Error limpiando archivos huérfanos:", cleanupError);
+            });
+        }
+
         res.status(500).send("Error creando juego");
-
     }
-
 }
 
 async function getAllGames(req, res) {
@@ -160,7 +166,6 @@ async function updateGame(req, res) {
     try {
 
         const gameId = req.params.id;
-
         const currentGame = await gamesService.getGameById(gameId);
 
         if (!currentGame) {
@@ -173,25 +178,36 @@ async function updateGame(req, res) {
             entry_file: req.body.entry_file
         });
 
-        // Si subieron un zip nuevo, reemplaza los archivos del juego
-        if (req.files?.gameFile?.[0]) {
+        try {
 
-            await storageService.deleteGameFolder(gameId);
+            if (req.files?.gameFile?.[0]) {
+                await storageService.replaceGameFiles(
+                    gameId,
+                    req.files.gameFile[0],
+                    updatedGame.entry_file
+                );
+            }
 
-            await storageService.extractGame(
-                req.files.gameFile[0],
-                updatedGame.id_game,
-                updatedGame.entry_file
-            );
-        }
+            if (req.files?.thumbnail?.[0]) {
+                await storageService.storeThumbnail(
+                    req.files.thumbnail[0],
+                    updatedGame.id_game
+                );
+            }
 
-        // Si subieron una miniatura nueva, reemplázala
-        if (req.files?.thumbnail?.[0]) {
+        } catch (fileError) {
 
-            await storageService.storeThumbnail(
-                req.files.thumbnail[0],
-                updatedGame.id_game
-            );
+            // Los archivos fallaron: revierte los metadatos a como estaban
+            // antes, para que la DB no diga algo distinto a lo que hay en disco.
+            await gamesService.updateGame(gameId, {
+                game_name: currentGame.game_name,
+                game_description: currentGame.game_description,
+                entry_file: currentGame.entry_file
+            }).catch((rollbackError) => {
+                console.error("Error revirtiendo metadatos:", rollbackError);
+            });
+
+            throw fileError;
         }
 
         res.redirect(`/games/game-details/${gameId}`);
@@ -202,7 +218,6 @@ async function updateGame(req, res) {
         res.status(500).send("Error actualizando el juego");
 
     }
-
 }
 
 
