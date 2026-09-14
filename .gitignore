@@ -181,3 +181,6 @@ temp/
 
 # settings
 settings.json
+
+# backup folder
+backups/
