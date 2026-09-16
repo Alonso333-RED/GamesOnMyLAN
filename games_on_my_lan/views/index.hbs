@@ -1,6 +1,6 @@
 {{> header activeHome=true}}
 
-<main class="main-panel container mt-5">
+<main class="main-panel container mt-4 mt-md-5">
 
     <div class="hero-block info-block">
 
@@ -10,16 +10,18 @@
             Galería de videojuegos en la red local
         </h1>
 
-        <p class="text-tertiary">
-            GamesOnMyLan es una plataforma self-hosted en donde los usuarios pueden subir
-            videojuegos y probar juegos creados por otros, todo dentro de tu propia red.
-        </p>
+        <article class="horizontal-card reveal">
+            <div class="row align-items-center text-center text-md-start">
+                <div class="col-12 col-md-3 mb-3 mb-md-0">
+                    <img src="img/logo.png" alt="¿Qué es GamesOnMyLAN?">
+                </div>
+                <div class="col-12 col-md-9">
+                    <p class="card-title">¿Qué es GamesOnMyLAN?</p>
+                    <p class="text-tertiary mb-0">GamesOnMyLAN es un servicio self-hosted cuyo rol principal es almacenar, servir y conservar videojuegos web o cualquier aplicación estática creada por los usuarios. Permite centralizar estos proyectos en un servidor propio, facilitando su administración, acceso y distribución dentro de una red local, sin depender de servicios externos de alojamiento. De esta forma, los usuarios pueden publicar y mantener sus propios proyectos de manera sencilla, manteniendo el control sobre sus archivos y recursos.</p>
+                </div>
+            </div>
+        </article>
 
-        <p class="text-tertiary">
-            Por motivos de seguridad debes preguntarle a un administrador si puedes tener una
-            cuenta para subir juegos, pero puedes jugar sin problema sin tener una cuenta.
-            Se recomienda no usar datos de la vida real, ya que por ahora la conexión no es cifrada.
-        </p>
 
         {{#if stats}}
             <div class="stat-row">
@@ -34,15 +36,21 @@
             </div>
         {{/if}}
 
-        <div class="yDiv">
-            <a href="/games" class="btn btn-primary" role="button">
+        <div class="action-grid">
+            <a href="/games" class="action-card" role="button">
                 🎮 Todos los juegos
             </a>
-            <a href="/users" class="btn btn-primary" role="button">
+            <a href="/users" class="action-card" role="button">
                 👥 Todos los usuarios
             </a>
-            <a href="/games/new" class="btn btn-outline-light" role="button">
+            <a href="/games/new" class="action-card" role="button">
                 ⬆️ Subir un juego
+            </a>
+            <a href="https://alonso333-red.github.io/GamesOnMyLAN/" class="action-card" role="button" target="_blank" rel="noopener noreferrer">
+                🎓 Manual de Uso
+            </a>
+            <a href="https://alonso333-red.github.io/AlonsoSpace/" class="action-card" role="button" target="_blank" rel="noopener noreferrer">
+                🧒 Sobre el Autor
             </a>
         </div>
 
