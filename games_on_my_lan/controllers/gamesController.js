@@ -1,5 +1,14 @@
 import gamesService from "../services/gamesService.js";
 import storageService from "../services/storageService.js";
+import settings from "../admin/getSettings.js";
+import fsp from "fs/promises";
+
+const GAMES_PORT = settings.games_port || (settings.app_port || 3000) + 1;
+
+async function cleanupUploads(files) {
+    const all = Object.values(files ?? {}).flat();
+    await Promise.all(all.map(f => fsp.unlink(f.path).catch(() => {})));
+}
 
 async function createGame(req, res) {
 
@@ -42,6 +51,8 @@ async function createGame(req, res) {
         }
 
         res.status(500).send("Error creando juego");
+    } finally {
+        await cleanupUploads(req.files);
     }
 }
 
@@ -77,9 +88,9 @@ async function playGame(req, res) {
             return res.status(404).send("Juego no encontrado");
         }
 
-    res.redirect(
-        `/game-files/${game.id_game}/${game.entry_file}`
-    );
+        res.redirect(
+            `https://${req.hostname}:${GAMES_PORT}/${game.id_game}/${encodeURI(game.entry_file)}`
+        );
 
     } catch (error) {
 
@@ -208,7 +219,7 @@ async function updateGame(req, res) {
             });
 
             throw fileError;
-        }
+        } 
 
         res.redirect(`/games/game-details/${gameId}`);
 
@@ -217,6 +228,8 @@ async function updateGame(req, res) {
         console.error(error);
         res.status(500).send("Error actualizando el juego");
 
+    } finally {
+        await cleanupUploads(req.files);
     }
 }
 

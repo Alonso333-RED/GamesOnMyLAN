@@ -180,6 +180,19 @@ Presiona ENTER para utilizar el valor indicado entre corchetes.
         3000
     );
 
+    let games_port;
+
+    while (true) {
+        games_port = await askDefault(
+            "Puerto del servidor de juegos",
+            3001
+        );
+
+        if (Number(games_port) !== Number(app_port)) break;
+
+        console.log("Debe ser distinto al puerto de la app. Inténtalo de nuevo.");
+    }
+
     const guest_register = await askBoolean(
         "¿Permitir registro de invitados?",
         true
@@ -198,6 +211,8 @@ Presiona ENTER para utilizar el valor indicado entre corchetes.
         db_database,
 
         app_port: Number(app_port),
+
+        games_port: Number(games_port),
 
         guest_register,
 
@@ -338,11 +353,6 @@ Ya existe un archivo settings.json.
     }
 }
 
-
-// ====================================
-// CONECTAR A POSTGRESQL
-// ====================================
-
 async function connectDatabase() {
 
     /*
@@ -398,11 +408,6 @@ ${error.message}
     }
 }
 
-
-// ====================================
-// INSTALACIÓN NUEVA
-// ====================================
-
 async function newInstallation(db) {
 
     console.log(`
@@ -431,11 +436,6 @@ async function newInstallation(db) {
         "✓ Base de datos preparada."
     );
 
-
-    // ====================================
-    // COMPROBAR USUARIOS
-    // ====================================
-
     const result = await db.query(
         "SELECT COUNT(*) FROM users;"
     );
@@ -452,11 +452,6 @@ La instalación continuará sin crear un usuario inicial.
 
         return;
     }
-
-
-    // ====================================
-    // CREAR OWNER
-    // ====================================
 
     console.log(`
 [2/2] Crear propietario inicial
@@ -519,11 +514,6 @@ La instalación continuará sin crear un usuario inicial.
     );
 }
 
-
-// ====================================
-// RESTAURACIÓN
-// ====================================
-
 async function restoreInstallation() {
 
     console.log(`
@@ -581,11 +571,6 @@ de backup y restauración.
     );
 }
 
-
-// ====================================
-// FINAL
-// ====================================
-
 function showFinalMessage() {
 
     console.log(`
@@ -612,11 +597,6 @@ necesitas modificar alguna configuración.
 `);
 }
 
-
-// ====================================
-// MAIN
-// ====================================
-
 async function main() {
 
     let db = null;
@@ -629,21 +609,11 @@ async function main() {
 ====================================
 `);
 
-
-        // ====================================
-        // 1. SETTINGS
-        // ====================================
-
         console.log(
             "[1/4] Configurando GamesOnMyLAN..."
         );
 
         await configureSettings();
-
-
-        // ====================================
-        // 2. TIPO DE INSTALACIÓN
-        // ====================================
 
         console.log(
             "\n[2/4] Seleccionando tipo de instalación..."
@@ -651,11 +621,6 @@ async function main() {
 
         const installationType =
             await askInstallationType();
-
-
-        // ====================================
-        // RESTAURACIÓN
-        // ====================================
 
         if (installationType === "restore") {
 
@@ -668,32 +633,17 @@ async function main() {
             return;
         }
 
-
-        // ====================================
-        // CONEXIÓN
-        // ====================================
-
         console.log(
             "\n[3/4] Comprobando PostgreSQL..."
         );
 
         db = await connectDatabase();
 
-
-        // ====================================
-        // INSTALACIÓN NUEVA
-        // ====================================
-
         console.log(
             "\n[4/4] Instalando GamesOnMyLAN..."
         );
 
         await newInstallation(db);
-
-
-        // ====================================
-        // FINAL
-        // ====================================
 
         showFinalMessage();
 

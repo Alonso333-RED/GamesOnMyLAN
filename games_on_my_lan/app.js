@@ -16,11 +16,14 @@ import userRouter from "./routes/userRouter.js";
 import gamesService from "./services/gamesService.js";
 import userService from "./services/userService.js";
 
+import { csrfProtection } from "./middlewares/csrf.js";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = settings.app_port || 3000;
+const GAMES_PORT = settings.games_port || PORT + 1;
 
 // Engine
 app.engine(
@@ -40,6 +43,7 @@ app.set(
 // Middlewares globales
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(csrfProtection);
 app.use(methodOverride("_method"));
 
 app.use(session({
@@ -48,19 +52,30 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         maxAge: 3600000,
-        secure: true
+        secure: true,
+        httpOnly: true,
+        sameSite: "strict"
     }
 }));
 
 app.use((req, res, next) => {
 
     res.locals.user = req.session.user;
+    res.locals.gamesOrigin = `https://${req.hostname}:${GAMES_PORT}`;
 
     next();
 
 });
 
 // Archivos estáticos
+
+app.use((req, res, next) => {
+    res.setHeader("X-Frame-Options", "DENY");
+    res.setHeader("Content-Security-Policy", "frame-ancestors 'none'");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    next();
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 
 // Vistas
@@ -117,29 +132,33 @@ app.use(
     )
 );
 
-app.use(
-    "/game-files",
-    express.static(
-        path.join(process.cwd(), "data", "games")
-    )
-);
+app.use((err, req, res, next) => {
+
+    if (res.headersSent) {
+        return next(err);
+    }
+
+    if (err.code === "LIMIT_FILE_SIZE") {
+        return res.status(413).send("El archivo es demasiado grande");
+    }
+
+    if (err.name === "MulterError" || err.status === 400) {
+        return res.status(400).send(err.message);
+    }
+
+    console.error(err);
+    res.status(500).send("Error procesando la solicitud");
+});
 
 // Inicio servidor
 try {
 
-    const server = https.createServer(
-        {
-            key: fs.readFileSync(
-                path.join(__dirname, "certs", "server.key")
-            ),
+    const tlsOptions = {
+    key: fs.readFileSync(path.join(__dirname, "certs", "server.key")),
+    cert: fs.readFileSync(path.join(__dirname, "certs", "server.crt"))
+    };
 
-            cert: fs.readFileSync(
-                path.join(__dirname, "certs", "server.crt")
-            )
-        },
-
-        app
-    );
+    const server = https.createServer(tlsOptions, app);
 
     server.on("error", (error) => {
 
@@ -171,6 +190,33 @@ try {
             `GamesOnMyLAN listening on port https://localhost:${PORT}/`
         );
 
+    });
+
+    const gamesApp = express();
+
+    gamesApp.disable("x-powered-by");
+    gamesApp.use((req, res, next) => {
+        res.setHeader("X-Content-Type-Options", "nosniff");
+        // Opcional: solo si un juego de Godot con hilos lo pide
+        // res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+        // res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+        next();
+    });
+    gamesApp.use(express.static(path.join(process.cwd(), "data", "games")));
+
+    const gamesServer = https.createServer(tlsOptions, gamesApp);
+
+    gamesServer.on("error", (error) => {
+        console.error(
+            error.code === "EADDRINUSE"
+                ? `El puerto de juegos ${GAMES_PORT} ya está siendo utilizado.`
+                : error.message
+        );
+        process.exit(1);
+    });
+
+    gamesServer.listen(GAMES_PORT, () => {
+        console.log(`Servidor de juegos en https://localhost:${GAMES_PORT}/`);
     });
 
 } catch (error) {

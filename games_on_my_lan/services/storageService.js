@@ -2,9 +2,14 @@ import fs from "fs";
 import fsp from "fs/promises";
 import path from "path";
 import unzipper from "unzipper";
+import { Transform } from "stream";
+import { pipeline } from "stream/promises";
 
 const DATA_PATH = path.join(process.cwd(), "data");
 const DEFAULT_THUMBNAIL = path.join(process.cwd(), "public", "img", "default_game.png");
+
+const MAX_FILES = 10000;
+const MAX_TOTAL_BYTES = 1024 * 1024 * 1024;
 
 const storageService = {
 
@@ -56,6 +61,23 @@ const storageService = {
         const resolvedRoot = path.resolve(destFolder);
         const directory = await unzipper.Open.file(zipFilePath);
 
+        // Capa 2: rechazo rápido según lo que el zip DECLARA
+        if (directory.files.length > MAX_FILES) {
+            throw new Error("ZIP con demasiados archivos");
+        }
+
+        const declaredTotal = directory.files.reduce(
+            (sum, f) => sum + (f.uncompressedSize || 0),
+            0
+        );
+
+        if (declaredTotal > MAX_TOTAL_BYTES) {
+            throw new Error("ZIP demasiado grande al descomprimir");
+        }
+
+        // Capa 3: conteo de bytes REALES (el tamaño declarado se puede falsificar)
+        let total = 0;
+
         for (const file of directory.files) {
 
             const destPath = path.resolve(
@@ -78,18 +100,37 @@ const storageService = {
 
             await fsp.mkdir(path.dirname(destPath), { recursive: true });
 
-            await new Promise((resolve, reject) => {
-                file.stream()
-                    .pipe(fs.createWriteStream(destPath))
-                    .on("finish", resolve)
-                    .on("error", reject);
-            });
+            const declaredSize = file.uncompressedSize || 0;
+            let fileBytes = 0;
+
+            await pipeline(
+                file.stream(),
+                new Transform({
+                    transform(chunk, enc, cb) {
+                        fileBytes += chunk.length;
+                        total += chunk.length;
+
+                        if (fileBytes > declaredSize) {
+                            return cb(new Error("ZIP inválido: un archivo excede su tamaño declarado"));
+                        }
+
+                        if (total > MAX_TOTAL_BYTES) {
+                            return cb(new Error("ZIP demasiado grande al descomprimir"));
+                        }
+
+                        cb(null, chunk);
+                    }
+                }),
+                fs.createWriteStream(destPath)
+            );
         }
     },
 
-    // La miniatura ahora es opcional: si no llega archivo, se usa
-    // la imagen por defecto del proyecto.
     async storeThumbnail(thumbnailFile, id_game) {
+
+        if (thumbnailFile && thumbnailFile.size > 5 * 1024 * 1024) {
+            throw new Error("La miniatura no puede pesar más de 5 MB");
+        }
 
         const thumbnailFolder = path.join(DATA_PATH, "thumbnails");
         await fsp.mkdir(thumbnailFolder, { recursive: true });
