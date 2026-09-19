@@ -8,7 +8,11 @@ async function registerUser(username, password) {
     const result = await pool.query(
         `
         INSERT INTO users (username, password_hash, role_id)
-        VALUES ($1, $2, 3)
+        VALUES (
+            $1,
+            $2,
+            (SELECT id_role FROM roles WHERE role_name = 'member')
+        )
         RETURNING id_user
         `,
         [username, hashedPassword]
