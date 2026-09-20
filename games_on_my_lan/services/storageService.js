@@ -171,15 +171,20 @@ const storageService = {
             );
         }
 
-        const innerEntries = await fsp.readdir(innerFolder);
+        // Renombrar la carpeta contenedora a un nombre temporal para que ningún
+        // hijo (ej: games/games) choque con el nombre de su propio padre.
+        const tempFolder = path.join(gameFolder, `__normalize_${Date.now()}`);
+        await fsp.rename(innerFolder, tempFolder);
+
+        const innerEntries = await fsp.readdir(tempFolder);
 
         for (const entry of innerEntries) {
             await fsp.rename(
-                path.join(innerFolder, entry),
+                path.join(tempFolder, entry),
                 path.join(gameFolder, entry)
             );
         }
-        await fsp.rmdir(innerFolder);
+        await fsp.rmdir(tempFolder);
     },
 
     async deleteGameFiles(id_game) {
