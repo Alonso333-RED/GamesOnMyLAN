@@ -47,6 +47,7 @@ app.use(csrfProtection);
 app.use(methodOverride("_method"));
 
 app.use(session({
+    name: "__Host-goml.sid",
     secret: settings.session_secret,
     resave: false,
     saveUninitialized: false,
@@ -54,7 +55,8 @@ app.use(session({
         maxAge: 3600000,
         secure: true,
         httpOnly: true,
-        sameSite: "strict"
+        sameSite: "strict",
+        path: "/"        // obligatorio para __Host-. No agregues "domain".
     }
 }));
 

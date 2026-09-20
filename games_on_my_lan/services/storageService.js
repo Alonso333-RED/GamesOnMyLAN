@@ -148,6 +148,13 @@ const storageService = {
 
     async normalizeGameFolder(gameFolder, entry_file) {
 
+        const root = path.resolve(gameFolder);
+        const target = path.resolve(root, entry_file);
+
+        if (!target.startsWith(root + path.sep)) {
+            throw new Error("Archivo principal inválido");
+        }
+
         try {
             await fsp.access(path.join(gameFolder, entry_file));
             return;

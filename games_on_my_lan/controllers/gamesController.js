@@ -2,6 +2,9 @@ import gamesService from "../services/gamesService.js";
 import storageService from "../services/storageService.js";
 import settings from "../admin/getSettings.js";
 import fsp from "fs/promises";
+import { validateEntryFile, ENTRY_FILE_ERROR } from "../utils/validators.js";
+import userService from "../services/userService.js";
+import { canDeleteGame } from "../utils/permissions.js";
 
 const GAMES_PORT = settings.games_port || (settings.app_port || 3000) + 1;
 
@@ -16,10 +19,16 @@ async function createGame(req, res) {
 
     try {
 
+        const entryFile = validateEntryFile(req.body.entry_file);
+
+        if (!entryFile) {
+            return res.status(400).send(ENTRY_FILE_ERROR);
+        }
+
         game = await gamesService.createGame({
             game_name: req.body.game_name,
             game_description: req.body.game_description,
-            entry_file: req.body.entry_file,
+            entry_file: entryFile,
             author_id: req.session.user.id
         });
 
@@ -119,10 +128,24 @@ async function getGameById(req, res) {
             req.session.user.id === game.author_id
         );
 
+        let canDelete = false;
+
+        if (req.session.user) {
+            const viewer = await userService.getUserById(req.session.user.id);
+
+            canDelete = canDeleteGame({
+                actorId: req.session.user.id,
+                actorRole: viewer?.role_name,
+                authorId: game.author_id,
+                authorRole: game.author_role
+            });
+        }
+
         res.render("game", {
             title: "Detalles del juego",
             game,
-            isOwner
+            isOwner,
+            canDelete
         });
 
     } catch (error) {
@@ -144,6 +167,15 @@ async function deleteGame(req, res) {
 
         if (!deletedGame) {
             return res.status(404).send("Juego no encontrado");
+        }
+
+        if (!req.moderation.isAuthor) {
+            console.warn(
+                `[MODERACIÓN] ${new Date().toISOString()} ` +
+                `usuario #${req.session.user.id} (${req.moderation.actorRole}) eliminó ` +
+                `el juego #${deletedGame.id_game} ${JSON.stringify(deletedGame.game_name)} ` +
+                `del usuario #${deletedGame.author_id} (${req.moderation.authorRole})`
+            );
         }
 
         await storageService.deleteGameFiles(deletedGame.id_game);
@@ -183,10 +215,16 @@ async function updateGame(req, res) {
             return res.status(404).send("Juego no encontrado");
         }
 
+        const entryFile = validateEntryFile(req.body.entry_file);
+
+        if (!entryFile) {
+            return res.status(400).send(ENTRY_FILE_ERROR);
+        }
+
         const updatedGame = await gamesService.updateGame(gameId, {
             game_name: req.body.game_name,
             game_description: req.body.game_description,
-            entry_file: req.body.entry_file
+            entry_file: entryFile
         });
 
         try {

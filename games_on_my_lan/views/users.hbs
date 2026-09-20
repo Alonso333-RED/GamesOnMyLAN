@@ -6,6 +6,21 @@
         Usuarios registrados
     </h1>
 
+    <div class="gallery-toolbar">
+
+        <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input class="mySearcher"
+                type="search"
+                id="userSearch"
+                placeholder="Buscar por usuario o rol..."
+                autocomplete="off">
+        </div>
+
+        <span class="result-count" id="resultCount"></span>
+
+    </div>
+
     <div class="table-responsive mt-4">
 
         <table class="table table-dark table-hover align-middle">
@@ -15,12 +30,14 @@
                     <th>Usuario</th>
                     <th>Rol</th>
                     <th>Registrado</th>
+                    {{#if canManageRoles}}<th>Acciones</th>{{/if}}
                 </tr>
             </thead>
 
             <tbody>
 
             {{#each users}}
+                <tr data-username="{{username}}" data-role="{{role_name}}"></tr>
                 <tr>
                     <td>
                         <a class="user-link" href="/profile/{{id_user}}">
@@ -35,19 +52,42 @@
                     <td>
                         {{registered_at}}
                     </td>
+                    {{#if @root.canManageRoles}}
+                    <td>
+                        {{#if canChangeRole}}
+                        <form action="/users/{{id_user}}/role" method="POST"
+                            data-confirm="¿Cambiar el rol de «{{username}}»?">
+                            <input type="hidden" name="role" value="{{newRole}}">
+                            <button type="submit" class="btn btn-outline-light" style="font-size:0.8rem;">
+                                {{newRoleLabel}}
+                            </button>
+                        </form>
+                        {{/if}}
+                    </td>
+                    {{/if}}
                 </tr>
 
             {{else}}
 
                 <tr>
-                    <td colspan="3" class="text-center">
+                    <td colspan="4" class="text-center">
                         No hay usuarios registrados.
                     </td>
                 </tr>
 
             {{/each}}
 
+                <tr id="noResults" style="display:none;">
+                    <td colspan="4" class="text-center">
+                        No se encontraron usuarios que coincidan con tu búsqueda.
+                    </td>
+                </tr>
+
+            </tbody>
+
             </tbody>
         </table>
     </div>
 </main>
+
+<script src="/js/users.js"></script>

@@ -59,14 +59,38 @@ async function getAllUsers() {
         FROM users
         INNER JOIN roles
             ON users.role_id = roles.id_role
+        ORDER BY users.id_user
         `
     );
 
     return result.rows;
 }
+async function updateUserRole(userId, roleName) {
+
+    const result = await pool.query(
+        `
+        WITH target AS (
+            SELECT u.id_user, r.role_name AS old_role
+            FROM users u
+            JOIN roles r ON r.id_role = u.role_id
+            WHERE u.id_user = $2
+              AND r.role_name IN ('member', 'admin')
+        )
+        UPDATE users
+        SET role_id = (SELECT id_role FROM roles WHERE role_name = $1)
+        FROM target
+        WHERE users.id_user = target.id_user
+        RETURNING users.id_user, users.username, target.old_role
+        `,
+        [roleName, userId]
+    );
+
+    return result.rows[0] ?? null;
+}
 
 export default {
     registerUser,
     getUserById,
-    getAllUsers
+    getAllUsers,
+    updateUserRole
 };

@@ -1,4 +1,5 @@
 import authService from "../services/authService.js";
+import { regenerateSession, saveSession } from "../utils/session.js";
 
 async function login(req,res) {
     const { username, password } = req.body;
@@ -13,9 +14,11 @@ async function login(req,res) {
     }
 
 
+    await regenerateSession(req);
     req.session.user = {
         id: user.id_user,
     };
+    await saveSession(req);
 
     res.redirect("/profile");
     
@@ -30,7 +33,12 @@ function logout(req, res) {
             return res.status(500).send("Error cerrando sesión");
         }
 
-        res.clearCookie("connect.sid");
+        res.clearCookie("__Host-goml.sid", {
+            path: "/",
+            secure: true,
+            httpOnly: true,
+            sameSite: "strict"
+        });
 
         res.redirect("/login");
     });

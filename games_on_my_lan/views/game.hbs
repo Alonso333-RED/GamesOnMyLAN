@@ -43,18 +43,18 @@
                 </a>
 
                 {{#if isOwner}}
-
                     <a href="/games/game-details/{{game.id_game}}/edit" class="btn btn-outline-light">
                         ✎ Editar
                     </a>
+                {{/if}}
 
+                {{#if canDelete}}
                     <form action="/games/{{game.id_game}}?_method=DELETE" method="POST"
                         data-confirm="¿Seguro que quieres eliminar «{{game.game_name}}»? Esta acción no se puede deshacer.">
                         <button type="submit" class="btn btn-danger">
-                            🗑️ Eliminar
+                            {{#if isOwner}}🗑️ Eliminar{{else}}🛡️ Eliminar como moderador{{/if}}
                         </button>
                     </form>
-
                 {{/if}}
 
             </div>

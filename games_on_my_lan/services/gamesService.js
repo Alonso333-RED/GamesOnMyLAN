@@ -56,11 +56,12 @@ const gamesService = {
                 g.author_id,
                 g.updated_at,
                 g.created_at,
-                u.username AS author_name
+                u.username AS author_name,
+                r.role_name AS author_role
             FROM games g
             JOIN users u ON g.author_id = u.id_user
-            WHERE g.id_game = $1;
-            `,
+            JOIN roles r ON u.role_id = r.id_role
+            WHERE g.id_game = $1;`,
             [id_game]
         );
 

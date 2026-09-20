@@ -1,5 +1,6 @@
 import userService from '../services/userService.js';
 import gamesService from "../services/gamesService.js";
+import { regenerateSession, saveSession } from "../utils/session.js";
 
 async function register(req, res) {
     const { username, password } = req.body;
@@ -7,10 +8,12 @@ async function register(req, res) {
     try {
         const userId = await userService.registerUser(username, password);
 
+        await regenerateSession(req);
         req.session.user = {
             id: userId,
             username: username
         };
+        await saveSession(req);
 
         res.redirect("/profile");
     } catch (error) {
@@ -96,9 +99,29 @@ async function getAllUsers(req, res) {
 
         const users = await userService.getAllUsers();
 
+        let canManageRoles = false;
+
+        if (req.session.user) {
+            const viewer = await userService.getUserById(req.session.user.id);
+            canManageRoles = viewer?.role_name === "owner";
+        }
+
+        const rows = users.map((u) => {
+            const isPromotable = u.role_name === "member";
+            const isDemotable = u.role_name === "admin";
+
+            return {
+                ...u,
+                canChangeRole: canManageRoles && (isPromotable || isDemotable),
+                newRole: isDemotable ? "member" : "admin",
+                newRoleLabel: isDemotable ? "Degradar a member" : "Ascender a admin"
+            };
+        });
+
         res.render("users", {
             title: "Usuarios",
-            users
+            users: rows,
+            canManageRoles
         });
 
     } catch (error) {
@@ -109,10 +132,50 @@ async function getAllUsers(req, res) {
     }
 }
 
+async function changeRole(req, res) {
+
+    const targetId = req.params.userId;
+    const newRole = req.body.role;
+
+    if (!/^\d{1,9}$/.test(targetId)) {
+        return res.status(404).send("Usuario no encontrado");
+    }
+
+    if (!["member", "admin"].includes(newRole)) {
+        return res.status(400).send("Rol inválido");
+    }
+
+    try {
+
+        const updated = await userService.updateUserRole(targetId, newRole);
+
+        if (!updated) {
+            return res.status(403).send("Usuario no encontrado o no modificable");
+        }
+
+        if (updated.old_role !== newRole) {
+            console.warn(
+                `[ROLES] ${new Date().toISOString()} ` +
+                `owner #${req.session.user.id} cambió a #${updated.id_user} ` +
+                `${JSON.stringify(updated.username)}: ${updated.old_role} -> ${newRole}`
+            );
+        }
+
+        res.redirect("/users");
+
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).send("Error al cambiar el rol");
+
+    }
+}
+
 export default {
     register
     , showRegister
     , getSelfUser
     , getUserById
     , getAllUsers
+    , changeRole
 };
