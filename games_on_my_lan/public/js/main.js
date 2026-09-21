@@ -109,6 +109,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    /* ---------- Límite de tamaño en archivos (data-max-mb) ---------- */
+    /* El servidor vuelve a comprobarlo; esto solo ahorra una subida inútil. */
+    document.querySelectorAll("input[type='file'][data-max-mb]").forEach((input) => {
+        input.addEventListener("change", () => {
+            const maxMb = Number(input.dataset.maxMb);
+            const file = input.files[0];
+
+            if (file && file.size > maxMb * 1024 * 1024) {
+                window.alert(`El archivo pesa más de ${maxMb} MB. Elige uno más liviano.`);
+                input.value = "";
+                input.dispatchEvent(new Event("change"));
+            }
+        });
+    });
+
     /* ---------- Confirmación antes de eliminar ---------- */
     document.querySelectorAll("[data-confirm]").forEach((form) => {
         form.addEventListener("submit", (event) => {

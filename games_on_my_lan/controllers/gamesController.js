@@ -2,7 +2,7 @@ import gamesService from "../services/gamesService.js";
 import storageService from "../services/storageService.js";
 import settings from "../admin/getSettings.js";
 import fsp from "fs/promises";
-import { validateEntryFile, ENTRY_FILE_ERROR } from "../utils/validators.js";
+import { validateEntryFile, ENTRY_FILE_ERROR, assertPngFile } from "../utils/validators.js";
 import userService from "../services/userService.js";
 import { canDeleteGame } from "../utils/permissions.js";
 
@@ -11,6 +11,17 @@ const GAMES_PORT = settings.games_port || (settings.app_port || 3000) + 1;
 async function cleanupUploads(files) {
     const all = Object.values(files ?? {}).flat();
     await Promise.all(all.map(f => fsp.unlink(f.path).catch(() => {})));
+}
+
+// Errores del usuario (status 400, ej. "no es un PNG válido") se devuelven
+// tal cual; cualquier otro error es un fallo interno y solo se informa en general.
+function sendError(res, error, fallbackMessage) {
+
+    if (error.status === 400) {
+        return res.status(400).send(error.message);
+    }
+
+    res.status(500).send(fallbackMessage);
 }
 
 async function createGame(req, res) {
@@ -23,6 +34,12 @@ async function createGame(req, res) {
 
         if (!entryFile) {
             return res.status(400).send(ENTRY_FILE_ERROR);
+        }
+
+        // Valida la miniatura ANTES de crear el registro y extraer el zip,
+        // para no hacer trabajo (ni dejar restos) si la imagen no sirve.
+        if (req.files?.thumbnail?.[0]) {
+            await assertPngFile(req.files.thumbnail[0].path);
         }
 
         game = await gamesService.createGame({
@@ -59,7 +76,7 @@ async function createGame(req, res) {
             });
         }
 
-        res.status(500).send("Error creando juego");
+        sendError(res, error, "Error creando juego");
     } finally {
         await cleanupUploads(req.files);
     }
@@ -221,6 +238,10 @@ async function updateGame(req, res) {
             return res.status(400).send(ENTRY_FILE_ERROR);
         }
 
+        if (req.files?.thumbnail?.[0]) {
+            await assertPngFile(req.files.thumbnail[0].path);
+        }
+
         const updatedGame = await gamesService.updateGame(gameId, {
             game_name: req.body.game_name,
             game_description: req.body.game_description,
@@ -264,7 +285,7 @@ async function updateGame(req, res) {
     } catch (error) {
 
         console.error(error);
-        res.status(500).send("Error actualizando el juego");
+        sendError(res, error, "Error actualizando el juego");
 
     } finally {
         await cleanupUploads(req.files);

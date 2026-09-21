@@ -3,6 +3,7 @@ import userController from "../controllers/userController.js";
 import {requireGuestRegister} from "../middlewares/settings.js";
 import { registerLimiter } from "../middlewares/rateLimit.js";
 import { requireLogin, requireRole } from "../middlewares/auth.js";
+import { uploadAvatar } from "../middlewares/upload.js";
 
 const router = express.Router();
 
@@ -16,6 +17,11 @@ router.post("/register",
     userController.register);
 
 router.get("/profile", userController.getSelfUser);
+
+router.post("/profile/avatar",
+    requireLogin,
+    uploadAvatar.single("avatar"),
+    userController.updateAvatar);
 
 router.get("/profile/:userId", userController.getUserById);
 

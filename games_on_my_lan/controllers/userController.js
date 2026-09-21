@@ -1,6 +1,8 @@
 import userService from '../services/userService.js';
 import gamesService from "../services/gamesService.js";
+import storageService from "../services/storageService.js";
 import { regenerateSession, saveSession } from "../utils/session.js";
+import fsp from "fs/promises";
 
 async function register(req, res) {
     const { username, password } = req.body;
@@ -44,25 +46,28 @@ async function getSelfUser(req, res) {
         return res.redirect("/login");
     }
 
-
     const user = await userService.getUserById(
         req.session.user.id
     );
-
 
     if (!user) {
         return res.status(404).send(
             "Usuario no encontrado"
         );
     }
-    
-    gamesService.getGamesByAuthorId(req.session.user.id).then(games => {
-        res.render("profile", {
-            title: "Perfil",
-            profileUser: user,
-            isOwnProfile: true,
-            games
-        });
+
+    // Con await, un error de BD llega al manejador de errores de Express
+    // (500) en vez de quedar como promesa rechazada sin capturar, que tumbaba
+    // el proceso completo.
+    const games = await gamesService.getGamesByAuthorId(
+        req.session.user.id
+    );
+
+    res.render("profile", {
+        title: "Perfil",
+        profileUser: user,
+        isOwnProfile: true,
+        games
     });
 
 }
@@ -132,6 +137,27 @@ async function getAllUsers(req, res) {
     }
 }
 
+async function updateAvatar(req, res) {
+
+    try {
+
+        if (!req.file) {
+            return res.status(400).send("Debes seleccionar una imagen PNG");
+        }
+
+        await storageService.storeAvatar(req.file, req.session.user.id);
+
+        res.redirect("/profile");
+
+    } finally {
+        // Si el temporal sigue ahí (falló la validación) se borra;
+        // si ya se movió a data/avatars, no pasa nada.
+        if (req.file) {
+            await fsp.unlink(req.file.path).catch(() => {});
+        }
+    }
+}
+
 async function changeRole(req, res) {
 
     const targetId = req.params.userId;
@@ -178,4 +204,5 @@ export default {
     , getUserById
     , getAllUsers
     , changeRole
+    , updateAvatar
 };

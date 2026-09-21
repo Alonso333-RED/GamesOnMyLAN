@@ -5,10 +5,11 @@
     <div class="profile-header">
 
         <div class="profile-avatar-wrap">
-            <img src="/img/default_profile.png"
+            <img src="/avatars/{{profileUser.id_user}}.png"
                  alt="Foto de perfil"
                  class="thumbnail"
-                 style="width:140px;height:140px;">
+                 style="width:140px;height:140px;"
+                 onerror="this.onerror=null;this.src='/img/default_profile.png';">
             <span class="profile-role-badge">{{profileUser.role_name}}</span>
         </div>
 
@@ -19,6 +20,22 @@
             <p class="text-tertiary mb-0">
                 <strong>Miembro desde:</strong> {{profileUser.registered_at}}
             </p>
+
+            {{#if isOwnProfile}}
+                <form action="/profile/avatar" method="POST" enctype="multipart/form-data" class="mt-3">
+                    <input
+                        type="file"
+                        class="form-control"
+                        name="avatar"
+                        accept=".png"
+                        data-max-mb="5"
+                        required>
+                    <p class="field-hint">PNG, máximo 5 MB.</p>
+                    <button type="submit" class="btn btn-outline-light" style="font-size:0.8rem;">
+                        📷 Cambiar foto
+                    </button>
+                </form>
+            {{/if}}
         </div>
 
     </div>

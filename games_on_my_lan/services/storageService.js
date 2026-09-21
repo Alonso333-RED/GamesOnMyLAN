@@ -4,6 +4,8 @@ import path from "path";
 import unzipper from "unzipper";
 import { Transform } from "stream";
 import { pipeline } from "stream/promises";
+import { assertPngFile } from "../utils/validators.js";
+import { MAX_IMAGE_BYTES } from "../utils/limits.js";
 
 const DATA_PATH = path.join(process.cwd(), "data");
 const DEFAULT_THUMBNAIL = path.join(process.cwd(), "public", "img", "default_game.png");
@@ -128,8 +130,9 @@ const storageService = {
 
     async storeThumbnail(thumbnailFile, id_game) {
 
-        if (thumbnailFile && thumbnailFile.size > 5 * 1024 * 1024) {
-            throw new Error("La miniatura no puede pesar más de 5 MB");
+        if (thumbnailFile) {
+            this._assertImageSize(thumbnailFile, "La miniatura");
+            await assertPngFile(thumbnailFile.path);
         }
 
         const thumbnailFolder = path.join(DATA_PATH, "thumbnails");
@@ -144,6 +147,33 @@ const storageService = {
         }
 
         return thumbnailPath;
+    },
+
+    // Foto de perfil: data/avatars/<id_usuario>.png (sobrescribe la anterior)
+    async storeAvatar(avatarFile, id_user) {
+
+        this._assertImageSize(avatarFile, "La foto de perfil");
+        await assertPngFile(avatarFile.path);
+
+        const avatarFolder = path.join(DATA_PATH, "avatars");
+        await fsp.mkdir(avatarFolder, { recursive: true });
+
+        const avatarPath = path.join(avatarFolder, `${id_user}.png`);
+        await fsp.rename(avatarFile.path, avatarPath);
+
+        return avatarPath;
+    },
+
+    // Respaldo: el middleware ya corta las subidas que superan el límite
+    _assertImageSize(file, label) {
+
+        if (file.size > MAX_IMAGE_BYTES) {
+            const err = new Error(
+                `${label} no puede pesar más de ${MAX_IMAGE_BYTES / (1024 * 1024)} MB`
+            );
+            err.status = 400;
+            throw err;
+        }
     },
 
     async normalizeGameFolder(gameFolder, entry_file) {
