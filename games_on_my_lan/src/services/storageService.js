@@ -8,7 +8,7 @@ import { assertPngFile } from "../utils/validators.js";
 import { MAX_IMAGE_BYTES } from "../utils/limits.js";
 
 const DATA_PATH = path.join(process.cwd(), "data");
-const DEFAULT_THUMBNAIL = path.join(process.cwd(), "public", "img", "default_game.png");
+const DEFAULT_THUMBNAIL = path.join(process.cwd(), "src", "public", "img", "default_game.png");
 
 const MAX_FILES = 10000;
 const MAX_TOTAL_BYTES = 1024 * 1024 * 1024;

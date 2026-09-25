@@ -9,14 +9,14 @@ import https from "https";
 
 import settings from "./admin/getSettings.js";
 
-import authRouter from "./routes/authRouter.js";
-import gamesRouter from "./routes/gamesRouter.js";
-import userRouter from "./routes/userRouter.js";
+import authRouter from "./src/routes/authRouter.js";
+import gamesRouter from "./src/routes/gamesRouter.js";
+import userRouter from "./src/routes/userRouter.js";
 
-import gamesService from "./services/gamesService.js";
-import userService from "./services/userService.js";
+import gamesService from "./src/services/gamesService.js";
+import userService from "./src/services/userService.js";
 
-import { csrfProtection } from "./middlewares/csrf.js";
+import { csrfProtection } from "./src/middlewares/csrf.js";
 
 // Red de seguridad: un error inesperado se registra en vez de tumbar el servidor
 process.on("unhandledRejection", (reason) => {
@@ -46,7 +46,7 @@ app.engine(
 app.set("view engine", "hbs");
 app.set(
     "views",
-    path.join(__dirname, "views")
+    path.join(__dirname, "./src/views")
 );
 
 // Middlewares globales
@@ -87,7 +87,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "src", "public")));
 
 // Vistas
 app.get("/", async (req, res) => {

@@ -20,7 +20,7 @@ const settingsPath = path.join(
 
 const schemaPath = path.join(
     __dirname,
-    "../database/schema.sql"
+    "../src/database/schema.sql"
 );
 
 
@@ -362,7 +362,7 @@ async function connectDatabase() {
      */
 
     const { default: db } = await import(
-        "../database/pool.js"
+        "../src/database/pool.js"
     );
 
     try {

@@ -1,6 +1,6 @@
 import gamesService from "../services/gamesService.js";
 import storageService from "../services/storageService.js";
-import settings from "../admin/getSettings.js";
+import settings from "../../admin/getSettings.js";
 import fsp from "fs/promises";
 import { validateEntryFile, ENTRY_FILE_ERROR, assertPngFile } from "../utils/validators.js";
 import userService from "../services/userService.js";
