@@ -1,0 +1,9 @@
+node_modules
+data
+temp
+certs
+.env
+.git
+admin/settings.json
+admin/settings.json.bak
+tests

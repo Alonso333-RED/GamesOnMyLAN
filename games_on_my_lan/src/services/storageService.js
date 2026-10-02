@@ -6,6 +6,7 @@ import { Transform } from "stream";
 import { pipeline } from "stream/promises";
 import { assertPngFile } from "../utils/validators.js";
 import { MAX_IMAGE_BYTES } from "../utils/limits.js";
+import { moveFile } from "../utils/moveFile.js";
 
 const DATA_PATH = path.join(process.cwd(), "data");
 const DEFAULT_THUMBNAIL = path.join(process.cwd(), "src", "public", "img", "default_game.png");
@@ -141,7 +142,7 @@ const storageService = {
         const thumbnailPath = path.join(thumbnailFolder, `${id_game}.png`);
 
         if (thumbnailFile) {
-            await fsp.rename(thumbnailFile.path, thumbnailPath);
+            await moveFile(thumbnailFile.path, thumbnailPath);
         } else {
             await fsp.copyFile(DEFAULT_THUMBNAIL, thumbnailPath);
         }
@@ -159,7 +160,7 @@ const storageService = {
         await fsp.mkdir(avatarFolder, { recursive: true });
 
         const avatarPath = path.join(avatarFolder, `${id_user}.png`);
-        await fsp.rename(avatarFile.path, avatarPath);
+        await moveFile(avatarFile.path, avatarPath);
 
         return avatarPath;
     },

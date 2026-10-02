@@ -1,0 +1,3 @@
+services:
+  goml:
+    build: ./games_on_my_lan

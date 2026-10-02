@@ -3,30 +3,21 @@ import readline from "readline";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import crypto from "crypto";
+import { parseEnv } from "util";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
-// ====================================
-// RUTAS
-// ====================================
-
-const settingsPath = path.join(
+const envPath = path.join(
     __dirname,
-    "settings.json"
+    "..",
+    ".env"
 );
 
 const schemaPath = path.join(
     __dirname,
     "../src/database/schema.sql"
 );
-
-
-// ====================================
-// READLINE
-// ====================================
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -38,11 +29,6 @@ function ask(question) {
         rl.question(question, resolve);
     });
 }
-
-
-// ====================================
-// UTILIDADES
-// ====================================
 
 function askDefault(question, defaultValue) {
     return new Promise(resolve => {
@@ -134,9 +120,57 @@ async function askInstallationType() {
 }
 
 
-// ====================================
-// CREAR SETTINGS
-// ====================================
+const ENV_KEYS = {
+    db_host: "DB_HOST",
+    db_port: "DB_PORT",
+    db_user: "DB_USER",
+    db_password: "DB_PASSWORD",
+    db_database: "DB_DATABASE",
+    app_port: "APP_PORT",
+    games_port: "GAMES_PORT",
+    guest_register: "GUEST_REGISTER"
+};
+
+function toEnvValue(value) {
+
+    const text = String(value);
+
+    if (/^[A-Za-z0-9_.:@\/+-]*$/.test(text)) return text;
+    if (!text.includes("'")) return `'${text}'`;
+    if (!text.includes('"') && !text.includes("\\")) return `"${text}"`;
+    if (!text.includes("`")) return `\`${text}\``;
+
+    throw new Error(
+        "El valor no puede mezclar comillas simples, dobles y acentos graves."
+    );
+}
+
+function readEnvFile() {
+
+    return fs.existsSync(envPath)
+        ? parseEnv(fs.readFileSync(envPath, "utf8"))
+        : {};
+}
+
+function writeEnvFile(settings) {
+
+    const values = readEnvFile();
+
+    for (const [key, envName] of Object.entries(ENV_KEYS)) {
+        values[envName] = String(settings[key]);
+    }
+
+    const lines = Object.entries(values).map(
+        ([name, value]) => `${name}=${toEnvValue(value)}`
+    );
+
+    fs.writeFileSync(
+        envPath,
+        lines.join("\n") + "\n",
+        { encoding: "utf8", mode: 0o600 }
+    );
+}
+
 
 async function createSettings() {
 
@@ -214,63 +248,35 @@ Presiona ENTER para utilizar el valor indicado entre corchetes.
 
         games_port: Number(games_port),
 
-        guest_register,
-
-        session_secret:
-            crypto.randomBytes(64).toString("hex")
+        guest_register
     };
 
-    fs.writeFileSync(
-        settingsPath,
-        JSON.stringify(
-            settings,
-            null,
-            2
-        ),
-        "utf8"
-    );
+    // SESSION_SECRET ya no se escribe aquí: GOML genera una clave
+    // al azar la primera vez que arranca y la guarda en data/session_secret.
+    writeEnvFile(settings);
 
     console.log(
-        "\n✓ settings.json creado correctamente."
+        "\n✓ .env creado correctamente."
     );
 
     return settings;
 }
 
-
-// ====================================
-// CARGAR SETTINGS
-// ====================================
-
 function loadSettings() {
 
-    try {
+    const values = readEnvFile();
+    const settings = {};
 
-        const data = fs.readFileSync(
-            settingsPath,
-            "utf8"
-        );
-
-        return JSON.parse(data);
-
-    } catch (error) {
-
-        console.error(
-            "\nNo se pudo leer settings.json."
-        );
-
-        throw error;
+    for (const [key, envName] of Object.entries(ENV_KEYS)) {
+        settings[key] = values[envName];
     }
+
+    return settings;
 }
-
-
-// ====================================
-// CONFIGURACIÓN
-// ====================================
 
 async function configureSettings() {
 
-    if (!fs.existsSync(settingsPath)) {
+    if (!fs.existsSync(envPath)) {
 
         return await createSettings();
 
@@ -278,10 +284,10 @@ async function configureSettings() {
 
     console.log(`
 ====================================
-       settings.json encontrado
+       .env encontrado
 ====================================
 
-Ya existe un archivo settings.json.
+Ya existe un archivo .env.
 `);
 
     console.log("[1] Usar configuración existente");
@@ -309,33 +315,9 @@ Ya existe un archivo settings.json.
                 "\nSe creará una nueva configuración."
             );
 
-            /*
-             * Si se reconfigura, NO generamos otro
-             * session_secret si ya existe.
-             */
-
-            const oldSettings = loadSettings();
-
-            const settings = await createSettings();
-
-            settings.session_secret =
-                oldSettings.session_secret;
-
-            fs.writeFileSync(
-                settingsPath,
-                JSON.stringify(
-                    settings,
-                    null,
-                    2
-                ),
-                "utf8"
-            );
-
-            console.log(
-                "✓ Session secret existente conservado."
-            );
-
-            return settings;
+            // writeEnvFile conserva SESSION_SECRET y cualquier otra
+            // variable que ya estuviera en el .env
+            return await createSettings();
         }
 
         if (option === "3") {
@@ -356,8 +338,8 @@ Ya existe un archivo settings.json.
 async function connectDatabase() {
 
     /*
-     * pool.js importa settings.json,
-     * por lo tanto settings.json debe existir
+     * pool.js lee la configuración (getSettings.js) al importarse,
+     * por lo tanto el .env debe existir
      * antes de importar este módulo.
      */
 
@@ -533,7 +515,7 @@ Pasos recomendados:
    y funcionando.
 
 2. Comprueba que la base de datos indicada
-   en settings.json exista.
+   en el .env exista.
 
 3. Restaura el respaldo de PostgreSQL
    sobre esa base de datos.
@@ -590,7 +572,7 @@ Si los certificados ya existen pero la IP
 local cambió, elimina la carpeta "certs"
 y vuelve a ejecutar el script.
 
-También puedes revisar settings.json si
+También puedes revisar el archivo .env si
 necesitas modificar alguna configuración.
 
 ====================================

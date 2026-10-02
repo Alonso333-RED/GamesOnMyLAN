@@ -2,6 +2,8 @@ import { execFileSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import os from "os";
+import net from "net";
+import settings from "./getSettings.js";
 
 const certFolder = path.join(process.cwd(), "certs");
 
@@ -9,30 +11,34 @@ const keyPath = path.join(certFolder, "server.key");
 const certPath = path.join(certFolder, "server.crt");
 const configPath = path.join(certFolder, "openssl.cnf");
 
-// Crear carpeta
 fs.mkdirSync(certFolder, { recursive: true });
 
-// Si ya existen ambos archivos, no hacer nada
 if (fs.existsSync(keyPath) && fs.existsSync(certPath)) {
     console.log("Certificado existente.");
     process.exit(0);
 }
 
-// Buscar una IP IPv4 local
-const interfaces = os.networkInterfaces();
+let ip = settings.host_ip ?? null;
 
-let ip = null;
+if (ip && !net.isIP(ip)) {
+    throw new Error(`HOST_IP no es una dirección IP válida: ${ip}`);
+}
 
-outer:
-for (const name of Object.keys(interfaces)) {
-    for (const iface of interfaces[name] ?? []) {
-        if (
-            iface.family === "IPv4" &&
-            !iface.internal &&
-            iface.address !== "127.0.0.1"
-        ) {
-            ip = iface.address;
-            break outer;
+if (!ip) {
+
+    const interfaces = os.networkInterfaces();
+
+    outer:
+    for (const name of Object.keys(interfaces)) {
+        for (const iface of interfaces[name] ?? []) {
+            if (
+                iface.family === "IPv4" &&
+                !iface.internal &&
+                iface.address !== "127.0.0.1"
+            ) {
+                ip = iface.address;
+                break outer;
+            }
         }
     }
 }

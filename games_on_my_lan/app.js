@@ -18,6 +18,8 @@ import userService from "./src/services/userService.js";
 
 import { csrfProtection } from "./src/middlewares/csrf.js";
 
+import { getSessionSecret } from "./src/utils/sessionSecret.js";
+
 // Red de seguridad: un error inesperado se registra en vez de tumbar el servidor
 process.on("unhandledRejection", (reason) => {
     console.error("Promesa rechazada sin manejar:", reason);
@@ -57,7 +59,7 @@ app.use(methodOverride("_method"));
 
 app.use(session({
     name: "__Host-goml.sid",
-    secret: settings.session_secret,
+    secret: getSessionSecret(),
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -262,7 +264,7 @@ try {
             Si los certificados ya existen pero la IP local cambió,
             elimina la carpeta "certs" y vuelve a ejecutar el script.
 
-            Ademas debes de revisar admin/settings.json y cambiar los valores por defecto.
+            Ademas debes de revisar el archivo .env y cambiar los valores por defecto.
         `);
 
     } else if (error.code === "EACCES") {
