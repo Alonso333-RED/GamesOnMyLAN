@@ -33,6 +33,10 @@ function Home() {
                     <span>Paso 2</span>
                     <strong>Instalación</strong>
                 </Link>
+                <Link to="/docker" className="action-card">
+                    <span>Alternativa</span>
+                    <strong>Usar GOML con Docker</strong>
+                </Link>
                 <Link to="/solutions" className="action-card">
                     <span>Paso 3</span>
                     <strong>Problemas comunes</strong>

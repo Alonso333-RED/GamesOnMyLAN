@@ -29,6 +29,7 @@ async function getUserById(userId) {
             users.id_user,
             users.username,
             roles.role_name,
+            users.bio,
             users.registered_at
         FROM users
         INNER JOIN roles
@@ -88,9 +89,24 @@ async function updateUserRole(userId, roleName) {
     return result.rows[0] ?? null;
 }
 
+async function updateBio(bio, userId) {
+    const result = await pool.query(
+        `
+        UPDATE users
+        SET bio = $1
+        WHERE id_user = $2
+        RETURNING id_user, bio
+        `,
+        [bio, userId]
+    );
+
+    return result.rows[0] ?? null;
+}
+
 export default {
     registerUser,
     getUserById,
     getAllUsers,
-    updateUserRole
+    updateUserRole,
+    updateBio
 };

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import ConsoleCard from '../components/ConsoleCard';
 import StepRail from '../components/StepRail';
 
@@ -13,6 +14,11 @@ function BackupRestore() {
         <>
             <p className="page-kicker">Backup</p>
             <h1 className="text-secondary">Backup y restauración de GOML</h1>
+            <p className="text-tertiary lead-copy">
+                Esta guía es para la instalación <strong>sin Docker</strong>. Si usas Docker, mira{' '}
+                <Link to="/docker#paso-6">Respaldar con Docker</Link>.
+            </p>
+
             <p className="text-tertiary lead-copy">
                 Para realizar un respaldo completo de GamesOnMyLAN debes guardar tanto la base de datos
                 PostgreSQL como la carpeta <code>data/</code>, donde se almacenan los archivos de los juegos.

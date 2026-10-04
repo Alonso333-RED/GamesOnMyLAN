@@ -5,6 +5,7 @@ const NAV_LINKS = [
     { to: '/', label: 'Inicio' },
     { to: '/requirements', label: 'Antes de instalar' },
     { to: '/installation', label: 'Instalación' },
+    { to: '/docker', label: 'Docker' },
     { to: '/solutions', label: 'Problemas' },
 ];
 

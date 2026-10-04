@@ -1,7 +1,3 @@
--- ===============
--- DATABASE SCHEMA
--- ===============
-
 CREATE TABLE IF NOT EXISTS roles (
     id_role SERIAL PRIMARY KEY,
     role_name VARCHAR(25) NOT NULL UNIQUE
@@ -12,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     role_id INTEGER NOT NULL,
+    bio TEXT,
     registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (role_id)
@@ -32,9 +29,6 @@ CREATE TABLE IF NOT EXISTS games (
         REFERENCES users(id_user)
         ON DELETE CASCADE
 );
-
--- INITIAL DATA
--- ===============
 
 INSERT INTO roles (role_name)
 VALUES

@@ -2,15 +2,18 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { usePointerGlow } from './hooks/usePointerGlow';
+import { useScrollToHash } from './hooks/useScrollToHash';
 import Home from './pages/Home';
 import Requirements from './pages/Requirements';
 import Installation from './pages/Installation';
 import Solutions from './pages/Solutions';
 import BackupRestore from './pages/BackupRestore';
+import Docker from './pages/Docker';
 import NotFound from './pages/NotFound';
 
 function Layout({ children }) {
     usePointerGlow();
+    useScrollToHash();
 
     return (
         <>
@@ -46,6 +49,14 @@ function App() {
                     element={
                         <Layout>
                             <Installation />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/docker"
+                    element={
+                        <Layout>
+                            <Docker />
                         </Layout>
                     }
                 />

@@ -40,38 +40,6 @@ async function showRegister(req, res) {
     });
 }
 
-async function getSelfUser(req, res) {
-
-    if (!req.session.user) {
-        return res.redirect("/login");
-    }
-
-    const user = await userService.getUserById(
-        req.session.user.id
-    );
-
-    if (!user) {
-        return res.status(404).send(
-            "Usuario no encontrado"
-        );
-    }
-
-    // Con await, un error de BD llega al manejador de errores de Express
-    // (500) en vez de quedar como promesa rechazada sin capturar, que tumbaba
-    // el proceso completo.
-    const games = await gamesService.getGamesByAuthorId(
-        req.session.user.id
-    );
-
-    res.render("profile", {
-        title: "Perfil",
-        profileUser: user,
-        isOwnProfile: true,
-        games
-    });
-
-}
-
 async function getUserById(req, res) {
     const userId = req.params.userId;
     const anotherUser = await userService.getUserById(userId);
@@ -158,6 +126,24 @@ async function updateAvatar(req, res) {
     }
 }
 
+async function updateBio(req, res) {
+    try {
+        const updatedUser = await userService.updateBio(
+            req.body.bio,
+            req.session.user.id
+        );
+
+        if (!updatedUser) {
+            return res.status(404).send("Usuario no encontrado");
+        }
+
+        res.redirect("/profile");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error al actualizar la biografía");
+    }
+}
+
 async function changeRole(req, res) {
 
     const targetId = req.params.userId;
@@ -198,11 +184,12 @@ async function changeRole(req, res) {
 }
 
 export default {
-    register
-    , showRegister
-    , getSelfUser
-    , getUserById
-    , getAllUsers
-    , changeRole
-    , updateAvatar
+    register, 
+    showRegister, 
+    getSelfUser,
+    getUserById,
+    getAllUsers,
+    changeRole,
+    updateAvatar,
+    updateBio
 };

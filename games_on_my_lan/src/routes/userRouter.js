@@ -16,12 +16,14 @@ router.post("/register",
     registerLimiter,
     userController.register);
 
-router.get("/profile", userController.getSelfUser);
-
 router.post("/profile/avatar",
     requireLogin,
     uploadAvatar.single("avatar"),
     userController.updateAvatar);
+
+router.post("/profile/bio",
+    requireLogin,
+    userController.updateBio);
 
 router.get("/profile/:userId", userController.getUserById);
 

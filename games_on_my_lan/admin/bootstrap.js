@@ -23,10 +23,9 @@ async function main() {
     const username = (process.env.OWNER_USER ?? "").trim();
     const password = process.env.OWNER_PASSWORD ?? "";
 
-    if (!username || password.length < 12) {
+    if (!username || !password) {
         throw new Error(
-            "La base no tiene usuarios. Define OWNER_USER y OWNER_PASSWORD " +
-            "(mínimo 12 caracteres) para crear el propietario inicial."
+            "La base no tiene usuarios. Define OWNER_USER y OWNER_PASSWORD "
         );
     }
 

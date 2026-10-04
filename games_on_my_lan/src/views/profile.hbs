@@ -18,6 +18,46 @@
                 {{profileUser.username}}
             </h1>
             <p class="text-tertiary mb-0">
+            {{#if profileUser.bio}}
+                {{#if isOwnProfile}}
+
+                    <form action="/profile/bio" method="POST" class="mt-2">
+
+                        <textarea
+                            name="bio"
+                            id="bio"
+                            class="form-control"
+                            placeholder="Escribe tu biografía..."
+                            rows="4"
+                        >{{profileUser.bio}}</textarea>
+
+                        <button
+                            type="submit"
+                            class="btn btn-outline-light mt-2"
+                            style="font-size: 0.8rem;"
+                        >
+                            💾 Guardar biografía
+                        </button>
+
+                    </form>
+
+                {{else}}
+
+                    <p>{{profileUser.bio}}</p>
+
+                {{/if}}
+            {{else}}
+                {{#if isOwnProfile}}
+                    <textarea name="bio" id="bio" class="form-control" placeholder="Escribe tu biografía..."></textarea>
+                    <button type="submit" class="btn btn-outline-light" style="font-size: 0.8rem;">
+                        📷 Cambiar foto
+                    </button>
+                {{else}}
+                    <em>Este usuario no ha escrito una biografía.</em>
+                {{/if}}
+            {{/if}}
+
+            <p class="text-tertiary mb-0">
                 <strong>Miembro desde:</strong> {{profileUser.registered_at}}
             </p>
 
