@@ -37,8 +37,7 @@
             <tbody>
 
             {{#each users}}
-                <tr data-username="{{username}}" data-role="{{role_name}}"></tr>
-                <tr>
+                <tr data-username="{{username}}" data-role="{{role_name}}">
                     <td>
                         <a class="user-link" href="/profile/{{id_user}}">
                             👤 {{username}}
@@ -82,8 +81,6 @@
                         No se encontraron usuarios que coincidan con tu búsqueda.
                     </td>
                 </tr>
-
-            </tbody>
 
             </tbody>
         </table>

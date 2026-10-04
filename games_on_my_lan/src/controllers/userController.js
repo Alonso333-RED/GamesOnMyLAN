@@ -185,8 +185,7 @@ async function changeRole(req, res) {
 
 export default {
     register, 
-    showRegister, 
-    getSelfUser,
+    showRegister,
     getUserById,
     getAllUsers,
     changeRole,

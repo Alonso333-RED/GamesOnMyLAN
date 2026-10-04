@@ -25,6 +25,13 @@ router.post("/profile/bio",
     requireLogin,
     userController.updateBio);
 
+router.get("/profile", (req, res) => {
+    if (!req.session.user) {
+        return res.redirect("/login");
+    }
+    res.redirect(`/profile/${req.session.user.id}`);
+});
+
 router.get("/profile/:userId", userController.getUserById);
 
 router.get("/users", userController.getAllUsers);
