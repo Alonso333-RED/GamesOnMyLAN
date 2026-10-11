@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './StepRail.css';
 
 function StepRail({ steps }) {
     const [current, setCurrent] = useState(0);

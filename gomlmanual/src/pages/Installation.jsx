@@ -1,4 +1,5 @@
 import ConsoleCard from '../components/ConsoleCard';
+import ImageZoom from '../components/ImageZoom';
 import StepRail from '../components/StepRail';
 
 const STEPS = [
@@ -33,6 +34,10 @@ function Installation() {
                     <code>postgres=# CREATE DATABASE goml_db OWNER goml;</code>
                     <output>CREATE DATABASE</output>
                 </div>
+                <div className="zoom-gallery">
+                    <ImageZoom src="/img/installation/postgresConfiguration.png" alt="Creación del usuario y la base de datos en psql" />
+                    <ImageZoom src="/img/installation/pgAdmin4.png" alt="Panel de pgAdmin 4" />
+                </div>
             </ConsoleCard>
 
             <ConsoleCard id={2} step={2}>
@@ -42,6 +47,9 @@ function Installation() {
                 <div className="console">
                     <code>$ npm install</code>
                     <output>added 152 packages</output>
+                </div>
+                <div className="zoom-gallery">
+                    <ImageZoom src="/img/installation/NPMinitialization.png" alt="Salida de npm install" />
                 </div>
             </ConsoleCard>
 
@@ -57,6 +65,10 @@ function Installation() {
                         Usuario propietario creado correctamente.
                     </output>
                 </div>
+                <div className="zoom-gallery">
+                    <ImageZoom src="/img/installation/install.png" alt="Salida del instalador de GamesOnMyLAN" />
+                    <ImageZoom src="/img/installation/settings.png" alt="Ejemplo de settings.json" />
+                </div>
             </ConsoleCard>
 
             <ConsoleCard id={4} step={4}>
@@ -70,6 +82,9 @@ function Installation() {
                         <br />
                         Certificados generados correctamente.
                     </output>
+                </div>
+                <div className="zoom-gallery">
+                    <ImageZoom src="/img/installation/cert.png" alt="Generación de los certificados HTTPS" />
                 </div>
             </ConsoleCard>
 

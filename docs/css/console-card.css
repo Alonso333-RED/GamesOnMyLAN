@@ -1,0 +1,108 @@
+.console-card {
+    margin: 28px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--console);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid #2a2a2a;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.console-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--pink);
+    box-shadow: 0 12px 28px rgba(255, 0, 0, 0.16);
+}
+
+.console-card-header {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 15px;
+    background-color: var(--console-bar);
+}
+
+.console-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.console-dot.red { background-color: #ff5f56; }
+.console-dot.yellow { background-color: #ffbd2e; }
+.console-dot.green { background-color: #27c93f; }
+
+.console-title {
+    margin-left: 8px;
+    color: #aaa;
+    font-family: monospace;
+    font-size: 14px;
+    flex: 1;
+}
+
+.copy-btn {
+    margin-left: auto;
+    background: #111;
+    color: var(--pink);
+    border: 1px solid var(--maroon);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.copy-btn:hover,
+.copy-btn.is-copied {
+    background: var(--red);
+    color: #fff;
+    border-color: var(--red);
+}
+
+.console-card-body {
+    padding: 20px;
+}
+
+.console-card-body h3 {
+    color: white;
+    margin-top: 0;
+}
+
+.console-card-body p {
+    color: var(--muted);
+}
+
+.step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    margin-right: 8px;
+    border-radius: 50%;
+    background: var(--maroon);
+    color: var(--pink);
+    font-size: 0.85rem;
+}
+
+.console {
+    position: relative;
+    padding: 15px;
+    border-radius: 6px;
+    background-color: var(--console-inner);
+    color: #eee;
+    font-family: "Courier New", monospace;
+    overflow-x: auto;
+}
+
+.console code {
+    display: block;
+    margin: 5px 0;
+    color: var(--pink);
+}
+
+.console output {
+    display: block;
+    color: #cfcfcf;
+    margin: 6px 0 12px;
+}

@@ -1,3 +1,5 @@
+import './Card.css';
+
 function RequirementCard({ img, alt, title, children, link, linkLabel = 'Sitio principal' }) {
     return (
         <article className="requirement-card reveal">

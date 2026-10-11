@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { copyText } from '../utils/clipboard';
+import './ConsoleCard.css';
 
 function ConsoleCard({ id, step, label, showCopy = true, children }) {
     const articleRef = useRef(null);

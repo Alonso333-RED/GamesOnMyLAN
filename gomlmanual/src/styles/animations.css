@@ -1,0 +1,32 @@
+.reveal {
+    animation: rise-in 0.7s ease both;
+}
+
+@keyframes scan {
+    from { background-position: 0 0; }
+    to { background-position: 0 80px; }
+}
+
+@keyframes rise-in {
+    from {
+        transform: translateY(18px);
+    }
+    to {
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}

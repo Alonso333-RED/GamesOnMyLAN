@@ -1,4 +1,5 @@
 import ConsoleCard from '../components/ConsoleCard';
+import ImageZoom from '../components/ImageZoom';
 
 function Solutions() {
     return (
@@ -25,6 +26,9 @@ function Solutions() {
                         settings.json generado correctamente.
                     </output>
                 </div>
+                <div className="zoom-gallery">
+                    <ImageZoom src="/img/problems/noSettingsJSON.png" alt="Error ENOENT al no encontrar settings.json" />
+                </div>
             </ConsoleCard>
 
             <ConsoleCard>
@@ -41,6 +45,9 @@ function Solutions() {
                         <br />
                         Certificados generados correctamente.
                     </output>
+                </div>
+                <div className="zoom-gallery">
+                    <ImageZoom src="/img/problems/noCerts.png" alt="Error por falta de certificados HTTPS" />
                 </div>
             </ConsoleCard>
 

@@ -1,3 +1,5 @@
+import './Card.css';
+
 function HorizontalCard({ img, alt, title, children }) {
     return (
         <article className="horizontal-card reveal">

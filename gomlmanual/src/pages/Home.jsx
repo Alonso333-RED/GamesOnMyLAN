@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import HorizontalCard from '../components/HorizontalCard';
+import './Home.css';
 
 function Home() {
     return (
