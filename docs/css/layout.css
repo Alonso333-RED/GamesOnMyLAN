@@ -1,0 +1,30 @@
+.site-header,
+.main-panel,
+.site-footer {
+    position: relative;
+    z-index: 1;
+}
+
+.main-panel {
+    background:
+        linear-gradient(180deg, rgba(64, 0, 0, 0.22), transparent 90px),
+        var(--panel);
+    padding: 32px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 191, 191, 0.18);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), inset 0 0 40px rgba(64, 0, 0, 0.18);
+}
+
+@media (min-width: 768px) {
+    .main-panel {
+        padding: 40px;
+        margin-bottom: 48px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .main-panel {
+        padding: 20px;
+        border-radius: 16px;
+    }
+}

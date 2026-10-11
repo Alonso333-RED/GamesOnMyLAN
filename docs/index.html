@@ -1,15 +1,88 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/img/logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/bootstrap.min.css" />
+
+<head>
+    <meta charset="utf-8">
     <title>HowToGOML</title>
-    <script type="module" crossorigin src="/assets/index-D-aduLh1.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BiGaDa6e.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function () {
+            if (location.protocol === "file:") return;
+            var host = location.hostname;
+            if (host === "htmlpreview.github.io" || host === "raw.githubusercontent.com") {
+                var base = document.createElement("base");
+                base.href = "https://cdn.jsdelivr.net/gh/Alonso333-RED/GamesOnMyLAN@main/docs/";
+                document.head.insertBefore(base, document.head.firstChild);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body data-page="inicio">
+    <header class="site-header"></header>
+
+    <main class="main-panel container mt-4 mt-md-5">
+        <p class="page-kicker">Manual de uso</p>
+        <h1 class="text-secondary">Manual de uso de GamesOnMyLAN</h1>
+        <p class="text-tertiary lead-copy">
+            Este manual explica cómo instalar, configurar y poner en marcha GamesOnMyLan en tu propio equipo,
+            además de cómo resolver los problemas más comunes que pueden aparecer durante el proceso.
+            Aquí encontrarás los requisitos previos que necesitas cumplir, los pasos de instalación en orden,
+            y una sección de solución de problemas para los errores más frecuentes.
+        </p>
+
+        <img class="hero-art d-block" src="img/goml.png" alt="Captura de GamesOnMyLAN">
+
+        <article class="horizontal-card reveal">
+            <div class="row align-items-center text-center text-md-start">
+                <div class="col-12 col-md-3 mb-3 mb-md-0">
+                    <img src="img/logo.png" alt="¿Qué es GamesOnMyLAN?">
+                </div>
+                <div class="col-12 col-md-9">
+                    <p class="card-title">¿Qué es GamesOnMyLAN?</p>
+                    <p class="text-tertiary mb-0">GamesOnMyLAN es un servicio self-hosted cuyo rol principal es almacenar, servir y conservar videojuegos web o cualquier aplicación estática creada por los usuarios. Permite centralizar estos proyectos en un servidor propio, facilitando su administración, acceso y distribución dentro de una red local, sin depender de servicios externos de alojamiento. De esta forma, los usuarios pueden publicar y mantener sus propios proyectos de manera sencilla, manteniendo el control sobre sus archivos y recursos.</p>
+                </div>
+            </div>
+        </article>
+
+        <div class="action-grid">
+            <a href="requirements.html" class="action-card">
+                <span>Paso 1</span>
+                <strong>Antes de instalar</strong>
+            </a>
+            <a href="installation.html" class="action-card">
+                <span>Paso 2</span>
+                <strong>Instalación</strong>
+            </a>
+            <a href="docker.html" class="action-card">
+                <span>Alternativa</span>
+                <strong>Usar GOML con Docker</strong>
+            </a>
+            <a href="solutions.html" class="action-card">
+                <span>Paso 3</span>
+                <strong>Problemas comunes</strong>
+            </a>
+            <a href="backupRestore.html" class="action-card">
+                <span>Respaldo y Restauración</span>
+                <strong>Como respaldar los juegos y usuarios, y restaurarlos en otra instalación</strong>
+            </a>
+            <a href="https://github.com/Alonso333-RED/GamesOnMyLAN" class="action-card" target="_blank" rel="noopener noreferrer">
+                <span>Código</span>
+                <strong>Repositorio GitHub</strong>
+            </a>
+            <a href="https://alonso333-red.github.io/AlonsoSpace/" class="action-card" target="_blank" rel="noopener noreferrer">
+                <span>Créditos</span>
+                <strong>Sobre el autor</strong>
+            </a>
+        </div>
+    </main>
+
+    <footer class="site-footer"></footer>
+
+    <script src="js/docs.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+</body>
+
 </html>
