@@ -1,0 +1,24 @@
+services:
+  goml:
+    # En modo público nadie debe llegar a 3000/3001 directo: solo vía Caddy
+    ports: !reset []
+    environment:
+      PUBLIC_MODE: "true"
+      GAMES_ORIGIN: ${GAMES_ORIGIN:?Falta GAMES_ORIGIN en el .env}
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - goml
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+      - caddyconfig:/config
+
+volumes:
+  caddydata:
+  caddyconfig:

@@ -31,7 +31,9 @@ services:
       GAMES_PORT: ${GAMES_PORT:-3001}
       GUEST_REGISTER: ${GUEST_REGISTER:-true}
       SESSION_SECRET: ${SESSION_SECRET:-}
-      HOST_IP: ${HOST_IP:?Falta HOST_IP en el .env}
+      HOST_IP: ${HOST_IP:-}
+      PUBLIC_MODE: ${PUBLIC_MODE:-}
+      GAMES_ORIGIN: ${GAMES_ORIGIN:-}
       OWNER_USER: ${OWNER_USER:-}
       OWNER_PASSWORD: ${OWNER_PASSWORD:-}
     ports:

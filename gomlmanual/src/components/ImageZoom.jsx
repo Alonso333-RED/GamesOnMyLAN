@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Modal from './Modal';
+import { asset } from '../utils/asset';
 import './ImageZoom.css';
 
 function ImageZoom({ src, alt, caption }) {
@@ -13,12 +14,12 @@ function ImageZoom({ src, alt, caption }) {
                 title="Ampliar imagen"
                 onClick={() => setModalAbierto(true)}
             >
-                <img src={src} alt={alt} loading="lazy" />
+                <img src={asset(src)} alt={alt} loading="lazy" />
             </button>
 
             {modalAbierto && (
                 <Modal label={alt} onClose={() => setModalAbierto(false)}>
-                    <img src={src} alt={alt} />
+                    <img src={asset(src)} alt={alt} />
                     {caption && <p className="modal-caption">{caption}</p>}
                 </Modal>
             )}

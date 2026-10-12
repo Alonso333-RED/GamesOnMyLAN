@@ -114,10 +114,13 @@ async function playGame(req, res) {
             return res.status(404).send("Juego no encontrado");
         }
 
-        res.redirect(
-            `https://${req.hostname}:${GAMES_PORT}/${game.id_game}/${encodeURI(game.entry_file)}`
-        );
+        const gamesOrigin =
+            settings.games_origin || `https://${req.hostname}:${GAMES_PORT}`;
 
+        res.redirect(
+            `${gamesOrigin}/${game.id_game}/${encodeURI(game.entry_file)}`
+        );
+        
     } catch (error) {
 
         console.error(error);

@@ -1,0 +1,7 @@
+goml.localhost {
+    reverse_proxy goml:3000
+}
+
+games.goml.localhost {
+    reverse_proxy goml:3001
+}

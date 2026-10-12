@@ -1,3 +1,4 @@
+import { asset } from '../utils/asset';
 import './Card.css';
 
 function HorizontalCard({ img, alt, title, children }) {
@@ -5,7 +6,7 @@ function HorizontalCard({ img, alt, title, children }) {
         <article className="horizontal-card reveal">
             <div className="row align-items-center text-center text-md-start">
                 <div className="col-12 col-md-3 mb-3 mb-md-0">
-                    <img src={img} alt={alt} />
+                    <img src={asset(img)} alt={alt} />
                 </div>
                 <div className="col-12 col-md-9">
                     <p className="card-title">{title}</p>

@@ -1,3 +1,4 @@
+import { asset } from '../utils/asset';
 import './Card.css';
 
 function RequirementCard({ img, alt, title, children, link, linkLabel = 'Sitio principal' }) {
@@ -6,7 +7,7 @@ function RequirementCard({ img, alt, title, children, link, linkLabel = 'Sitio p
             <div className="row align-items-center text-center text-md-start">
                 <div className="col-12 col-md-3 mb-3 mb-md-0">
                     <img
-                        src={img}
+                        src={asset(img)}
                         alt={alt}
                         style={{ width: 150, height: 150, maxWidth: '100%', objectFit: 'contain' }}
                     />

@@ -34,6 +34,12 @@ function Docker() {
                 <strong>con Docker</strong>
                 , donde todo viene empaquetado y solo necesitas Docker. Esta página explica la
                 segunda. Copia cada bloque y síguelos en orden.
+                {' '}
+                Esta guía deja GOML funcionando en tu red local (LAN); si quieres publicarlo en
+                internet, termina primero esta guía y sigue
+                {' '}
+                <Link to="/internet">Publicar GOML en internet</Link>
+                .
             </p>
 
             <StepRail steps={STEPS} />
@@ -68,7 +74,7 @@ function Docker() {
                     {' '}
                     <strong>HOST_IP</strong>
                     {' '}
-                    (la IP de tu equipo en la red, sale con hostname -I),
+                    (la IP de tu equipo en la red, sale con hostname -I; solo se usa en LAN),
                     {' '}
                     <strong>DB_PASSWORD</strong>
                     {' '}
@@ -185,7 +191,7 @@ function Docker() {
                         el propietario viene dentro del backup.
                     </li>
                     <li>
-                        <strong>Si cambia la IP de tu equipo:</strong>
+                        <strong>Si cambia la IP de tu equipo (solo LAN):</strong>
                         {' '}
                         el certificado solo se genera una vez. Actualiza HOST_IP en el .env,
                         borra el volumen de certificados y vuelve a arrancar:
@@ -205,7 +211,7 @@ function Docker() {
                         .
                     </li>
                     <li>
-                        <strong>Puertos:</strong>
+                        <strong>Puertos (en LAN):</strong>
                         {' '}
                         se publican APP_PORT (3000) y GAMES_PORT (3001). Si usas firewall,
                         permítelos, por ejemplo

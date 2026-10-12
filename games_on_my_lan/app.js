@@ -6,6 +6,7 @@ import session from "express-session";
 import { engine } from "express-handlebars";
 import fs from "fs";
 import https from "https";
+import http from "http";
 
 import settings from "./admin/getSettings.js";
 
@@ -33,6 +34,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+if (settings.public_mode) {
+    app.set("trust proxy", 1);
+}
+
 const PORT = settings.app_port || 3000;
 const GAMES_PORT = settings.games_port || PORT + 1;
 
@@ -74,7 +80,7 @@ app.use(session({
 app.use((req, res, next) => {
 
     res.locals.user = req.session.user;
-    res.locals.gamesOrigin = `https://${req.hostname}:${GAMES_PORT}`;
+    res.locals.gamesOrigin = settings.games_origin || `https://${req.hostname}:${GAMES_PORT}`;
 
     next();
 
@@ -173,12 +179,17 @@ app.use((err, req, res, next) => {
 // Inicio servidor
 try {
 
-    const tlsOptions = {
-    key: fs.readFileSync(path.join(__dirname, "certs", "server.key")),
-    cert: fs.readFileSync(path.join(__dirname, "certs", "server.crt"))
+    const tlsOptions = settings.public_mode ? null : {
+        key: fs.readFileSync(path.join(__dirname, "certs", "server.key")),
+        cert: fs.readFileSync(path.join(__dirname, "certs", "server.crt"))
     };
 
-    const server = https.createServer(tlsOptions, app);
+    const createServer = (handler) =>
+        tlsOptions
+            ? https.createServer(tlsOptions, handler)
+            : http.createServer(handler);
+
+    const server = createServer(app);
 
     server.on("error", (error) => {
 
@@ -224,7 +235,7 @@ try {
     });
     gamesApp.use(express.static(path.join(process.cwd(), "data", "games")));
 
-    const gamesServer = https.createServer(tlsOptions, gamesApp);
+    const gamesServer = createServer(gamesApp);
 
     gamesServer.on("error", (error) => {
         console.error(

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { asset } from '../utils/asset';
 import './Header.css';
 
 const NAV_LINKS = [
@@ -7,6 +8,7 @@ const NAV_LINKS = [
     { to: '/requirements', label: 'Antes de instalar' },
     { to: '/installation', label: 'Instalación' },
     { to: '/docker', label: 'Docker' },
+    { to: '/internet', label: 'Internet' },
     { to: '/solutions', label: 'Problemas' },
 ];
 
@@ -16,7 +18,7 @@ function Header() {
     return (
         <header className={`site-header${isOpen ? ' is-open' : ''}`}>
             <Link className="brand" to="/">
-                <img src="/img/logo.png" alt="GamesOnMyLan Logo" className="logo" />
+                <img src={asset('/img/logo.png')} alt="GamesOnMyLan Logo" className="logo" />
                 <h1 className="brand-title">How To GamesOnMyLan</h1>
             </Link>
 

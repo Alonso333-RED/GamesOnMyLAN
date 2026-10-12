@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import HorizontalCard from '../components/HorizontalCard';
+import { asset } from '../utils/asset';
 import './Home.css';
 
 function Home() {
@@ -14,7 +15,7 @@ function Home() {
                 y una sección de solución de problemas para los errores más frecuentes.
             </p>
 
-            <img className="hero-art d-block" src="/img/goml.png" alt="Captura de GamesOnMyLAN" />
+            <img className="hero-art d-block" src={asset('/img/goml.png')} alt="Captura de GamesOnMyLAN" />
 
             <HorizontalCard img="/img/logo.png" alt="¿Qué es GamesOnMyLAN?" title="¿Qué es GamesOnMyLAN?">
                 GamesOnMyLAN es un servicio self-hosted cuyo rol principal es almacenar, servir y conservar
@@ -37,6 +38,10 @@ function Home() {
                 <Link to="/docker" className="action-card">
                     <span>Alternativa</span>
                     <strong>Usar GOML con Docker</strong>
+                </Link>
+                <Link to="/internet" className="action-card">
+                    <span>Avanzado</span>
+                    <strong>Publicar GOML en internet</strong>
                 </Link>
                 <Link to="/solutions" className="action-card">
                     <span>Paso 3</span>

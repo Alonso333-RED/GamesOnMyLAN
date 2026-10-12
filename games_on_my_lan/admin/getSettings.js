@@ -39,7 +39,10 @@ const settings = {
 
     guest_register: toBoolean(read("GUEST_REGISTER")),
     session_secret: read("SESSION_SECRET"),
-    host_ip: read("HOST_IP")
+    host_ip: read("HOST_IP"),
+
+    public_mode: toBoolean(read("PUBLIC_MODE")),
+    games_origin: read("GAMES_ORIGIN")
 };
 
 export default settings;

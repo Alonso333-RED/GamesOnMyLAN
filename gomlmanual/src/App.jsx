@@ -9,6 +9,7 @@ import Installation from './pages/Installation';
 import Solutions from './pages/Solutions';
 import BackupRestore from './pages/BackupRestore';
 import Docker from './pages/Docker';
+import Public from './pages/Public';
 import NotFound from './pages/NotFound';
 
 function Layout({ children }) {
@@ -26,7 +27,7 @@ function Layout({ children }) {
 
 function App() {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
             <Routes>
                 <Route
                     path="/"
@@ -57,6 +58,14 @@ function App() {
                     element={
                         <Layout>
                             <Docker />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/internet"
+                    element={
+                        <Layout>
+                            <Public />
                         </Layout>
                     }
                 />
