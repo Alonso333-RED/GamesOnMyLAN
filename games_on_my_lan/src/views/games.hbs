@@ -33,6 +33,12 @@
                         loading="lazy"
                         onerror="this.onerror=null;this.src='/img/default_game.png';">
 
+                    {{#if is_favorite}}
+                        <span class="favorite-badge" title="En tus favoritos" aria-label="Juego favorito">
+                            ♥
+                        </span>
+                    {{/if}}
+
                     <div class="game-card-overlay">
                         <a href="{{@root.gamesOrigin}}/{{id_game}}/{{entry_file}}" class="btn btn-primary">
                             ▶️ Jugar

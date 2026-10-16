@@ -1,4 +1,4 @@
-import userService from '../services/userService.js';
+import userService from '../services/usersService.js';
 import gamesService from "../services/gamesService.js";
 import storageService from "../services/storageService.js";
 import { regenerateSession, saveSession } from "../utils/session.js";

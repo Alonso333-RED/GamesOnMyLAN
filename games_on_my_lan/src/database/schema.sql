@@ -30,6 +30,22 @@ CREATE TABLE IF NOT EXISTS games (
         ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS favorites (
+    id_favorite SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    game_id INTEGER NOT NULL,
+
+    UNIQUE (user_id, game_id),
+
+    FOREIGN KEY (user_id)
+        REFERENCES users(id_user)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (game_id)
+        REFERENCES games(id_game)
+        ON DELETE CASCADE
+);
+
 INSERT INTO roles (role_name)
 VALUES
     ('owner'),

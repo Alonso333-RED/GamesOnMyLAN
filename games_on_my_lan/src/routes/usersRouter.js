@@ -1,5 +1,5 @@
 import express from "express";
-import userController from "../controllers/userController.js";
+import userController from "../controllers/usersController.js";
 import {requireGuestRegister} from "../middlewares/settings.js";
 import { registerLimiter } from "../middlewares/rateLimit.js";
 import { requireLogin, requireRole } from "../middlewares/auth.js";

@@ -1,9 +1,10 @@
 import gamesService from "../services/gamesService.js";
 import storageService from "../services/storageService.js";
+import favoritesService from "../services/favoritesService.js";
 import settings from "../../admin/getSettings.js";
 import fsp from "fs/promises";
 import { validateEntryFile, ENTRY_FILE_ERROR, assertPngFile } from "../utils/validators.js";
-import userService from "../services/userService.js";
+import userService from "../services/usersService.js";
 import { canDeleteGame } from "../utils/permissions.js";
 
 const GAMES_PORT = settings.games_port || (settings.app_port || 3000) + 1;
@@ -83,23 +84,19 @@ async function createGame(req, res) {
 }
 
 async function getAllGames(req, res) {
-
     try {
+        const userId = req.session.user?.id ?? null;
 
-        const games = await gamesService.getAllGames();
+        const games = await gamesService.getAllGames(userId);
 
-        res.render("games", {
+        return res.render("games", {
             title: "Galería",
             games
         });
-
     } catch (error) {
-
         console.error(error);
-        res.status(500).send("Error al obtener los juegos");
-
+        return res.status(500).send("Error al obtener los juegos");
     }
-
 }
 
 async function playGame(req, res) {
@@ -131,50 +128,55 @@ async function playGame(req, res) {
 }
 
 async function getGameById(req, res) {
-
     try {
-
         const gameId = req.params.id;
-
         const game = await gamesService.getGameById(gameId);
-        
 
         if (!game) {
             return res.status(404).send("Juego no encontrado");
         }
 
+        const user = req.session.user;
+        let isFavorite = false;
+
+        if (user) {
+            isFavorite = await favoritesService.checkFavorite(
+                user.id,
+                gameId
+            );
+        }
+
         const isOwner = Boolean(
-            req.session.user &&
-            req.session.user.id === game.author_id
+            user && user.id === game.author_id
         );
 
         let canDelete = false;
 
-        if (req.session.user) {
-            const viewer = await userService.getUserById(req.session.user.id);
+        if (user) {
+            const viewer = await userService.getUserById(user.id);
 
             canDelete = canDeleteGame({
-                actorId: req.session.user.id,
+                actorId: user.id,
                 actorRole: viewer?.role_name,
                 authorId: game.author_id,
                 authorRole: game.author_role
             });
         }
 
-        res.render("game", {
+        return res.render("game", {
             title: "Detalles del juego",
             game,
             isOwner,
-            canDelete
+            canDelete,
+            isFavorite
         });
 
     } catch (error) {
-
         console.error(error);
-        res.status(500).send("Error al obtener los detalles del juego");
-
+        return res.status(500).send(
+            "Error al obtener los detalles del juego"
+        );
     }
-
 }
 
 async function deleteGame(req, res) {

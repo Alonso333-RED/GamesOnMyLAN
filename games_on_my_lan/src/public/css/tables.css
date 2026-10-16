@@ -1,0 +1,31 @@
+/* Tabla de usuarios */
+
+/* ========================================
+   TABLA DE USUARIOS (se conserva tabla, se estiliza)
+   ======================================== */
+
+.table-dark {
+    --bs-table-bg: transparent;
+}
+
+.table-responsive table a.user-link {
+    color: var(--pink);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.table-responsive table a.user-link:hover {
+    color: var(--red);
+    text-decoration: underline;
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    border: 1px solid var(--border-soft);
+    color: var(--pink);
+    background: rgba(255, 0, 0, 0.08);
+    text-transform: capitalize;
+}

@@ -1,0 +1,33 @@
+/* Utilidades generales */
+
+/* ========================================
+   UTILIDADES GENERALES
+   ======================================== */
+
+.xDiv {
+    display: flex;
+    flex-direction: row;
+}
+
+.yDiv {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.yDiv .btn {
+    width: auto;
+}
+
+.big-img {
+    width: 1000px;
+    object-fit: contain;
+    background-color: var(--red-dark);
+}
+
+.inline-form {
+    display: contents;
+    margin: 0;
+}

@@ -1,0 +1,59 @@
+/* Detalle de juego */
+
+/* ========================================
+   DETALLE DE JUEGO
+   ======================================== */
+
+.detail-panel {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.detail-panel.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.detail-media {
+    position: relative;
+}
+
+.detail-media .thumbnail {
+    width: 100%;
+    max-width: 280px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+}
+
+.detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 12px 0 18px;
+}
+
+.detail-meta .meta-chip {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.detail-meta .meta-chip strong {
+    color: var(--pink);
+}
+
+.detail-description {
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.detail-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}

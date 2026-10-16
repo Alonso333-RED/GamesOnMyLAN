@@ -12,10 +12,11 @@ import settings from "./admin/getSettings.js";
 
 import authRouter from "./src/routes/authRouter.js";
 import gamesRouter from "./src/routes/gamesRouter.js";
-import userRouter from "./src/routes/userRouter.js";
+import usersRouter from "./src/routes/usersRouter.js";
+import favoritesRouter from "./src/routes/favoritesRouter.js"
 
 import gamesService from "./src/services/gamesService.js";
-import userService from "./src/services/userService.js";
+import usersService from "./src/services/usersService.js";
 
 import { csrfProtection } from "./src/middlewares/csrf.js";
 
@@ -106,7 +107,7 @@ app.get("/", async (req, res) => {
 
         const [games, users] = await Promise.all([
             gamesService.getAllGames(),
-            userService.getAllUsers()
+            usersService.getAllUsers()
         ]);
 
         stats = {
@@ -141,7 +142,8 @@ app.get("/games/new", (req, res) => {
 // Routers
 app.use(authRouter);
 app.use("/games", gamesRouter);
-app.use(userRouter);
+app.use(usersRouter);
+app.use(favoritesRouter)
 
 // datos
 app.use(

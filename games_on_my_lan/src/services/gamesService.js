@@ -26,21 +26,30 @@ const gamesService = {
         return result.rows[0];
     },
 
-    async getAllGames() {
+    async getAllGames(userId) {
         const result = await pool.query(
             `
-            SELECT 
+            SELECT
                 g.id_game,
                 g.game_name,
                 g.game_description,
                 g.entry_file,
                 g.updated_at,
-                u.username AS author_name
+                u.username AS author_name,
+                (f.game_id IS NOT NULL) AS is_favorite
             FROM games g
-            JOIN users u ON g.author_id = u.id_user
-            ORDER BY g.updated_at DESC;
-            `
+            JOIN users u
+                ON g.author_id = u.id_user
+            LEFT JOIN favorites f
+                ON f.game_id = g.id_game
+                AND f.user_id = $1
+            ORDER BY
+                (f.game_id IS NOT NULL) DESC,
+                g.updated_at DESC;
+            `,
+            [userId]
         );
+
         return result.rows;
     },
 

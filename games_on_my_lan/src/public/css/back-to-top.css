@@ -1,0 +1,35 @@
+/* Boton volver arriba */
+
+/* ========================================
+   BOTON VOLVER ARRIBA
+   ======================================== */
+
+.back-to-top {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 0, 0, 0.4);
+    background-color: rgba(20, 0, 0, 0.85);
+    color: var(--pink);
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity var(--transition), transform var(--transition), background-color var(--transition);
+    z-index: 900;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.back-to-top:hover {
+    background-color: var(--red);
+    color: #ffffff;
+}

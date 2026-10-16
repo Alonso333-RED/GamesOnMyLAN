@@ -39,8 +39,31 @@
             <div class="detail-actions">
 
                 <a href="{{gamesOrigin}}/{{game.id_game}}/{{game.entry_file}}" class="btn btn-primary">
-                    ▶️ Jugar
+                    <img class="icon" src="/icons/play.svg" alt="">Jugar
                 </a>
+
+                {{#if isFavorite}}
+                    <form
+                        action="/deleteFavorite/{{game.id_game}}?_method=DELETE"
+                        method="POST"
+                        class="inline-form">
+
+                        <button type="submit" class="btn btn-danger">
+                            Quitar de favoritos
+                        </button>
+                    </form>
+                {{else}}
+                    <form
+                        action="/addFavorite/{{game.id_game}}"
+                        method="POST"
+                        class="inline-form">
+
+                        <button type="submit" class="btn btn-primary">
+                            <img class="icon" src="/icons/heart.svg" alt="">
+                            Añadir a favoritos
+                        </button>
+                    </form>
+                {{/if}}
 
                 {{#if isOwner}}
                     <a href="/games/game-details/{{game.id_game}}/edit" class="btn btn-outline-light">
