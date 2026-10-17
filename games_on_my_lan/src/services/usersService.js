@@ -1,12 +1,11 @@
-import pool from "../database/pool.js";
-import bcrypt from "bcryptjs";
+import pool from '../database/pool.js';
+import bcrypt from 'bcryptjs';
 
 async function registerUser(username, password) {
-
-    //receive password in plain text and hash it
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const result = await pool.query(
-        `
+  //receive password in plain text and hash it
+  const hashedPassword = await bcrypt.hash(password, 12);
+  const result = await pool.query(
+    `
         INSERT INTO users (username, password_hash, role_id)
         VALUES (
             $1,
@@ -15,16 +14,15 @@ async function registerUser(username, password) {
         )
         RETURNING id_user
         `,
-        [username, hashedPassword]
-    );
+    [username, hashedPassword],
+  );
 
-    return result.rows[0].id_user;
+  return result.rows[0].id_user;
 }
 
 async function getUserById(userId) {
-
-    const result = await pool.query(
-        `
+  const result = await pool.query(
+    `
         SELECT 
             users.id_user,
             users.username,
@@ -36,22 +34,19 @@ async function getUserById(userId) {
             ON users.role_id = roles.id_role
         WHERE users.id_user = $1
         `,
-        [userId]
-    );
+    [userId],
+  );
 
+  if (result.rows.length === 0) {
+    return null;
+  }
 
-    if (result.rows.length === 0) {
-        return null;
-    }
-
-
-    return result.rows[0];
-
+  return result.rows[0];
 }
 
 async function getAllUsers() {
-    const result = await pool.query(
-        `
+  const result = await pool.query(
+    `
         SELECT 
             users.id_user,
             users.username,
@@ -61,15 +56,14 @@ async function getAllUsers() {
         INNER JOIN roles
             ON users.role_id = roles.id_role
         ORDER BY users.id_user
-        `
-    );
+        `,
+  );
 
-    return result.rows;
+  return result.rows;
 }
 async function updateUserRole(userId, roleName) {
-
-    const result = await pool.query(
-        `
+  const result = await pool.query(
+    `
         WITH target AS (
             SELECT u.id_user, r.role_name AS old_role
             FROM users u
@@ -83,30 +77,47 @@ async function updateUserRole(userId, roleName) {
         WHERE users.id_user = target.id_user
         RETURNING users.id_user, users.username, target.old_role
         `,
-        [roleName, userId]
-    );
+    [roleName, userId],
+  );
 
-    return result.rows[0] ?? null;
+  return result.rows[0] ?? null;
+}
+
+async function deleteUser(userId) {
+  // El owner nunca se elimina, aunque otra parte del código falle.
+  // Los juegos y favoritos del usuario se borran en cascada (ver schema.sql).
+  const result = await pool.query(
+    `
+        DELETE FROM users
+        WHERE id_user = $1
+          AND role_id <> (SELECT id_role FROM roles WHERE role_name = 'owner')
+        RETURNING id_user, username
+        `,
+    [userId],
+  );
+
+  return result.rows[0] ?? null;
 }
 
 async function updateBio(bio, userId) {
-    const result = await pool.query(
-        `
+  const result = await pool.query(
+    `
         UPDATE users
         SET bio = $1
         WHERE id_user = $2
         RETURNING id_user, bio
         `,
-        [bio, userId]
-    );
+    [bio, userId],
+  );
 
-    return result.rows[0] ?? null;
+  return result.rows[0] ?? null;
 }
 
 export default {
-    registerUser,
-    getUserById,
-    getAllUsers,
-    updateUserRole,
-    updateBio
+  registerUser,
+  getUserById,
+  getAllUsers,
+  updateUserRole,
+  deleteUser,
+  updateBio,
 };

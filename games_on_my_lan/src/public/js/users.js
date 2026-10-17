@@ -1,56 +1,50 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('userSearch');
+  const rows = Array.from(document.querySelectorAll('tbody tr[data-username]'));
+  const noResults = document.getElementById('noResults');
+  const resultCount = document.getElementById('resultCount');
 
-    const searchInput = document.getElementById("userSearch");
-    const rows = Array.from(document.querySelectorAll("tbody tr[data-username]"));
-    const noResults = document.getElementById("noResults");
-    const resultCount = document.getElementById("resultCount");
+  if (!searchInput || !rows.length) return;
 
-    if (!searchInput || !rows.length) return;
+  // Minúsculas y sin tildes: "José" coincide con "jose"
+  const normalize = (text) =>
+    (text || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
 
-    // Minúsculas y sin tildes: "José" coincide con "jose"
-    const normalize = (text) =>
-        (text || "")
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
+  const updateCount = (visible, total) => {
+    if (resultCount) {
+      resultCount.textContent = `${visible} de ${total} usuarios`;
+    }
+  };
 
-    const updateCount = (visible, total) => {
-        if (resultCount) {
-            resultCount.textContent = `${visible} de ${total} usuarios`;
-        }
-    };
+  const applyFilter = () => {
+    const terms = normalize(searchInput.value.trim()).split(/\s+/).filter(Boolean);
 
-    const applyFilter = () => {
+    let visibleCount = 0;
 
-        const terms = normalize(searchInput.value.trim())
-            .split(/\s+/)
-            .filter(Boolean);
+    rows.forEach((row) => {
+      const haystack = normalize(row.dataset.username) + ' ' + normalize(row.dataset.role);
 
-        let visibleCount = 0;
+      // Cada palabra escrita debe aparecer en el nombre o en el rol
+      const matches = terms.every((term) => haystack.includes(term));
 
-        rows.forEach((row) => {
+      row.style.display = matches ? '' : 'none';
 
-            const haystack =
-                normalize(row.dataset.username) + " " + normalize(row.dataset.role);
+      if (matches) visibleCount++;
+    });
 
-            // Cada palabra escrita debe aparecer en el nombre o en el rol
-            const matches = terms.every((term) => haystack.includes(term));
+    updateCount(visibleCount, rows.length);
 
-            row.style.display = matches ? "" : "none";
+    if (noResults) {
+      noResults.style.display = visibleCount === 0 ? '' : 'none';
+    }
+  };
 
-            if (matches) visibleCount++;
-        });
+  updateCount(rows.length, rows.length);
+  searchInput.addEventListener('input', applyFilter);
 
-        updateCount(visibleCount, rows.length);
-
-        if (noResults) {
-            noResults.style.display = visibleCount === 0 ? "" : "none";
-        }
-    };
-
-    updateCount(rows.length, rows.length);
-    searchInput.addEventListener("input", applyFilter);
-
-    // Si el navegador restaura el texto al volver atrás, aplica el filtro
-    if (searchInput.value) applyFilter();
+  // Si el navegador restaura el texto al volver atrás, aplica el filtro
+  if (searchInput.value) applyFilter();
 });

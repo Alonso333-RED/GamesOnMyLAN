@@ -1,43 +1,37 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('gameSearch');
+  const cards = Array.from(document.querySelectorAll('.game-card'));
+  const noResults = document.getElementById('noResults');
+  const resultCount = document.getElementById('resultCount');
 
-    const searchInput = document.getElementById("gameSearch");
-    const cards = Array.from(document.querySelectorAll(".game-card"));
-    const noResults = document.getElementById("noResults");
-    const resultCount = document.getElementById("resultCount");
+  if (!searchInput || !cards.length) return;
 
-    if (!searchInput || !cards.length) return;
+  const updateCount = (visible, total) => {
+    if (!resultCount) return;
+    resultCount.textContent = `${visible} de ${total} juegos`;
+  };
 
-    const updateCount = (visible, total) => {
-        if (!resultCount) return;
-        resultCount.textContent = `${visible} de ${total} juegos`;
-    };
+  updateCount(cards.length, cards.length);
 
-    updateCount(cards.length, cards.length);
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim().toLowerCase();
+    let visibleCount = 0;
 
-    searchInput.addEventListener("input", () => {
+    cards.forEach((card) => {
+      const gameName = (card.dataset.name || '').toLowerCase();
+      const authorName = (card.dataset.author || '').toLowerCase();
 
-        const query = searchInput.value.trim().toLowerCase();
-        let visibleCount = 0;
+      const matches = gameName.includes(query) || authorName.includes(query);
 
-        cards.forEach((card) => {
+      card.style.display = matches ? '' : 'none';
 
-            const gameName = (card.dataset.name || "").toLowerCase();
-            const authorName = (card.dataset.author || "").toLowerCase();
-
-            const matches = gameName.includes(query) || authorName.includes(query);
-
-            card.style.display = matches ? "" : "none";
-
-            if (matches) visibleCount++;
-
-        });
-
-        updateCount(visibleCount, cards.length);
-
-        if (noResults) {
-            noResults.style.display = visibleCount === 0 ? "" : "none";
-        }
-
+      if (matches) visibleCount++;
     });
 
+    updateCount(visibleCount, cards.length);
+
+    if (noResults) {
+      noResults.style.display = visibleCount === 0 ? '' : 'none';
+    }
+  });
 });

@@ -1,44 +1,34 @@
-import express from "express";
-import userController from "../controllers/usersController.js";
-import {requireGuestRegister} from "../middlewares/settings.js";
-import { registerLimiter } from "../middlewares/rateLimit.js";
-import { requireLogin, requireRole } from "../middlewares/auth.js";
-import { uploadAvatar } from "../middlewares/upload.js";
+import express from 'express';
+import usersController from '../controllers/usersController.js';
+import { requireGuestRegister } from '../middlewares/settings.js';
+import { registerLimiter } from '../middlewares/rateLimit.js';
+import {
+  requireLogin,
+  requireLoginPage,
+  requireRole,
+  requireCanDeleteUser,
+} from '../middlewares/auth.js';
+import { uploadAvatar } from '../middlewares/upload.js';
 
 const router = express.Router();
 
-router.get("/register",
-    requireGuestRegister,
-    userController.showRegister);
+router.get('/register', requireGuestRegister, usersController.showRegister);
+router.post('/register', requireGuestRegister, registerLimiter, usersController.register);
 
-router.post("/register",
-    requireGuestRegister,
-    registerLimiter,
-    userController.register);
+router.get('/profile', requireLoginPage, usersController.redirectToOwnProfile);
+router.get('/profile/:userId', usersController.showProfile);
+router.post(
+  '/profile/avatar',
+  requireLogin,
+  uploadAvatar.single('avatar'),
+  usersController.updateAvatar,
+);
+router.post('/profile/bio', requireLogin, usersController.updateBio);
 
-router.post("/profile/avatar",
-    requireLogin,
-    uploadAvatar.single("avatar"),
-    userController.updateAvatar);
+router.get('/', usersController.showUsers);
 
-router.post("/profile/bio",
-    requireLogin,
-    userController.updateBio);
+router.delete('/:userId', requireLogin, requireCanDeleteUser, usersController.deleteUser);
 
-router.get("/profile", (req, res) => {
-    if (!req.session.user) {
-        return res.redirect("/login");
-    }
-    res.redirect(`/profile/${req.session.user.id}`);
-});
-
-router.get("/profile/:userId", userController.getUserById);
-
-router.get("/users", userController.getAllUsers);
-
-router.post("/users/:userId/role",
-    requireLogin,
-    requireRole("owner"),
-    userController.changeRole);
+router.post('/:userId/role', requireLogin, requireRole('owner'), usersController.changeRole);
 
 export default router;

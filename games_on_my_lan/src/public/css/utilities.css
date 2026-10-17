@@ -5,29 +5,29 @@
    ======================================== */
 
 .xDiv {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .yDiv {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .yDiv .btn {
-    width: auto;
+  width: auto;
 }
 
 .big-img {
-    width: 1000px;
-    object-fit: contain;
-    background-color: var(--red-dark);
+  width: 1000px;
+  object-fit: contain;
+  background-color: var(--red-dark);
 }
 
 .inline-form {
-    display: contents;
-    margin: 0;
+  display: contents;
+  margin: 0;
 }

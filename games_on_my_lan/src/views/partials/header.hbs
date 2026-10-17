@@ -32,11 +32,11 @@
 
             {{#if user}}
 
-                <a class="nav-link {{#if activeProfile}}active{{/if}}" href="/profile/{{user.id}}">
+                <a class="nav-link {{#if activeProfile}}active{{/if}}" href="/users/profile/{{user.id}}">
                     <span class="nav-icon">👤</span> Perfil
                 </a>
 
-                <form action="/logout" method="POST" class="nav-logout-form">
+                <form action="/auth/logout" method="POST" class="nav-logout-form">
                     <button class="nav-link nav-link-btn" type="submit">
                         <span class="nav-icon">🚪</span> Salir
                     </button>
@@ -44,7 +44,7 @@
 
             {{else}}
 
-                <a class="nav-link {{#if activeLogin}}active{{/if}}" href="/login">
+                <a class="nav-link {{#if activeLogin}}active{{/if}}" href="/auth/login">
                     <span class="nav-icon">🔑</span> Ingresar
                 </a>
 

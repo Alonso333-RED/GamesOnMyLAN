@@ -5,97 +5,95 @@
    ======================================== */
 
 @media (max-width: 767px) {
+  .main-panel {
+    padding: 24px 18px;
+    border-radius: 16px;
+  }
 
-    .main-panel {
-        padding: 24px 18px;
-        border-radius: 16px;
-    }
+  .site-header-inner {
+    flex-wrap: nowrap;
+  }
 
-    .site-header-inner {
-        flex-wrap: nowrap;
-    }
+  .nav-toggle {
+    display: flex;
+    order: 2;
+  }
 
-    .nav-toggle {
-        display: flex;
-        order: 2;
-    }
+  .brand {
+    order: 1;
+  }
 
-    .brand {
-        order: 1;
-    }
+  .site-nav {
+    order: 3;
+    flex-basis: 100%;
+    max-height: 0;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    transition: max-height var(--transition);
+  }
 
-    .site-nav {
-        order: 3;
-        flex-basis: 100%;
-        max-height: 0;
-        overflow: hidden;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 4px;
-        transition: max-height var(--transition);
-    }
+  .site-nav.open {
+    max-height: 400px;
+    padding-top: 10px;
+  }
 
-    .site-nav.open {
-        max-height: 400px;
-        padding-top: 10px;
-    }
+  .nav-link {
+    justify-content: flex-start;
+    border-radius: var(--radius-sm);
+  }
 
-    .nav-link {
-        justify-content: flex-start;
-        border-radius: var(--radius-sm);
-    }
+  .brand-text {
+    font-size: 1.1rem;
+  }
 
-    .brand-text {
-        font-size: 1.1rem;
-    }
+  .game-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+  }
 
-    .game-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 14px;
-    }
-
-    .detail-media .thumbnail {
-        max-width: 220px;
-        margin: 0 auto;
-    }
+  .detail-media .thumbnail {
+    max-width: 220px;
+    margin: 0 auto;
+  }
 }
 
 @media (max-width: 450px) {
+  .stat-row {
+    gap: 8px;
+  }
 
-    .stat-row {
-        gap: 8px;
-    }
+  .stat-chip {
+    min-width: 110px;
+    padding: 10px 12px;
+  }
 
-    .stat-chip {
-        min-width: 110px;
-        padding: 10px 12px;
-    }
-
-    .back-to-top {
-        right: 14px;
-        bottom: 14px;
-        width: 40px;
-        height: 40px;
-    }
+  .back-to-top {
+    right: 14px;
+    bottom: 14px;
+    width: 40px;
+    height: 40px;
+  }
 }
 
 @media (max-width: 767px) {
-    body {
-        background-attachment: scroll;
-    }
+  body {
+    background-attachment: scroll;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation: none !important;
-        transition: none !important;
-        scroll-behavior: auto !important;
-    }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 
-    body::before,
-    body::after {
-        animation: none;
-    }
+  body::before,
+  body::after {
+    animation: none;
+  }
 }

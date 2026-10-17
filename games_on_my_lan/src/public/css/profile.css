@@ -5,26 +5,26 @@
    ======================================== */
 
 .profile-header {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    align-items: center;
-    margin-bottom: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 30px;
 }
 
 .profile-avatar-wrap {
-    position: relative;
+  position: relative;
 }
 
 .profile-role-badge {
-    position: absolute;
-    bottom: -6px;
-    right: -6px;
-    background: var(--red-dark);
-    border: 1px solid var(--red);
-    color: var(--pink);
-    font-size: 0.7rem;
-    padding: 2px 9px;
-    border-radius: 999px;
-    text-transform: capitalize;
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  background: var(--red-dark);
+  border: 1px solid var(--red);
+  color: var(--pink);
+  font-size: 0.7rem;
+  padding: 2px 9px;
+  border-radius: 999px;
+  text-transform: capitalize;
 }

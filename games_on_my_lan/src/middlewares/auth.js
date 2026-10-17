@@ -1,145 +1,138 @@
-import pool from "../database/pool.js";
-import { canDeleteGame } from "../utils/permissions.js";
+import gamesService from '../services/gamesService.js';
+import usersService from '../services/usersService.js';
+import { canDeleteGame, canDeleteUser } from '../utils/permissions.js';
+import { isValidId } from '../utils/validators.js';
 
+// Para acciones (POST, PUT, DELETE): responde 401 si no hay sesión
+export function requireLogin(req, res, next) {
+  if (!req.session.user) {
+    return res.status(401).send('Debes iniciar sesión');
+  }
 
-export function requireLogin(req, res, next){
+  next();
+}
 
-    if(!req.session.user){
-        return res.status(401).send("Debes iniciar sesión");
+// Para páginas: manda a la pantalla de login si no hay sesión
+export function requireLoginPage(req, res, next) {
+  if (!req.session.user) {
+    return res.redirect('/auth/login');
+  }
+
+  next();
+}
+
+export function requireRole(...roles) {
+  return async (req, res, next) => {
+    const user = await usersService.getUserById(req.session.user.id);
+
+    if (!user) {
+      return res.status(403).send('Usuario no encontrado');
+    }
+
+    if (!roles.includes(user.role_name)) {
+      return res.status(403).send('Sin permisos');
     }
 
     next();
+  };
 }
 
-export function requireRole(...roles){
+export async function requireOwnership(req, res, next) {
+  const gameId = req.params.gameId;
 
-    return async (req,res,next)=>{
+  if (!isValidId(gameId)) {
+    return res.status(404).send('Juego no encontrado');
+  }
 
-        try {
+  const game = await gamesService.getGameById(gameId);
 
-            const result = await pool.query(
-                `
-                SELECT roles.role_name
-                FROM users
-                JOIN roles
-                ON users.role_id = roles.id_role
-                WHERE users.id_user = $1
-                `,
-                [req.session.user.id]
-            );
+  if (!game || game.author_id !== req.session.user.id) {
+    return res.status(403).send('No eres el propietario del juego');
+  }
 
-
-            if(result.rows.length === 0){
-                return res.status(403).send("Usuario no encontrado");
-            }
-
-
-            const role = result.rows[0].role_name;
-
-
-            if(!roles.includes(role)){
-                return res.status(403).send("Sin permisos");
-            }
-
-
-            next();
-
-
-        } catch(error){
-
-            console.error(error);
-            res.status(500).send("Error verificando permisos");
-
-        }
-
-    };
-
-}
-
-export function requireOwnership(req,res,next){
-
-    const userId = req.session.user.id;
-    const gameId = req.params.id;
-
-    pool.query(
-        `
-        SELECT *
-        FROM games
-        WHERE id_game = $1 AND author_id = $2
-        `,
-        [gameId, userId]
-    )
-    .then(result => {
-
-        if(result.rows.length === 0){
-            return res.status(403).send("No eres el propietario del juego");
-        }
-
-        next();
-
-    })
-    .catch(error => {
-        console.error(error);
-        res.status(500).send("Error verificando propiedad del juego");
-    });
-
+  next();
 }
 
 export async function requireCanDelete(req, res, next) {
+  const gameId = req.params.gameId;
 
-    const gameId = req.params.id;
+  if (!isValidId(gameId)) {
+    return res.status(404).send('Juego no encontrado');
+  }
 
-    if (!/^\d{1,9}$/.test(gameId)) {
-        return res.status(404).send("Juego no encontrado");
-    }
+  const actorId = req.session.user.id;
 
-    try {
+  const game = await gamesService.getGameById(gameId);
 
-        const result = await pool.query(
-            `
-            SELECT
-                g.author_id,
-                author_role.role_name AS author_role,
-                actor_role.role_name  AS actor_role
-            FROM games g
-            JOIN users author      ON author.id_user = g.author_id
-            JOIN roles author_role ON author_role.id_role = author.role_id
-            JOIN users actor       ON actor.id_user = $2
-            JOIN roles actor_role  ON actor_role.id_role = actor.role_id
-            WHERE g.id_game = $1
-            `,
-            [gameId, req.session.user.id]
-        );
+  if (!game) {
+    return res.status(404).send('Juego no encontrado');
+  }
 
-        if (result.rows.length === 0) {
-            return res.status(404).send("Juego no encontrado");
-        }
+  const actor = await usersService.getUserById(actorId);
 
-        const row = result.rows[0];
-        const actorId = req.session.user.id;
+  if (!actor) {
+    return res.status(403).send('Usuario no encontrado');
+  }
 
-        const allowed = canDeleteGame({
-            actorId,
-            actorRole: row.actor_role,
-            authorId: row.author_id,
-            authorRole: row.author_role
-        });
+  const allowed = canDeleteGame({
+    actorId,
+    actorRole: actor.role_name,
+    authorId: game.author_id,
+    authorRole: game.author_role,
+  });
 
-        if (!allowed) {
-            return res.status(403).send("No tienes permiso para eliminar este juego");
-        }
+  if (!allowed) {
+    return res.status(403).send('No tienes permiso para eliminar este juego');
+  }
 
-        // Para el registro de moderación en el controlador
-        req.moderation = {
-            isAuthor: row.author_id === actorId,
-            actorRole: row.actor_role,
-            authorRole: row.author_role
-        };
+  // Para el registro de moderación en el controlador
+  req.moderation = {
+    isAuthor: game.author_id === actorId,
+    actorRole: actor.role_name,
+    authorRole: game.author_role,
+  };
 
-        next();
+  next();
+}
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error verificando permisos");
-    }
+export async function requireCanDeleteUser(req, res, next) {
+  const targetId = req.params.userId;
+
+  if (!isValidId(targetId)) {
+    return res.status(404).send('Usuario no encontrado');
+  }
+
+  const actorId = req.session.user.id;
+
+  const target = await usersService.getUserById(targetId);
+
+  if (!target) {
+    return res.status(404).send('Usuario no encontrado');
+  }
+
+  const actor = await usersService.getUserById(actorId);
+
+  if (!actor) {
+    return res.status(403).send('Usuario no encontrado');
+  }
+
+  const allowed = canDeleteUser({
+    actorId,
+    actorRole: actor.role_name,
+    targetId: target.id_user,
+    targetRole: target.role_name,
+  });
+
+  if (!allowed) {
+    return res.status(403).send('No tienes permiso para eliminar a este usuario');
+  }
+
+  // Para el registro de moderación en el controlador
+  req.moderation = {
+    isSelf: target.id_user === actorId,
+    actorRole: actor.role_name,
+    targetRole: target.role_name,
+  };
+
+  next();
 }

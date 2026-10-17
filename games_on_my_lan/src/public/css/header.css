@@ -1,14 +1,14 @@
 /* Logo, header y navegacion */
 
 .logo {
-    width: 100px;
-    height: auto;
-    filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.35));
-    transition: transform 0.25s ease;
+  width: 100px;
+  height: auto;
+  filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.35));
+  transition: transform 0.25s ease;
 }
 
 .brand:hover .logo {
-    transform: rotate(-6deg) scale(1.05);
+  transform: rotate(-6deg) scale(1.05);
 }
 
 /* ========================================
@@ -16,133 +16,140 @@
    ======================================== */
 
 .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    background-color: rgba(0, 0, 0, 0.88);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(255, 0, 0, 0.16);
-    transition: box-shadow var(--transition), border-color var(--transition);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 0, 0, 0.16);
+  transition:
+    box-shadow var(--transition),
+    border-color var(--transition);
 }
 
 .site-header.scrolled {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-    border-bottom-color: rgba(255, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  border-bottom-color: rgba(255, 0, 0, 0.3);
 }
 
 .site-header-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 12px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    color: var(--pink);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--pink);
 }
 
 .brand:hover {
-    color: var(--pink);
-    opacity: 0.9;
+  color: var(--pink);
+  opacity: 0.9;
 }
 
 .brand .logo {
-    width: 42px;
+  width: 42px;
 }
 
 .brand-text {
-    font-size: 1.35rem;
-    font-weight: 700;
-    letter-spacing: 0.01em;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
 .site-nav {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .nav-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--text) !important;
-    text-decoration: none !important;
-    font-weight: 500;
-    font-size: 0.95rem;
-    padding: 8px 14px;
-    border-radius: 999px;
-    border: 1px solid transparent;
-    background: none;
-    cursor: pointer;
-    transition: background-color var(--transition), border-color var(--transition), color var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text) !important;
+  text-decoration: none !important;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: none;
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
 }
 
 .nav-icon {
-    font-size: 0.95em;
-    line-height: 1;
+  font-size: 0.95em;
+  line-height: 1;
 }
 
 .nav-link:hover {
-    background-color: rgba(255, 0, 0, 0.12);
-    border-color: rgba(255, 0, 0, 0.3);
-    color: #ffffff !important;
+  background-color: rgba(255, 0, 0, 0.12);
+  border-color: rgba(255, 0, 0, 0.3);
+  color: #ffffff !important;
 }
 
 .nav-link.active {
-    background-color: var(--red-dark);
-    border-color: var(--red);
-    color: #ffffff !important;
+  background-color: var(--red-dark);
+  border-color: var(--red);
+  color: #ffffff !important;
 }
 
 .nav-link-btn {
-    font-family: inherit;
+  font-family: inherit;
 }
 
 .nav-logout-form {
-    margin: 0;
-    display: inline-flex;
+  margin: 0;
+  display: inline-flex;
 }
 
 .nav-toggle {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5px;
-    width: 40px;
-    height: 36px;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 8px;
-    cursor: pointer;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 36px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .nav-toggle span {
-    display: block;
-    width: 20px;
-    height: 2px;
-    margin: 0 auto;
-    background-color: var(--text);
-    transition: transform var(--transition), opacity var(--transition);
+  display: block;
+  width: 20px;
+  height: 2px;
+  margin: 0 auto;
+  background-color: var(--text);
+  transition:
+    transform var(--transition),
+    opacity var(--transition);
 }
 
 .nav-toggle.open span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
+  transform: translateY(7px) rotate(45deg);
 }
 
 .nav-toggle.open span:nth-child(2) {
-    opacity: 0;
+  opacity: 0;
 }
 
 .nav-toggle.open span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
+  transform: translateY(-7px) rotate(-45deg);
 }

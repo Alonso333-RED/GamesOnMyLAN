@@ -5,55 +5,55 @@
    ======================================== */
 
 .hero-block {
-    padding: 12px 0 28px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    margin-bottom: 28px;
+  padding: 12px 0 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 28px;
 }
 
 .hero-badge {
-    display: inline-block;
-    color: var(--pink);
-    background: rgba(255, 0, 0, 0.12);
-    border: 1px solid rgba(255, 0, 0, 0.3);
-    border-radius: 999px;
-    padding: 4px 14px;
-    font-size: 0.8rem;
-    letter-spacing: 0.04em;
-    margin-bottom: 14px;
+  display: inline-block;
+  color: var(--pink);
+  background: rgba(255, 0, 0, 0.12);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 14px;
 }
 
 .stat-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    margin: 24px 0 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 24px 0 4px;
 }
 
 .stat-chip {
-    background: var(--panel-soft);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-md);
-    padding: 14px 20px;
-    min-width: 140px;
-    text-align: center;
+  background: var(--panel-soft);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  padding: 14px 20px;
+  min-width: 140px;
+  text-align: center;
 }
 
 .stat-chip .stat-number {
-    display: block;
-    font-size: 1.7rem;
-    font-weight: 700;
-    color: var(--pink);
+  display: block;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--pink);
 }
 
 .stat-chip .stat-label {
-    display: block;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-top: 2px;
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
 }
 
 .stat-chip:hover {
-    transform: translateY(-4px);
-    border-color: var(--pink);
-    box-shadow: 0 12px 28px rgba(255, 0, 0, 0.18);
+  transform: translateY(-4px);
+  border-color: var(--pink);
+  box-shadow: 0 12px 28px rgba(255, 0, 0, 0.18);
 }

@@ -1,98 +1,69 @@
-import bcrypt from "bcryptjs";
-import readline from "readline";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { parseEnv } from "util";
+import bcrypt from 'bcryptjs';
+import readline from 'readline';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { parseEnv } from 'util';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const envPath = path.join(
-    __dirname,
-    "..",
-    ".env"
-);
+const envPath = path.join(__dirname, '..', '.env');
 
-const schemaPath = path.join(
-    __dirname,
-    "../src/database/schema.sql"
-);
+const schemaPath = path.join(__dirname, '../src/database/schema.sql');
 
 const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
+  input: process.stdin,
+  output: process.stdout,
 });
 
 function ask(question) {
-    return new Promise(resolve => {
-        rl.question(question, resolve);
-    });
+  return new Promise((resolve) => {
+    rl.question(question, resolve);
+  });
 }
 
 function askDefault(question, defaultValue) {
-    return new Promise(resolve => {
-        rl.question(
-            `${question} [${defaultValue}]: `,
-            answer => {
-                const value = answer.trim();
+  return new Promise((resolve) => {
+    rl.question(`${question} [${defaultValue}]: `, (answer) => {
+      const value = answer.trim();
 
-                resolve(
-                    value === ""
-                        ? defaultValue
-                        : value
-                );
-            }
-        );
+      resolve(value === '' ? defaultValue : value);
     });
+  });
 }
 
 function askBoolean(question, defaultValue = true) {
-    const defaultText = defaultValue ? "S/n" : "s/N";
+  const defaultText = defaultValue ? 'S/n' : 's/N';
 
-    return new Promise(resolve => {
-        rl.question(
-            `${question} [${defaultText}]: `,
-            answer => {
-                const value = answer.trim().toLowerCase();
+  return new Promise((resolve) => {
+    rl.question(`${question} [${defaultText}]: `, (answer) => {
+      const value = answer.trim().toLowerCase();
 
-                if (value === "") {
-                    resolve(defaultValue);
-                    return;
-                }
+      if (value === '') {
+        resolve(defaultValue);
+        return;
+      }
 
-                if (
-                    value === "s" ||
-                    value === "si" ||
-                    value === "sí" ||
-                    value === "y" ||
-                    value === "yes"
-                ) {
-                    resolve(true);
-                    return;
-                }
+      if (value === 's' || value === 'si' || value === 'sí' || value === 'y' || value === 'yes') {
+        resolve(true);
+        return;
+      }
 
-                if (
-                    value === "n" ||
-                    value === "no"
-                ) {
-                    resolve(false);
-                    return;
-                }
+      if (value === 'n' || value === 'no') {
+        resolve(false);
+        return;
+      }
 
-                console.log(
-                    "Respuesta no válida. Se utilizará el valor por defecto."
-                );
+      console.log('Respuesta no válida. Se utilizará el valor por defecto.');
 
-                resolve(defaultValue);
-            }
-        );
+      resolve(defaultValue);
     });
+  });
 }
 
 async function askInstallationType() {
-
-    console.log(`
+  console.log(`
 ====================================
        Tipo de instalación
 ====================================
@@ -101,80 +72,61 @@ async function askInstallationType() {
 [2] Restauración de una instalación existente
 `);
 
-    while (true) {
+  while (true) {
+    const option = (await ask('Selecciona una opción [1/2]: ')).trim();
 
-        const option = (
-            await ask("Selecciona una opción [1/2]: ")
-        ).trim();
-
-        if (option === "1") {
-            return "new";
-        }
-
-        if (option === "2") {
-            return "restore";
-        }
-
-        console.log("\nOpción no válida.\n");
+    if (option === '1') {
+      return 'new';
     }
+
+    if (option === '2') {
+      return 'restore';
+    }
+
+    console.log('\nOpción no válida.\n');
+  }
 }
 
-
 const ENV_KEYS = {
-    db_host: "DB_HOST",
-    db_port: "DB_PORT",
-    db_user: "DB_USER",
-    db_password: "DB_PASSWORD",
-    db_database: "DB_DATABASE",
-    app_port: "APP_PORT",
-    games_port: "GAMES_PORT",
-    guest_register: "GUEST_REGISTER"
+  db_host: 'DB_HOST',
+  db_port: 'DB_PORT',
+  db_user: 'DB_USER',
+  db_password: 'DB_PASSWORD',
+  db_database: 'DB_DATABASE',
+  app_port: 'APP_PORT',
+  games_port: 'GAMES_PORT',
+  guest_register: 'GUEST_REGISTER',
 };
 
 function toEnvValue(value) {
+  const text = String(value);
 
-    const text = String(value);
+  if (/^[-A-Za-z0-9_.:@/+]*$/.test(text)) return text;
+  if (!text.includes("'")) return `'${text}'`;
+  if (!text.includes('"') && !text.includes('\\')) return `"${text}"`;
+  if (!text.includes('`')) return `\`${text}\``;
 
-    if (/^[A-Za-z0-9_.:@\/+-]*$/.test(text)) return text;
-    if (!text.includes("'")) return `'${text}'`;
-    if (!text.includes('"') && !text.includes("\\")) return `"${text}"`;
-    if (!text.includes("`")) return `\`${text}\``;
-
-    throw new Error(
-        "El valor no puede mezclar comillas simples, dobles y acentos graves."
-    );
+  throw new Error('El valor no puede mezclar comillas simples, dobles y acentos graves.');
 }
 
 function readEnvFile() {
-
-    return fs.existsSync(envPath)
-        ? parseEnv(fs.readFileSync(envPath, "utf8"))
-        : {};
+  return fs.existsSync(envPath) ? parseEnv(fs.readFileSync(envPath, 'utf8')) : {};
 }
 
 function writeEnvFile(settings) {
+  const values = readEnvFile();
 
-    const values = readEnvFile();
+  for (const [key, envName] of Object.entries(ENV_KEYS)) {
+    values[envName] = String(settings[key]);
+  }
 
-    for (const [key, envName] of Object.entries(ENV_KEYS)) {
-        values[envName] = String(settings[key]);
-    }
+  const lines = Object.entries(values).map(([name, value]) => `${name}=${toEnvValue(value)}`);
 
-    const lines = Object.entries(values).map(
-        ([name, value]) => `${name}=${toEnvValue(value)}`
-    );
-
-    fs.writeFileSync(
-        envPath,
-        lines.join("\n") + "\n",
-        { encoding: "utf8", mode: 0o600 }
-    );
+  fs.writeFileSync(envPath, lines.join('\n') + '\n', { encoding: 'utf8', mode: 0o600 });
 }
 
-
 async function createSettings() {
-
-    console.log(`
+  console.log(`
 ====================================
        Configuración de GOML
 ====================================
@@ -183,106 +135,76 @@ Introduce los datos de conexión a PostgreSQL.
 Presiona ENTER para utilizar el valor indicado entre corchetes.
 `);
 
-    const db_host = await askDefault(
-        "Host de PostgreSQL",
-        "localhost"
-    );
+  const db_host = await askDefault('Host de PostgreSQL', 'localhost');
 
-    const db_port = await askDefault(
-        "Puerto de PostgreSQL",
-        5432
-    );
+  const db_port = await askDefault('Puerto de PostgreSQL', 5432);
 
-    const db_user = await askDefault(
-        "Usuario de PostgreSQL",
-        "goml"
-    );
+  const db_user = await askDefault('Usuario de PostgreSQL', 'goml');
 
-    const db_password = await ask(
-        "Contraseña de PostgreSQL: "
-    );
+  const db_password = await ask('Contraseña de PostgreSQL: ');
 
-    const db_database = await askDefault(
-        "Base de datos",
-        "goml_db"
-    );
+  const db_database = await askDefault('Base de datos', 'goml_db');
 
-    console.log("");
+  console.log('');
 
-    const app_port = await askDefault(
-        "Puerto de GamesOnMyLAN",
-        3000
-    );
+  const app_port = await askDefault('Puerto de GamesOnMyLAN', 3000);
 
-    let games_port;
+  let games_port;
 
-    while (true) {
-        games_port = await askDefault(
-            "Puerto del servidor de juegos",
-            3001
-        );
+  while (true) {
+    games_port = await askDefault('Puerto del servidor de juegos', 3001);
 
-        if (Number(games_port) !== Number(app_port)) break;
+    if (Number(games_port) !== Number(app_port)) break;
 
-        console.log("Debe ser distinto al puerto de la app. Inténtalo de nuevo.");
-    }
+    console.log('Debe ser distinto al puerto de la app. Inténtalo de nuevo.');
+  }
 
-    const guest_register = await askBoolean(
-        "¿Permitir registro de invitados?",
-        true
-    );
+  const guest_register = await askBoolean('¿Permitir registro de invitados?', true);
 
-    const settings = {
+  const settings = {
+    db_host,
 
-        db_host,
+    db_port: Number(db_port),
 
-        db_port: Number(db_port),
+    db_user,
 
-        db_user,
+    db_password,
 
-        db_password,
+    db_database,
 
-        db_database,
+    app_port: Number(app_port),
 
-        app_port: Number(app_port),
+    games_port: Number(games_port),
 
-        games_port: Number(games_port),
+    guest_register,
+  };
 
-        guest_register
-    };
+  // SESSION_SECRET ya no se escribe aquí: GOML genera una clave
+  // al azar la primera vez que arranca y la guarda en data/session_secret.
+  writeEnvFile(settings);
 
-    // SESSION_SECRET ya no se escribe aquí: GOML genera una clave
-    // al azar la primera vez que arranca y la guarda en data/session_secret.
-    writeEnvFile(settings);
+  console.log('\n✓ .env creado correctamente.');
 
-    console.log(
-        "\n✓ .env creado correctamente."
-    );
-
-    return settings;
+  return settings;
 }
 
 function loadSettings() {
+  const values = readEnvFile();
+  const settings = {};
 
-    const values = readEnvFile();
-    const settings = {};
+  for (const [key, envName] of Object.entries(ENV_KEYS)) {
+    settings[key] = values[envName];
+  }
 
-    for (const [key, envName] of Object.entries(ENV_KEYS)) {
-        settings[key] = values[envName];
-    }
-
-    return settings;
+  return settings;
 }
 
 async function configureSettings() {
+  if (!fs.existsSync(envPath)) {
+    return await createSettings();
+  }
 
-    if (!fs.existsSync(envPath)) {
-
-        return await createSettings();
-
-    }
-
-    console.log(`
+  console.log(`
 ====================================
        .env encontrado
 ====================================
@@ -290,82 +212,56 @@ async function configureSettings() {
 Ya existe un archivo .env.
 `);
 
-    console.log("[1] Usar configuración existente");
-    console.log("[2] Reconfigurar");
-    console.log("[3] Cancelar");
+  console.log('[1] Usar configuración existente');
+  console.log('[2] Reconfigurar');
+  console.log('[3] Cancelar');
 
-    while (true) {
+  while (true) {
+    const option = (await ask('\nSelecciona una opción [1/2/3]: ')).trim();
 
-        const option = (
-            await ask("\nSelecciona una opción [1/2/3]: ")
-        ).trim();
+    if (option === '1') {
+      console.log('\n✓ Se utilizará la configuración existente.');
 
-        if (option === "1") {
-
-            console.log(
-                "\n✓ Se utilizará la configuración existente."
-            );
-
-            return loadSettings();
-        }
-
-        if (option === "2") {
-
-            console.log(
-                "\nSe creará una nueva configuración."
-            );
-
-            // writeEnvFile conserva SESSION_SECRET y cualquier otra
-            // variable que ya estuviera en el .env
-            return await createSettings();
-        }
-
-        if (option === "3") {
-
-            console.log(
-                "\nInstalación cancelada."
-            );
-
-            process.exit(0);
-        }
-
-        console.log(
-            "\nOpción no válida."
-        );
+      return loadSettings();
     }
+
+    if (option === '2') {
+      console.log('\nSe creará una nueva configuración.');
+
+      // writeEnvFile conserva SESSION_SECRET y cualquier otra
+      // variable que ya estuviera en el .env
+      return await createSettings();
+    }
+
+    if (option === '3') {
+      console.log('\nInstalación cancelada.');
+
+      process.exit(0);
+    }
+
+    console.log('\nOpción no válida.');
+  }
 }
 
 async function connectDatabase() {
+  /*
+   * pool.js lee la configuración (getSettings.js) al importarse,
+   * por lo tanto el .env debe existir
+   * antes de importar este módulo.
+   */
 
-    /*
-     * pool.js lee la configuración (getSettings.js) al importarse,
-     * por lo tanto el .env debe existir
-     * antes de importar este módulo.
-     */
+  const { default: db } = await import('../src/database/pool.js');
 
-    const { default: db } = await import(
-        "../src/database/pool.js"
-    );
+  try {
+    const result = await db.query('SELECT current_database();');
 
-    try {
+    console.log(`✓ Conectado a PostgreSQL.`);
 
-        const result = await db.query(
-            "SELECT current_database();"
-        );
+    console.log(`  Base de datos: ${result.rows[0].current_database}`);
 
-        console.log(
-            `✓ Conectado a PostgreSQL.`
-        );
-
-        console.log(
-            `  Base de datos: ${result.rows[0].current_database}`
-        );
-
-        return db;
-
-    } catch (error) {
-
-        console.error(`
+    return db;
+  } catch (error) {
+    console.error(`
 ====================================
      Error de conexión
 ====================================
@@ -386,45 +282,33 @@ Error:
 ${error.message}
 `);
 
-        throw error;
-    }
+    throw error;
+  }
 }
 
 async function newInstallation(db) {
-
-    console.log(`
+  console.log(`
 ====================================
        Instalación nueva
 ====================================
 `);
 
-    console.log("[1/2] Creando estructura de base de datos...");
+  console.log('[1/2] Creando estructura de base de datos...');
 
-    if (!fs.existsSync(schemaPath)) {
+  if (!fs.existsSync(schemaPath)) {
+    throw new Error(`No se encontró schema.sql en:\n${schemaPath}`);
+  }
 
-        throw new Error(
-            `No se encontró schema.sql en:\n${schemaPath}`
-        );
-    }
+  const schema = fs.readFileSync(schemaPath, 'utf8');
 
-    const schema = fs.readFileSync(
-        schemaPath,
-        "utf8"
-    );
+  await db.query(schema);
 
-    await db.query(schema);
+  console.log('✓ Base de datos preparada.');
 
-    console.log(
-        "✓ Base de datos preparada."
-    );
+  const result = await db.query('SELECT COUNT(*) FROM users;');
 
-    const result = await db.query(
-        "SELECT COUNT(*) FROM users;"
-    );
-
-    if (Number(result.rows[0].count) > 0) {
-
-        console.log(`
+  if (Number(result.rows[0].count) > 0) {
+    console.log(`
 Ya existen usuarios en la base de datos.
 
 No se creará otro usuario owner.
@@ -432,42 +316,29 @@ No se creará otro usuario owner.
 La instalación continuará sin crear un usuario inicial.
 `);
 
-        return;
-    }
+    return;
+  }
 
-    console.log(`
+  console.log(`
 [2/2] Crear propietario inicial
 `);
 
-    const username = await ask(
-        "Usuario: "
-    );
+  const username = await ask('Usuario: ');
 
-    if (!username.trim()) {
+  if (!username.trim()) {
+    throw new Error('El nombre de usuario no puede estar vacío.');
+  }
 
-        throw new Error(
-            "El nombre de usuario no puede estar vacío."
-        );
-    }
+  const password = await ask('Contraseña: ');
 
-    const password = await ask(
-        "Contraseña: "
-    );
+  if (!password) {
+    throw new Error('La contraseña no puede estar vacía.');
+  }
 
-    if (!password) {
+  const hash = await bcrypt.hash(password, 12);
 
-        throw new Error(
-            "La contraseña no puede estar vacía."
-        );
-    }
-
-    const hash = await bcrypt.hash(
-        password,
-        12
-    );
-
-    await db.query(
-        `
+  await db.query(
+    `
         INSERT INTO users
         (
             username,
@@ -485,20 +356,14 @@ La instalación continuará sin crear un usuario inicial.
             )
         );
         `,
-        [
-            username.trim(),
-            hash
-        ]
-    );
+    [username.trim(), hash],
+  );
 
-    console.log(
-        "\n✓ Owner creado correctamente."
-    );
+  console.log('\n✓ Owner creado correctamente.');
 }
 
 async function restoreInstallation() {
-
-    console.log(`
+  console.log(`
 ====================================
        Restauración
 ====================================
@@ -548,14 +413,11 @@ de backup y restauración.
 ====================================
 `);
 
-    await ask(
-        "\nPresiona ENTER para finalizar..."
-    );
+  await ask('\nPresiona ENTER para finalizar...');
 }
 
 function showFinalMessage() {
-
-    console.log(`
+  console.log(`
 ====================================
      Instalación completada
 ====================================
@@ -580,76 +442,55 @@ necesitas modificar alguna configuración.
 }
 
 async function main() {
+  let db = null;
 
-    let db = null;
-
-    try {
-
-        console.log(`
+  try {
+    console.log(`
 ====================================
       GamesOnMyLAN Installer
 ====================================
 `);
 
-        console.log(
-            "[1/4] Configurando GamesOnMyLAN..."
-        );
+    console.log('[1/4] Configurando GamesOnMyLAN...');
 
-        await configureSettings();
+    await configureSettings();
 
-        console.log(
-            "\n[2/4] Seleccionando tipo de instalación..."
-        );
+    console.log('\n[2/4] Seleccionando tipo de instalación...');
 
-        const installationType =
-            await askInstallationType();
+    const installationType = await askInstallationType();
 
-        if (installationType === "restore") {
+    if (installationType === 'restore') {
+      console.log('\n[3/4] Preparando restauración...');
 
-            console.log(
-                "\n[3/4] Preparando restauración..."
-            );
+      await restoreInstallation();
 
-            await restoreInstallation();
+      return;
+    }
 
-            return;
-        }
+    console.log('\n[3/4] Comprobando PostgreSQL...');
 
-        console.log(
-            "\n[3/4] Comprobando PostgreSQL..."
-        );
+    db = await connectDatabase();
 
-        db = await connectDatabase();
+    console.log('\n[4/4] Instalando GamesOnMyLAN...');
 
-        console.log(
-            "\n[4/4] Instalando GamesOnMyLAN..."
-        );
+    await newInstallation(db);
 
-        await newInstallation(db);
-
-        showFinalMessage();
-
-    } catch (error) {
-
-        console.error(`
+    showFinalMessage();
+  } catch (error) {
+    console.error(`
 ====================================
               ERROR
 ====================================
 
 ${error.message}
 `);
+  } finally {
+    rl.close();
 
-    } finally {
-
-        rl.close();
-
-        if (db) {
-
-            await db.end();
-
-        }
+    if (db) {
+      await db.end();
     }
+  }
 }
-
 
 main();

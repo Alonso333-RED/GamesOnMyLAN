@@ -1,105 +1,108 @@
 /* Reset, body, fondo animado, tipografia y enlaces */
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 body {
-    min-height: 100vh;
-    margin: 0;
-    background-color: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
-    background-image:
-        radial-gradient(1200px 600px at 50% -10%, rgba(255, 0, 0, 0.18), transparent 60%),
-        url("/img/bg.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+  background-image:
+    radial-gradient(1200px 600px at 50% -10%, rgba(255, 0, 0, 0.18), transparent 60%),
+    url('/img/bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    background:
-        repeating-linear-gradient(
-            0deg,
-            rgba(255, 255, 255, 0.015) 0px,
-            rgba(255, 255, 255, 0.015) 1px,
-            transparent 1px,
-            transparent 4px
-        );
-    animation: scan 12s linear infinite;
-    opacity: 0.35;
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.015) 0px,
+    rgba(255, 255, 255, 0.015) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  animation: scan 12s linear infinite;
+  opacity: 0.35;
 }
 
 body::after {
-    content: "";
-    position: fixed;
-    width: 420px;
-    height: 420px;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 0;
-    background: radial-gradient(circle, var(--glow), transparent 68%);
-    left: var(--pointer-x, 50%);
-    top: var(--pointer-y, 20%);
-    transform: translate(-50%, -50%);
-    transition: opacity 0.3s ease;
-    opacity: 0.45;
+  content: '';
+  position: fixed;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle, var(--glow), transparent 68%);
+  left: var(--pointer-x, 50%);
+  top: var(--pointer-y, 20%);
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease;
+  opacity: 0.45;
 }
 
 .site-header,
 .main-panel {
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 1;
 }
 
 @keyframes scan {
-    from { background-position: 0 0; }
-    to { background-position: 0 80px; }
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 80px;
+  }
 }
 
 .text-primary {
-    color: var(--pink) !important;
-    font-size: 2rem;
+  color: var(--pink) !important;
+  font-size: 2rem;
 }
 
 .text-secondary {
-    color: var(--text) !important;
-    font-size: 1.5rem;
+  color: var(--text) !important;
+  font-size: 1.5rem;
 }
 
 .text-tertiary {
-    color: var(--text) !important;
-    font-size: 1rem;
+  color: var(--text) !important;
+  font-size: 1rem;
 }
 
 a {
-    color: var(--red);
-    text-decoration: underline;
-    transition: color var(--transition);
+  color: var(--red);
+  text-decoration: underline;
+  transition: color var(--transition);
 }
 
 a:hover {
-    color: var(--pink);
+  color: var(--pink);
 }
 
 .bg-primary {
-    background-color: var(--panel) !important;
+  background-color: var(--panel) !important;
 }
 
 img {
-    width: 250px;
-    height: 250px;
-    object-fit: contain;
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
 }

@@ -1,19 +1,19 @@
 /* Archivo principal: solo importa los demas. El ORDEN importa (la cascada).
    responsive.css debe ir siempre al final. */
 
-@import url("./variables.css");
-@import url("./base.css");
-@import url("./layout.css");
-@import url("./buttons.css");
-@import url("./header.css");
-@import url("./hero.css");
-@import url("./gallery.css");
-@import url("./cards.css");
-@import url("./tables.css");
-@import url("./forms.css");
-@import url("./upload-game.css");
-@import url("./game-detail.css");
-@import url("./profile.css");
-@import url("./back-to-top.css");
-@import url("./utilities.css");
-@import url("./responsive.css");
+@import url('./variables.css');
+@import url('./base.css');
+@import url('./layout.css');
+@import url('./buttons.css');
+@import url('./header.css');
+@import url('./hero.css');
+@import url('./gallery.css');
+@import url('./cards.css');
+@import url('./tables.css');
+@import url('./forms.css');
+@import url('./upload-game.css');
+@import url('./game-detail.css');
+@import url('./profile.css');
+@import url('./back-to-top.css');
+@import url('./utilities.css');
+@import url('./responsive.css');

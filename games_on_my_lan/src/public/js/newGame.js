@@ -1,83 +1,73 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
+  /* ---------- Vista previa de la miniatura ---------- */
+  const thumbnailInput = document.getElementById('thumbnail');
+  const thumbnailPreview = document.getElementById('thumbnailPreview');
 
-    /* ---------- Vista previa de la miniatura ---------- */
-    const thumbnailInput = document.getElementById("thumbnail");
-    const thumbnailPreview = document.getElementById("thumbnailPreview");
+  if (thumbnailInput && thumbnailPreview) {
+    thumbnailInput.addEventListener('change', () => {
+      const file = thumbnailInput.files[0];
 
-    if (thumbnailInput && thumbnailPreview) {
+      if (file) {
+        const reader = new FileReader();
 
-        thumbnailInput.addEventListener("change", () => {
-
-            const file = thumbnailInput.files[0];
-
-            if (file) {
-
-                const reader = new FileReader();
-
-                reader.onload = (event) => {
-                    thumbnailPreview.src = event.target.result;
-                };
-
-                reader.readAsDataURL(file);
-            }
-
-        });
-    }
-
-    /* ---------- Zona de arrastre para el .zip ---------- */
-    const dropZone = document.getElementById("gameFileDrop");
-    const gameFileInput = document.getElementById("gameFile");
-    const gameFileName = document.getElementById("gameFileName");
-
-    if (dropZone && gameFileInput) {
-
-        const showFileName = () => {
-            const file = gameFileInput.files[0];
-            if (gameFileName) {
-                gameFileName.textContent = file ? `📄 ${file.name}` : "";
-            }
+        reader.onload = (event) => {
+          thumbnailPreview.src = event.target.result;
         };
 
-        gameFileInput.addEventListener("change", showFileName);
+        reader.readAsDataURL(file);
+      }
+    });
+  }
 
-        ["dragenter", "dragover"].forEach((eventName) => {
-            dropZone.addEventListener(eventName, (event) => {
-                event.preventDefault();
-                dropZone.classList.add("dragover");
-            });
-        });
+  /* ---------- Zona de arrastre para el .zip ---------- */
+  const dropZone = document.getElementById('gameFileDrop');
+  const gameFileInput = document.getElementById('gameFile');
+  const gameFileName = document.getElementById('gameFileName');
 
-        ["dragleave", "drop"].forEach((eventName) => {
-            dropZone.addEventListener(eventName, (event) => {
-                event.preventDefault();
-                dropZone.classList.remove("dragover");
-            });
-        });
+  if (dropZone && gameFileInput) {
+    const showFileName = () => {
+      const file = gameFileInput.files[0];
+      if (gameFileName) {
+        gameFileName.textContent = file ? `📄 ${file.name}` : '';
+      }
+    };
 
-        dropZone.addEventListener("drop", (event) => {
+    gameFileInput.addEventListener('change', showFileName);
 
-            const file = event.dataTransfer.files[0];
+    ['dragenter', 'dragover'].forEach((eventName) => {
+      dropZone.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+    });
 
-            if (file) {
-                gameFileInput.files = event.dataTransfer.files;
-                showFileName();
-            }
+    ['dragleave', 'drop'].forEach((eventName) => {
+      dropZone.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        dropZone.classList.remove('dragover');
+      });
+    });
 
-        });
-    }
+    dropZone.addEventListener('drop', (event) => {
+      const file = event.dataTransfer.files[0];
 
-    /* ---------- Contador de caracteres de la descripción ---------- */
-    const description = document.getElementById("gameDescription");
-    const descCount = document.getElementById("descCount");
+      if (file) {
+        gameFileInput.files = event.dataTransfer.files;
+        showFileName();
+      }
+    });
+  }
 
-    if (description && descCount) {
+  /* ---------- Contador de caracteres de la descripción ---------- */
+  const description = document.getElementById('gameDescription');
+  const descCount = document.getElementById('descCount');
 
-        const updateCount = () => {
-            descCount.textContent = description.value.length;
-        };
+  if (description && descCount) {
+    const updateCount = () => {
+      descCount.textContent = description.value.length;
+    };
 
-        updateCount();
-        description.addEventListener("input", updateCount);
-    }
-
+    updateCount();
+    description.addEventListener('input', updateCount);
+  }
 });

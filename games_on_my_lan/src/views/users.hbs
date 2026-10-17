@@ -30,16 +30,19 @@
                     <th>Usuario</th>
                     <th>Rol</th>
                     <th>Registrado</th>
-                    {{#if canManageRoles}}<th>Acciones</th>{{/if}}
+                    {{#if canManageRoles}}
+                    <th>Acciones</th>
+                    {{/if}}
                 </tr>
             </thead>
 
             <tbody>
 
-            {{#each users}}
+                {{#each users}}
                 <tr data-username="{{username}}" data-role="{{role_name}}">
+
                     <td>
-                        <a class="user-link" href="/profile/{{id_user}}">
+                        <a class="user-link" href="/users/profile/{{id_user}}">
                             👤 {{username}}
                         </a>
                     </td>
@@ -51,33 +54,53 @@
                     <td>
                         {{registered_at}}
                     </td>
+
                     {{#if @root.canManageRoles}}
                     <td>
+
                         {{#if canChangeRole}}
                         <form action="/users/{{id_user}}/role" method="POST"
                             data-confirm="¿Cambiar el rol de «{{username}}»?">
+
                             <input type="hidden" name="role" value="{{newRole}}">
-                            <button type="submit" class="btn btn-outline-light" style="font-size:0.8rem;">
+
+                            <button type="submit" class="btn btn-outline-light"
+                                style="font-size:0.8rem;">
                                 {{newRoleLabel}}
                             </button>
+
                         </form>
                         {{/if}}
+
+                        {{#if canDelete}}
+                        <form action="/users/{{id_user}}?_method=DELETE" method="POST"
+                            data-confirm="¿Eliminar a «{{username}}»? Se borrarán también sus juegos.">
+
+                            <button type="submit" class="btn btn-danger"
+                                style="font-size:0.8rem;">
+                                Eliminar
+                            </button>
+
+                        </form>
+                        {{/if}}
+
                     </td>
                     {{/if}}
+
                 </tr>
 
-            {{else}}
+                {{else}}
 
                 <tr>
-                    <td colspan="4" class="text-center">
+                    <td colspan="{{#if canManageRoles}}4{{else}}3{{/if}}" class="text-center">
                         No hay usuarios registrados.
                     </td>
                 </tr>
 
-            {{/each}}
+                {{/each}}
 
                 <tr id="noResults" style="display:none;">
-                    <td colspan="4" class="text-center">
+                    <td colspan="{{#if canManageRoles}}4{{else}}3{{/if}}" class="text-center">
                         No se encontraron usuarios que coincidan con tu búsqueda.
                     </td>
                 </tr>
