@@ -1,34 +1,30 @@
-import express from "express";
-import methodOverride from "method-override";
-import path from "path";
-import { fileURLToPath } from "url";
-import session from "express-session";
-import { engine } from "express-handlebars";
-import fs from "fs";
-import https from "https";
-import http from "http";
+import express from 'express';
+import methodOverride from 'method-override';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import session from 'express-session';
+import { engine } from 'express-handlebars';
 
-import settings from "./admin/getSettings.js";
+import settings from './admin/getSettings.js';
+import { getGamesOrigin } from './src/config.js';
+import { startServers } from './src/startServers.js';
 
-import authRouter from "./src/routes/authRouter.js";
-import gamesRouter from "./src/routes/gamesRouter.js";
-import usersRouter from "./src/routes/usersRouter.js";
-import favoritesRouter from "./src/routes/favoritesRouter.js"
+import homeRouter from './src/routes/homeRouter.js';
+import authRouter from './src/routes/authRouter.js';
+import gamesRouter from './src/routes/gamesRouter.js';
+import usersRouter from './src/routes/usersRouter.js';
+import favoritesRouter from './src/routes/favoritesRouter.js';
 
-import gamesService from "./src/services/gamesService.js";
-import usersService from "./src/services/usersService.js";
-
-import { csrfProtection } from "./src/middlewares/csrf.js";
-
-import { getSessionSecret } from "./src/utils/sessionSecret.js";
+import { csrfProtection } from './src/middlewares/csrf.js';
+import { getSessionSecret } from './src/utils/sessionSecret.js';
 
 // Red de seguridad: un error inesperado se registra en vez de tumbar el servidor
-process.on("unhandledRejection", (reason) => {
-    console.error("Promesa rechazada sin manejar:", reason);
+process.on('unhandledRejection', (reason) => {
+  console.error('Promesa rechazada sin manejar:', reason);
 });
 
-process.on("uncaughtException", (error) => {
-    console.error("Excepción no capturada:", error);
+process.on('uncaughtException', (error) => {
+  console.error('Excepción no capturada:', error);
 });
 
 const __filename = fileURLToPath(import.meta.url);
@@ -37,261 +33,86 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 if (settings.public_mode) {
-    app.set("trust proxy", 1);
+  app.set('trust proxy', 1);
 }
 
-const PORT = settings.app_port || 3000;
-const GAMES_PORT = settings.games_port || PORT + 1;
-
-// Engine
+// Motor de vistas
 app.engine(
-    "hbs",
-    engine({
-        extname: ".hbs",
-        defaultLayout: "main"
-    })
+  'hbs',
+  engine({
+    extname: '.hbs',
+    defaultLayout: 'main',
+  }),
 );
 
-app.set("view engine", "hbs");
-app.set(
-    "views",
-    path.join(__dirname, "./src/views")
-);
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, './src/views'));
 
 // Middlewares globales
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(csrfProtection);
-app.use(methodOverride("_method"));
+app.use(methodOverride('_method'));
 
-app.use(session({
-    name: "__Host-goml.sid",
+app.use(
+  session({
+    name: '__Host-goml.sid',
     secret: getSessionSecret(),
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 3600000,
-        secure: true,
-        httpOnly: true,
-        sameSite: "strict",
-        path: "/"        // obligatorio para __Host-. No agregues "domain".
-    }
-}));
+      maxAge: 3600000,
+      secure: true,
+      httpOnly: true,
+      sameSite: 'strict',
+      path: '/', // obligatorio para __Host-. No agregues "domain".
+    },
+  }),
+);
+
+// Datos disponibles en todas las vistas
+app.use((req, res, next) => {
+  res.locals.user = req.session.user;
+  res.locals.gamesOrigin = getGamesOrigin(req);
+
+  next();
+});
 
 app.use((req, res, next) => {
-
-    res.locals.user = req.session.user;
-    res.locals.gamesOrigin = settings.games_origin || `https://${req.hostname}:${GAMES_PORT}`;
-
-    next();
-
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Content-Security-Policy', "frame-ancestors 'none'");
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  next();
 });
 
 // Archivos estáticos
+app.use(express.static(path.join(__dirname, 'src', 'public')));
+app.use('/thumbnails', express.static(path.join(process.cwd(), 'data', 'thumbnails')));
+app.use('/avatars', express.static(path.join(process.cwd(), 'data', 'avatars')));
 
-app.use((req, res, next) => {
-    res.setHeader("X-Frame-Options", "DENY");
-    res.setHeader("Content-Security-Policy", "frame-ancestors 'none'");
-    res.setHeader("X-Content-Type-Options", "nosniff");
-    next();
-});
+// Rutas
+app.use('/', homeRouter);
+app.use('/auth', authRouter);
+app.use('/games', gamesRouter);
+app.use('/users', usersRouter);
+app.use('/favorites', favoritesRouter);
 
-app.use(express.static(path.join(__dirname, "src", "public")));
-
-// Vistas
-app.get("/", async (req, res) => {
-
-    let stats = null;
-
-    try {
-
-        const [games, users] = await Promise.all([
-            gamesService.getAllGames(),
-            usersService.getAllUsers()
-        ]);
-
-        stats = {
-            totalGames: games.length,
-            totalUsers: users.length
-        };
-
-    } catch (error) {
-        console.error("No se pudieron cargar las estadísticas de la portada:", error);
-    }
-
-    res.render("index", {
-        title: "GamesOnMyLan",
-        stats
-    });
-
-});
-
-
-app.get("/games/new", (req, res) => {
-
-    if (!req.session.user) {
-        return res.redirect("/login");
-    }
-
-    res.render("new_game", {
-        title: "Nuevo Juego"
-    });
-
-});
-
-// Routers
-app.use(authRouter);
-app.use("/games", gamesRouter);
-app.use(usersRouter);
-app.use(favoritesRouter)
-
-// datos
-app.use(
-    "/thumbnails",
-    express.static(
-        path.join(process.cwd(), "data", "thumbnails")
-    )
-);
-
-app.use(
-    "/avatars",
-    express.static(
-        path.join(process.cwd(), "data", "avatars")
-    )
-);
-
+// Manejador de errores: debe ir al final
 app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
 
-    if (res.headersSent) {
-        return next(err);
-    }
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(413).send('El archivo es demasiado grande');
+  }
 
-    if (err.code === "LIMIT_FILE_SIZE") {
-        return res.status(413).send("El archivo es demasiado grande");
-    }
+  if (err.name === 'MulterError' || err.status === 400) {
+    return res.status(400).send(err.message);
+  }
 
-    if (err.name === "MulterError" || err.status === 400) {
-        return res.status(400).send(err.message);
-    }
-
-    console.error(err);
-    res.status(500).send("Error procesando la solicitud");
+  console.error(err);
+  res.status(500).send('Error procesando la solicitud');
 });
 
-// Inicio servidor
-try {
-
-    const tlsOptions = settings.public_mode ? null : {
-        key: fs.readFileSync(path.join(__dirname, "certs", "server.key")),
-        cert: fs.readFileSync(path.join(__dirname, "certs", "server.crt"))
-    };
-
-    const createServer = (handler) =>
-        tlsOptions
-            ? https.createServer(tlsOptions, handler)
-            : http.createServer(handler);
-
-    const server = createServer(app);
-
-    server.on("error", (error) => {
-
-        console.error("\n====================================");
-        console.error("ERROR AL INICIAR EL SERVIDOR");
-        console.error("====================================");
-
-        if (error.code === "EADDRINUSE") {
-
-            console.error(
-                `El puerto ${PORT} ya está siendo utilizado.`
-            );
-
-        } else {
-
-            console.error(error.message);
-
-        }
-
-        process.exit(1);
-
-    });
-
-    server.listen(PORT, () => {
-
-        console.log(
-            `app_port: ${settings.app_port}\n` +
-            `guest_register: ${settings.guest_register}\n` +
-            `GamesOnMyLAN listening on port https://localhost:${PORT}/`
-        );
-
-    });
-
-    const gamesApp = express();
-
-    gamesApp.disable("x-powered-by");
-    gamesApp.use((req, res, next) => {
-        res.setHeader("X-Content-Type-Options", "nosniff");
-        // Opcional: solo si un juego de Godot con hilos lo pide
-        // res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-        // res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-        next();
-    });
-    gamesApp.use(express.static(path.join(process.cwd(), "data", "games")));
-
-    const gamesServer = createServer(gamesApp);
-
-    gamesServer.on("error", (error) => {
-        console.error(
-            error.code === "EADDRINUSE"
-                ? `El puerto de juegos ${GAMES_PORT} ya está siendo utilizado.`
-                : error.message
-        );
-        process.exit(1);
-    });
-
-    gamesServer.listen(GAMES_PORT, () => {
-        console.log(`Servidor de juegos en https://localhost:${GAMES_PORT}/`);
-    });
-
-} catch (error) {
-
-    console.error("\n====================================");
-    console.error("ERROR AL CONFIGURAR HTTPS");
-    console.error("====================================");
-
-    if (error.code === "ENOENT") {
-
-        console.error(
-            "No se encontraron los certificados HTTPS."
-        );
-
-        console.log(`
-
-            IMPORTANTE:
-            Antes de iniciar GamesOnMyLAN debes generar los certificados HTTPS:
-
-                node admin/cert.js
-
-            Esto creará la carpeta "certs" en el directorio raíz
-            del proyecto, de no ser asi, muevela a la raiz.
-
-            Si los certificados ya existen pero la IP local cambió,
-            elimina la carpeta "certs" y vuelve a ejecutar el script.
-
-            Ademas debes de revisar el archivo .env y cambiar los valores por defecto.
-        `);
-
-    } else if (error.code === "EACCES") {
-
-        console.error(
-            "No tienes permisos para acceder a los certificados."
-        );
-
-    } else {
-
-        console.error(error.message);
-
-    }
-
-    process.exit(1);
-
-}
+startServers(app);

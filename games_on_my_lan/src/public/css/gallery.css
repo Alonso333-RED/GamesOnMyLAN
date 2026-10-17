@@ -5,171 +5,180 @@
    ======================================== */
 
 .gallery-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 14px;
-    margin: 20px 0 28px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin: 20px 0 28px;
 }
 
 .search-wrap {
-    position: relative;
-    flex: 1 1 260px;
-    max-width: 420px;
+  position: relative;
+  flex: 1 1 260px;
+  max-width: 420px;
 }
 
 .search-wrap .search-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0.6;
-    pointer-events: none;
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .mySearcher {
-    background-color: #000000;
-    color: var(--pink);
-    border: 1px solid var(--pink);
-    border-radius: 999px;
-    padding: 10px 16px 10px 38px;
-    width: 100%;
-    box-sizing: border-box;
-    transition: border-color var(--transition), box-shadow var(--transition);
+  background-color: #000000;
+  color: var(--pink);
+  border: 1px solid var(--pink);
+  border-radius: 999px;
+  padding: 10px 16px 10px 38px;
+  width: 100%;
+  box-sizing: border-box;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
 }
 
 .mySearcher:focus {
-    outline: none;
-    border-color: var(--red);
-    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.18);
+  outline: none;
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.18);
 }
 
 .result-count {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    white-space: nowrap;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .game-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 22px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 22px;
 }
 
 .game-card {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
-    opacity: 0;
-    transform: translateY(16px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition);
+  opacity: 0;
+  transform: translateY(16px);
 }
 
 .game-card.in-view {
-    opacity: 1;
-    transform: translateY(0);
-    transition: transform 0.4s ease, opacity 0.4s ease, border-color var(--transition), box-shadow var(--transition);
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    transform 0.4s ease,
+    opacity 0.4s ease,
+    border-color var(--transition),
+    box-shadow var(--transition);
 }
 
 .game-card:hover {
-    transform: translateY(-6px);
-    border-color: rgba(255, 0, 0, 0.5);
-    box-shadow: 0 14px 30px rgba(255, 0, 0, 0.15);
+  transform: translateY(-6px);
+  border-color: rgba(255, 0, 0, 0.5);
+  box-shadow: 0 14px 30px rgba(255, 0, 0, 0.15);
 }
 
 .game-card-media {
-    position: relative;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    background-color: var(--red-darker);
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background-color: var(--red-darker);
 }
 
 .game-card-media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.35s ease;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
 }
 
 .game-card:hover .game-card-media img {
-    transform: scale(1.08);
+  transform: scale(1.08);
 }
 
 .game-card-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background: rgba(0, 0, 0, 0.6);
-    opacity: 0;
-    transition: opacity var(--transition);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transition: opacity var(--transition);
 }
 
 .game-card:hover .game-card-overlay,
 .game-card:focus-within .game-card-overlay {
-    opacity: 1;
+  opacity: 1;
 }
 
 .game-card-overlay .btn-primary,
 .game-card-overlay .btn-outline-light {
-    padding: 0.4rem 0.9rem;
-    font-size: 0.85rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
 }
 
 .game-card-body {
-    padding: 14px 16px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex: 1;
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
 }
 
 .game-card-title {
-    color: var(--pink);
-    font-weight: 700;
-    font-size: 1.05rem;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  color: var(--pink);
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .game-card-author {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    margin: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 0;
 }
 
 .game-card-date {
-    margin-top: auto;
-    padding-top: 8px;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.45);
-    border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  margin-top: auto;
+  padding-top: 8px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
 }
 
 .favorite-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 2;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
 
-    background: rgba(0, 0, 0, 0.7);
-    color: #ffbfbf;
-    font-size: 24px;
-    line-height: 1;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffbfbf;
+  font-size: 24px;
+  line-height: 1;
 }

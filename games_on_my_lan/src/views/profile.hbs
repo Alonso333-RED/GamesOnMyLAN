@@ -14,50 +14,69 @@
         </div>
 
         <div class="flex-grow-1">
+
             <h1 class="text-primary mb-1">
                 {{profileUser.username}}
             </h1>
+
             <div class="text-tertiary mb-0">
-            {{#if profileUser.bio}}
-                {{#if isOwnProfile}}
+                {{#if profileUser.bio}}
+                    {{#if isOwnProfile}}
 
-                    <form action="/profile/bio" method="POST" class="mt-2">
+                        <form action="/users/profile/bio" method="POST" class="mt-2">
 
-                        <textarea
-                            name="bio"
-                            id="bio"
-                            class="form-control"
-                            placeholder="Escribe tu biografía..."
-                            rows="4"
-                        >{{profileUser.bio}}</textarea>
+                            <textarea
+                                name="bio"
+                                id="bio"
+                                class="form-control"
+                                placeholder="Escribe tu biografía..."
+                                rows="4"
+                            >{{profileUser.bio}}</textarea>
 
-                        <button
-                            type="submit"
-                            class="btn btn-outline-light mt-2"
-                            style="font-size: 0.8rem;"
-                        >
-                            💾 Guardar biografía
-                        </button>
+                            <button
+                                type="submit"
+                                class="btn btn-outline-light mt-2"
+                                style="font-size: 0.8rem;"
+                            >
+                                💾 Guardar biografía
+                            </button>
 
-                    </form>
+                        </form>
 
+                    {{else}}
+
+                        <p>{{profileUser.bio}}</p>
+
+                    {{/if}}
                 {{else}}
+                    {{#if isOwnProfile}}
 
-                    <p>{{profileUser.bio}}</p>
+                        <form action="/users/profile/bio" method="POST" class="mt-2">
 
+                            <textarea
+                                name="bio"
+                                id="bio"
+                                class="form-control"
+                                placeholder="Escribe tu biografía..."
+                                rows="4"
+                            ></textarea>
+
+                            <button
+                                type="submit"
+                                class="btn btn-outline-light mt-2"
+                                style="font-size: 0.8rem;"
+                            >
+                                💾 Guardar biografía
+                            </button>
+
+                        </form>
+
+                    {{else}}
+
+                        <em>Este usuario no ha escrito una biografía.</em>
+
+                    {{/if}}
                 {{/if}}
-            {{else}}
-                {{#if isOwnProfile}}
-                    <form action="/profile/bio" method="POST" class="mt-2">
-                        <textarea name="bio" id="bio" class="form-control" placeholder="Escribe tu biografía..." rows="4"></textarea>
-                        <button type="submit" class="btn btn-outline-light mt-2" style="font-size: 0.8rem;">
-                            💾 Guardar biografía
-                        </button>
-                    </form>
-                {{else}}
-                    <em>Este usuario no ha escrito una biografía.</em>
-                {{/if}}
-            {{/if}}
             </div>
 
             <p class="text-tertiary mb-0">
@@ -65,7 +84,8 @@
             </p>
 
             {{#if isOwnProfile}}
-                <form action="/profile/avatar" method="POST" enctype="multipart/form-data" class="mt-3">
+                <form action="/users/profile/avatar" method="POST" enctype="multipart/form-data" class="mt-3">
+
                     <input
                         type="file"
                         class="form-control"
@@ -73,12 +93,27 @@
                         accept=".png"
                         data-max-mb="5"
                         required>
+
                     <p class="field-hint">PNG, máximo 5 MB.</p>
+
                     <button type="submit" class="btn btn-outline-light" style="font-size:0.8rem;">
                         📷 Cambiar foto
                     </button>
+
                 </form>
             {{/if}}
+
+            {{#if canDelete}}
+                <form action="/users/{{profileUser.id_user}}?_method=DELETE" method="POST" class="mt-3"
+                    data-confirm="{{#if isOwnProfile}}¿Eliminar tu cuenta? Se borrarán también tus juegos y no se puede deshacer.{{else}}¿Eliminar a «{{profileUser.username}}»? Se borrarán también sus juegos.{{/if}}">
+
+                    <button type="submit" class="btn btn-danger" style="font-size:0.8rem;">
+                        {{#if isOwnProfile}}Eliminar mi cuenta{{else}}Eliminar usuario{{/if}}
+                    </button>
+
+                </form>
+            {{/if}}
+
         </div>
 
     </div>
@@ -93,6 +128,7 @@
             <article class="game-card">
 
                 <div class="game-card-media">
+
                     <img
                         src="/thumbnails/{{id_game}}.png"
                         alt="{{game_name}}"
@@ -100,17 +136,23 @@
                         onerror="this.onerror=null;this.src='/img/default_game.png';">
 
                     <div class="game-card-overlay">
+
                         <a href="{{@root.gamesOrigin}}/{{id_game}}/{{entry_file}}" class="btn btn-primary">
                             ▶️ Jugar
                         </a>
+
                         <a href="/games/game-details/{{id_game}}" class="btn btn-outline-light">
                             Detalles
                         </a>
+
                     </div>
+
                 </div>
 
                 <div class="game-card-body">
+
                     <p class="game-card-title" title="{{game_name}}">{{game_name}}</p>
+
                     <span class="game-card-date">Actualizado: {{updated_at}}</span>
 
                     {{#if ../isOwnProfile}}
@@ -118,18 +160,22 @@
                             ✎ Editar
                         </a>
                     {{/if}}
+
                 </div>
 
             </article>
         {{else}}
             <div class="empty-state">
+
                 <span class="empty-icon">🎮</span>
+
                 {{#if isOwnProfile}}
                     Todavía no has subido ningún juego.<br>
                     <a href="/games/new">Sube el primero</a>
                 {{else}}
                     Este usuario no ha subido juegos todavía.
                 {{/if}}
+
             </div>
         {{/each}}
 

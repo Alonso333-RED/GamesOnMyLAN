@@ -1,11 +1,9 @@
-import pool from "../database/pool.js";
+import pool from '../database/pool.js';
 
 const gamesService = {
-
-    async createGame(game) {
-
-        const result = await pool.query(
-            `
+  async createGame(game) {
+    const result = await pool.query(
+      `
             INSERT INTO games
             (
                 game_name,
@@ -16,19 +14,14 @@ const gamesService = {
             VALUES ($1,$2,$3,$4)
             RETURNING *;
             `,
-            [
-                game.game_name,
-                game.game_description,
-                game.entry_file,
-                game.author_id
-            ]
-        );
-        return result.rows[0];
-    },
+      [game.game_name, game.game_description, game.entry_file, game.author_id],
+    );
+    return result.rows[0];
+  },
 
-    async getAllGames(userId) {
-        const result = await pool.query(
-            `
+  async getAllGames(userId) {
+    const result = await pool.query(
+      `
             SELECT
                 g.id_game,
                 g.game_name,
@@ -47,16 +40,15 @@ const gamesService = {
                 (f.game_id IS NOT NULL) DESC,
                 g.updated_at DESC;
             `,
-            [userId]
-        );
+      [userId],
+    );
 
-        return result.rows;
-    },
+    return result.rows;
+  },
 
-    async getGameById(id_game) {
-
-        const result = await pool.query(
-            `
+  async getGameById(id_game) {
+    const result = await pool.query(
+      `
             SELECT
                 g.id_game,
                 g.game_name,
@@ -71,48 +63,42 @@ const gamesService = {
             JOIN users u ON g.author_id = u.id_user
             JOIN roles r ON u.role_id = r.id_role
             WHERE g.id_game = $1;`,
-            [id_game]
-        );
+      [id_game],
+    );
 
-        return result.rows[0];
+    return result.rows[0];
+  },
 
-    },
-
-    async getGamesByAuthorId(author_id) {
-
-        const result = await pool.query(
-            `
+  async getGamesByAuthorId(author_id) {
+    const result = await pool.query(
+      `
             SELECT *
             FROM games
             WHERE author_id = $1
             ORDER BY updated_at DESC;
             `,
-            [author_id]
-        );
+      [author_id],
+    );
 
-        return result.rows;
+    return result.rows;
+  },
 
-    },
-
-    async deleteGame(id_game) {
-
-        const result = await pool.query(
-            `
+  async deleteGame(id_game) {
+    const result = await pool.query(
+      `
             DELETE FROM games
             WHERE id_game = $1
             RETURNING *;
             `,
-            [id_game]
-        );
+      [id_game],
+    );
 
-        return result.rows[0];
+    return result.rows[0];
+  },
 
-    },
-
-    async updateGame(id_game, game) {
-
-        const result = await pool.query(
-            `
+  async updateGame(id_game, game) {
+    const result = await pool.query(
+      `
             UPDATE games
             SET
                 game_name = $1,
@@ -122,17 +108,11 @@ const gamesService = {
             WHERE id_game = $4
             RETURNING *;
             `,
-            [
-                game.game_name,
-                game.game_description,
-                game.entry_file,
-                id_game
-            ]
-        );
+      [game.game_name, game.game_description, game.entry_file, id_game],
+    );
 
-        return result.rows[0];
-
-    }
+    return result.rows[0];
+  },
 };
 
 export default gamesService;

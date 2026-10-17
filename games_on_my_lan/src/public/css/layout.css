@@ -1,18 +1,18 @@
 /* Estructura general: panel principal y footer */
 
 .main-panel {
-    background:
-        linear-gradient(180deg, rgba(64, 0, 0, 0.22), transparent 90px),
-        var(--panel);
-    padding: 40px;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border-soft);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), inset 0 0 40px rgba(64, 0, 0, 0.18);
+  background: linear-gradient(180deg, rgba(64, 0, 0, 0.22), transparent 90px), var(--panel);
+  padding: 40px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-soft);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.55),
+    inset 0 0 40px rgba(64, 0, 0, 0.18);
 }
 
 .site-footer {
-    padding: 24px 16px 40px;
-    text-align: center;
-    color: #bbb;
-    font-size: 0.9rem;
+  padding: 24px 16px 40px;
+  text-align: center;
+  color: #bbb;
+  font-size: 0.9rem;
 }

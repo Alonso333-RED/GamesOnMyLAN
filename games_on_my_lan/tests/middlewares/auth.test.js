@@ -1,122 +1,135 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock("../../src/database/pool.js", () => ({
-    default: { query: vi.fn() }
+vi.mock('../../src/services/gamesService.js', () => ({
+  default: { getGameById: vi.fn() },
 }));
 
-import pool from "../../src/database/pool.js";
-import { requireLogin, requireCanDelete } from "../../src/middlewares/auth.js";
+vi.mock('../../src/services/usersService.js', () => ({
+  default: { getUserById: vi.fn() },
+}));
+
+import gamesService from '../../src/services/gamesService.js';
+import usersService from '../../src/services/usersService.js';
+import { requireLogin, requireLoginPage, requireCanDelete } from '../../src/middlewares/auth.js';
 
 // req/res falsos: no levantamos Express real, solo simulamos lo mínimo
 // que el middleware necesita para ejercitar su lógica.
 function mockRes() {
-    const res = {};
-    res.status = vi.fn().mockReturnValue(res);
-    res.send = vi.fn().mockReturnValue(res);
-    return res;
+  const res = {};
+  res.status = vi.fn().mockReturnValue(res);
+  res.send = vi.fn().mockReturnValue(res);
+  res.redirect = vi.fn().mockReturnValue(res);
+  return res;
 }
 
-describe("requireLogin", () => {
+describe('requireLogin', () => {
+  it('deja pasar si hay un usuario en sesión', () => {
+    const req = { session: { user: { id: 1 } } };
+    const res = mockRes();
+    const next = vi.fn();
 
-    it("deja pasar si hay un usuario en sesión", () => {
+    requireLogin(req, res, next);
 
-        const req = { session: { user: { id: 1 } } };
-        const res = mockRes();
-        const next = vi.fn();
+    expect(next).toHaveBeenCalledOnce();
+    expect(res.status).not.toHaveBeenCalled();
+  });
 
-        requireLogin(req, res, next);
+  it('responde 401 si no hay sesión iniciada', () => {
+    const req = { session: {} };
+    const res = mockRes();
+    const next = vi.fn();
 
-        expect(next).toHaveBeenCalledOnce();
-        expect(res.status).not.toHaveBeenCalled();
+    requireLogin(req, res, next);
 
-    });
-
-    it("responde 401 si no hay sesión iniciada", () => {
-
-        const req = { session: {} };
-        const res = mockRes();
-        const next = vi.fn();
-
-        requireLogin(req, res, next);
-
-        expect(next).not.toHaveBeenCalled();
-        expect(res.status).toHaveBeenCalledWith(401);
-
-    });
-
+    expect(next).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(401);
+  });
 });
 
-describe("requireCanDelete", () => {
+describe('requireLoginPage', () => {
+  it('deja pasar si hay un usuario en sesión', () => {
+    const req = { session: { user: { id: 1 } } };
+    const res = mockRes();
+    const next = vi.fn();
 
-    beforeEach(() => {
-        pool.query.mockReset();
+    requireLoginPage(req, res, next);
+
+    expect(next).toHaveBeenCalledOnce();
+    expect(res.redirect).not.toHaveBeenCalled();
+  });
+
+  it('redirige a /auth/login si no hay sesión iniciada', () => {
+    const req = { session: {} };
+    const res = mockRes();
+    const next = vi.fn();
+
+    requireLoginPage(req, res, next);
+
+    expect(next).not.toHaveBeenCalled();
+    expect(res.redirect).toHaveBeenCalledWith('/auth/login');
+  });
+});
+
+describe('requireCanDelete', () => {
+  beforeEach(() => {
+    gamesService.getGameById.mockReset();
+    usersService.getUserById.mockReset();
+  });
+
+  it('responde 404 si el id del juego no es un número válido', async () => {
+    const req = { params: { gameId: 'abc' }, session: { user: { id: 1 } } };
+    const res = mockRes();
+    const next = vi.fn();
+
+    await requireCanDelete(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(next).not.toHaveBeenCalled();
+    // Ni siquiera debería haber consultado la BD con un id inválido
+    expect(gamesService.getGameById).not.toHaveBeenCalled();
+  });
+
+  it('deja pasar y anota req.moderation cuando el actor es el autor', async () => {
+    gamesService.getGameById.mockResolvedValueOnce({ author_id: 7, author_role: 'member' });
+    usersService.getUserById.mockResolvedValueOnce({ role_name: 'member' });
+
+    const req = { params: { gameId: '10' }, session: { user: { id: 7 } } };
+    const res = mockRes();
+    const next = vi.fn();
+
+    await requireCanDelete(req, res, next);
+
+    expect(next).toHaveBeenCalledOnce();
+    expect(req.moderation).toEqual({
+      isAuthor: true,
+      actorRole: 'member',
+      authorRole: 'member',
     });
+  });
 
-    it("responde 404 si el id del juego no es un número válido", async () => {
+  it('responde 403 cuando un member intenta borrar el juego de otro usuario', async () => {
+    gamesService.getGameById.mockResolvedValueOnce({ author_id: 7, author_role: 'member' });
+    usersService.getUserById.mockResolvedValueOnce({ role_name: 'member' });
 
-        const req = { params: { id: "abc" }, session: { user: { id: 1 } } };
-        const res = mockRes();
-        const next = vi.fn();
+    const req = { params: { gameId: '10' }, session: { user: { id: 99 } } };
+    const res = mockRes();
+    const next = vi.fn();
 
-        await requireCanDelete(req, res, next);
+    await requireCanDelete(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(404);
-        expect(next).not.toHaveBeenCalled();
-        // Ni siquiera debería haber consultado la BD con un id inválido
-        expect(pool.query).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(next).not.toHaveBeenCalled();
+  });
 
-    });
+  it('responde 404 si el juego no existe', async () => {
+    gamesService.getGameById.mockResolvedValueOnce(undefined);
 
-    it("deja pasar y anota req.moderation cuando el actor es el autor", async () => {
+    const req = { params: { gameId: '10' }, session: { user: { id: 1 } } };
+    const res = mockRes();
+    const next = vi.fn();
 
-        pool.query.mockResolvedValueOnce({
-            rows: [{ author_id: 7, author_role: "member", actor_role: "member" }]
-        });
+    await requireCanDelete(req, res, next);
 
-        const req = { params: { id: "10" }, session: { user: { id: 7 } } };
-        const res = mockRes();
-        const next = vi.fn();
-
-        await requireCanDelete(req, res, next);
-
-        expect(next).toHaveBeenCalledOnce();
-        expect(req.moderation).toEqual({
-            isAuthor: true,
-            actorRole: "member",
-            authorRole: "member"
-        });
-
-    });
-
-    it("responde 403 cuando un member intenta borrar el juego de otro usuario", async () => {
-
-        pool.query.mockResolvedValueOnce({
-            rows: [{ author_id: 7, author_role: "member", actor_role: "member" }]
-        });
-
-        const req = { params: { id: "10" }, session: { user: { id: 99 } } };
-        const res = mockRes();
-        const next = vi.fn();
-
-        await requireCanDelete(req, res, next);
-
-        expect(res.status).toHaveBeenCalledWith(403);
-        expect(next).not.toHaveBeenCalled();
-
-    });
-
-    it("responde 404 si el juego no existe", async () => {
-
-        pool.query.mockResolvedValueOnce({ rows: [] });
-
-        const req = { params: { id: "10" }, session: { user: { id: 1 } } };
-        const res = mockRes();
-        const next = vi.fn();
-
-        await requireCanDelete(req, res, next);
-
-        expect(res.status).toHaveBeenCalledWith(404);
-
-    });
-
+    expect(res.status).toHaveBeenCalledWith(404);
+  });
 });

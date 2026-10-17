@@ -44,7 +44,7 @@
 
                 {{#if isFavorite}}
                     <form
-                        action="/deleteFavorite/{{game.id_game}}?_method=DELETE"
+                        action="/favorites/{{game.id_game}}?_method=DELETE"
                         method="POST"
                         class="inline-form">
 
@@ -54,7 +54,7 @@
                     </form>
                 {{else}}
                     <form
-                        action="/addFavorite/{{game.id_game}}"
+                        action="/favorites/{{game.id_game}}"
                         method="POST"
                         class="inline-form">
 

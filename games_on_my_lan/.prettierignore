@@ -1,0 +1,17 @@
+node_modules/
+coverage/
+dist/
+build/
+temp/
+data/
+certs/
+.git/
+.eslintcache
+
+src/public/js/bootstrap.bundle.min.js
+
+# Plantillas Handlebars: sintaxis clásica de Express
+src/views/**/*.hbs
+
+# Bootstrap de terceros
+src/public/css/bootstrap.min.css

@@ -1,55 +1,31 @@
-import favoritesService from "../services/favoritesService.js";
+import favoritesService from '../services/favoritesService.js';
 
-async function addFavorite(req, res, next) {
-    const favorite = {
-        user_id: req.session.user.id,
-        game_id: req.params.id_game
-    };
+async function addFavorite(req, res) {
+  await favoritesService.addFavorite({
+    user_id: req.session.user.id,
+    game_id: req.params.gameId,
+  });
 
-    try {
-        await favoritesService.addFavorite(favorite);
-        return res.redirect("/games");
-    } catch (error) {
-        next(error);
-    }
+  res.redirect('/games');
 }
 
-async function deleteFavorite(req, res, next) {
-    const favorite = {
-        user_id: req.session.user.id,
-        game_id: req.params.id_game
-    };
+async function deleteFavorite(req, res) {
+  await favoritesService.deleteFavorite({
+    user_id: req.session.user.id,
+    game_id: req.params.gameId,
+  });
 
-    try {
-        await favoritesService.deleteFavorite(favorite);
-        return res.redirect("/games");
-    } catch (error) {
-        next(error);
-    }
+  res.redirect('/games');
 }
 
-export const checkFavorite = async (req, res, next) => {
-    try {
-        const favorite = {
-            user_id: req.session.user.id,
-            game_id: req.params.id_game
-        };
+async function checkFavorite(req, res) {
+  const isFavorited = await favoritesService.checkFavorite(req.session.user.id, req.params.gameId);
 
-        const isFavorited = await favoritesService.checkFavorite(
-            favorite.user_id,
-            favorite.game_id
-        );
-
-        return res.status(200).json({
-            isFavorited
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+  res.json({ isFavorited });
+}
 
 export default {
-    addFavorite,
-    deleteFavorite,
-    checkFavorite
+  addFavorite,
+  deleteFavorite,
+  checkFavorite,
 };

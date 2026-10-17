@@ -5,88 +5,92 @@
    ======================================== */
 
 .thumbnail {
-    width: 250px;
-    height: 250px;
-    object-fit: cover;
-    margin-bottom: 20px;
-    border-radius: var(--radius-md);
-    outline: 2px solid var(--pink);
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  margin-bottom: 20px;
+  border-radius: var(--radius-md);
+  outline: 2px solid var(--pink);
 }
 
 .thumb-dropzone {
-    position: relative;
-    width: 100%;
-    max-width: 260px;
-    margin: 0 auto;
+  position: relative;
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto;
 }
 
 .thumb-dropzone .thumbnail {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 1;
-    cursor: pointer;
-    transition: outline-color var(--transition), filter var(--transition);
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+  transition:
+    outline-color var(--transition),
+    filter var(--transition);
 }
 
 .thumb-dropzone:hover .thumbnail,
 .thumb-dropzone.dragover .thumbnail {
-    outline-color: var(--red);
-    filter: brightness(1.08);
+  outline-color: var(--red);
+  filter: brightness(1.08);
 }
 
 .thumb-dropzone .thumb-hint {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.75);
-    color: var(--pink);
-    font-size: 0.72rem;
-    padding: 3px 10px;
-    border-radius: 999px;
-    pointer-events: none;
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.75);
+  color: var(--pink);
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+  pointer-events: none;
 }
 
 .file-drop {
-    border: 1.5px dashed var(--border-soft);
-    border-radius: var(--radius-md);
-    padding: 22px 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color var(--transition), background-color var(--transition);
-    position: relative;
+  border: 1.5px dashed var(--border-soft);
+  border-radius: var(--radius-md);
+  padding: 22px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    background-color var(--transition);
+  position: relative;
 }
 
 .file-drop:hover,
 .file-drop.dragover {
-    border-color: var(--red);
-    background-color: rgba(255, 0, 0, 0.06);
+  border-color: var(--red);
+  background-color: rgba(255, 0, 0, 0.06);
 }
 
-.file-drop input[type="file"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
+.file-drop input[type='file'] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .file-drop .file-drop-icon {
-    font-size: 1.6rem;
-    display: block;
-    margin-bottom: 6px;
+  font-size: 1.6rem;
+  display: block;
+  margin-bottom: 6px;
 }
 
 .file-drop .file-drop-name {
-    display: block;
-    margin-top: 8px;
-    color: var(--pink);
-    font-size: 0.85rem;
-    word-break: break-all;
+  display: block;
+  margin-top: 8px;
+  color: var(--pink);
+  font-size: 0.85rem;
+  word-break: break-all;
 }
 
 .char-counter {
-    text-align: right;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.4);
-    margin-top: 4px;
+  text-align: right;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 4px;
 }
