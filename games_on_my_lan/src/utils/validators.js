@@ -74,3 +74,39 @@ export async function assertPngFile(filePath) {
 export function isValidId(value) {
   return /^\d{1,9}$/.test(value);
 }
+
+// ---------- Cambio de contraseña ----------
+
+export const PASSWORD_MIN_LENGTH = 1;
+// bcrypt solo usa los primeros 72 bytes: más allá de eso ignoraría el resto en silencio
+export const PASSWORD_MAX_BYTES = 72;
+
+// Devuelve un mensaje de error en español, o null si los datos son válidos.
+// Los valores pueden no ser strings (p. ej. "currentPassword[x]=1" llega como objeto).
+export function validatePasswordChange({ currentPassword, newPassword, confirmPassword }) {
+  const allStrings = [currentPassword, newPassword, confirmPassword].every(
+    (value) => typeof value === 'string',
+  );
+
+  if (!allStrings || currentPassword === '' || newPassword === '' || confirmPassword === '') {
+    return 'Completa los tres campos.';
+  }
+
+  if (newPassword !== confirmPassword) {
+    return 'La nueva contraseña y su confirmación no coinciden.';
+  }
+
+  if (newPassword.length < PASSWORD_MIN_LENGTH) {
+    return `La nueva contraseña debe tener al menos ${PASSWORD_MIN_LENGTH} caracteres.`;
+  }
+
+  if (Buffer.byteLength(newPassword, 'utf8') > PASSWORD_MAX_BYTES) {
+    return `La nueva contraseña es demasiado larga (máximo ${PASSWORD_MAX_BYTES} bytes; las tildes y los emojis ocupan más de uno).`;
+  }
+
+  if (newPassword === currentPassword) {
+    return 'La nueva contraseña debe ser distinta de la actual.';
+  }
+
+  return null;
+}

@@ -24,3 +24,19 @@ export const registerLimiter = rateLimit({
   legacyHeaders: false,
   handler: tooManyRequests('Demasiados registros desde esta red. Inténtalo más tarde.'),
 });
+
+// Se cuenta por usuario (la ruta exige sesión). Solo suman los intentos con la contraseña
+// actual incorrecta (el controlador marca res.locals.failedPasswordAttempt): equivocarse
+// al repetir la nueva o elegir una clave corta no debe bloquear a nadie.
+export const passwordChangeLimiter = rateLimit({
+  windowMs: 15 * MINUTE,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true,
+  requestWasSuccessful: (req, res) => !res.locals.failedPasswordAttempt,
+  keyGenerator: (req) => `user:${req.session.user.id}`,
+  handler: tooManyRequests(
+    'Demasiados intentos de cambio de contraseña. Espera unos minutos e inténtalo de nuevo.',
+  ),
+});

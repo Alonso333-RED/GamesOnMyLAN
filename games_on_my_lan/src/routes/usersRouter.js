@@ -1,7 +1,7 @@
 import express from 'express';
 import usersController from '../controllers/usersController.js';
 import { requireGuestRegister } from '../middlewares/settings.js';
-import { registerLimiter } from '../middlewares/rateLimit.js';
+import { registerLimiter, passwordChangeLimiter } from '../middlewares/rateLimit.js';
 import {
   requireLogin,
   requireLoginPage,
@@ -24,6 +24,9 @@ router.post(
   usersController.updateAvatar,
 );
 router.post('/profile/bio', requireLogin, usersController.updateBio);
+
+router.get('/password', requireLoginPage, usersController.showChangePassword);
+router.post('/password', requireLogin, passwordChangeLimiter, usersController.changePassword);
 
 router.get('/', usersController.showUsers);
 

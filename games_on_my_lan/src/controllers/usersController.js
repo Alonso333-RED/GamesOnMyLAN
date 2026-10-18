@@ -2,9 +2,14 @@ import fsp from 'fs/promises';
 import usersService from '../services/usersService.js';
 import gamesService from '../services/gamesService.js';
 import storageService from '../services/storageService.js';
-import { regenerateSession, saveSession, endSession } from '../utils/session.js';
+import {
+  regenerateSession,
+  saveSession,
+  endSession,
+  destroyOtherSessions,
+} from '../utils/session.js';
 import { canDeleteUser } from '../utils/permissions.js';
-import { isValidId } from '../utils/validators.js';
+import { isValidId, validatePasswordChange } from '../utils/validators.js';
 
 async function register(req, res) {
   const { username, password } = req.body;
@@ -166,6 +171,80 @@ async function changeRole(req, res) {
   res.redirect('/users');
 }
 
+function showChangePassword(req, res) {
+  res.render('change_password', {
+    title: 'Cambiar contraseña',
+    success: req.query.ok === '1',
+  });
+}
+
+function renderChangePasswordError(res, status, message) {
+  // Nunca se reenvían las contraseñas escritas: el formulario vuelve vacío
+  res.status(status).render('change_password', {
+    title: 'Cambiar contraseña',
+    error: message,
+  });
+}
+
+async function changePassword(req, res) {
+  const { currentPassword, newPassword, confirmPassword } = req.body;
+
+  const validationError = validatePasswordChange({
+    currentPassword,
+    newPassword,
+    confirmPassword,
+  });
+
+  if (validationError) {
+    return renderChangePasswordError(res, 400, validationError);
+  }
+
+  const sessionUser = req.session.user;
+
+  const result = await usersService.changePassword(sessionUser.id, currentPassword, newPassword);
+
+  if (result === 'not_found') {
+    // La cuenta ya no existe: se limpia la sesión que quedó huérfana
+    await endSession(req, res);
+    return res.redirect('/auth/login');
+  }
+
+  if (result === 'wrong_password') {
+    // Lo lee passwordChangeLimiter: solo estos intentos cuentan para el bloqueo
+    res.locals.failedPasswordAttempt = true;
+    return renderChangePasswordError(res, 400, 'La contraseña actual no es correcta.');
+  }
+
+  if (result === 'conflict') {
+    return renderChangePasswordError(
+      res,
+      409,
+      'Tu contraseña cambió mientras se procesaba la solicitud. Inténtalo de nuevo.',
+    );
+  }
+
+  // Cambio exitoso: se renueva el id de sesión y se cierran las demás sesiones abiertas
+  await regenerateSession(req);
+  req.session.user = sessionUser;
+  await saveSession(req);
+
+  let closedSessions = 0;
+
+  try {
+    closedSessions = await destroyOtherSessions(req, sessionUser.id);
+  } catch (error) {
+    // La contraseña ya cambió; no se falla por no poder cerrar las otras sesiones
+    console.error('No se pudieron cerrar las otras sesiones:', error);
+  }
+
+  console.warn(
+    `[CUENTAS] ${new Date().toISOString()} ` +
+      `#${sessionUser.id} cambió su contraseña (otras sesiones cerradas: ${closedSessions})`,
+  );
+
+  res.redirect('/users/password?ok=1');
+}
+
 async function deleteUser(req, res) {
   const targetId = req.params.userId;
 
@@ -211,5 +290,7 @@ export default {
   updateAvatar,
   updateBio,
   changeRole,
+  showChangePassword,
+  changePassword,
   deleteUser,
 };

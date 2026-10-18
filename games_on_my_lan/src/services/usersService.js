@@ -1,9 +1,11 @@
 import pool from '../database/pool.js';
 import bcrypt from 'bcryptjs';
 
+const BCRYPT_ROUNDS = 12;
+
 async function registerUser(username, password) {
   //receive password in plain text and hash it
-  const hashedPassword = await bcrypt.hash(password, 12);
+  const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
   const result = await pool.query(
     `
         INSERT INTO users (username, password_hash, role_id)
@@ -113,6 +115,41 @@ async function updateBio(bio, userId) {
   return result.rows[0] ?? null;
 }
 
+// Cambia la contraseña comprobando la actual. Devuelve:
+//   'ok' | 'wrong_password' | 'not_found' | 'conflict' (la contraseña cambió a mitad de camino)
+async function changePassword(userId, currentPassword, newPassword) {
+  const found = await pool.query('SELECT password_hash FROM users WHERE id_user = $1', [userId]);
+
+  if (found.rows.length === 0) {
+    return 'not_found';
+  }
+
+  const oldHash = found.rows[0].password_hash;
+
+  const correct = await bcrypt.compare(currentPassword, oldHash);
+
+  if (!correct) {
+    return 'wrong_password';
+  }
+
+  const newHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
+
+  // "AND password_hash = $3": si otra petición cambió la contraseña mientras tanto,
+  // esta no la pisa.
+  const updated = await pool.query(
+    `
+        UPDATE users
+        SET password_hash = $1
+        WHERE id_user = $2
+          AND password_hash = $3
+        RETURNING id_user
+        `,
+    [newHash, userId, oldHash],
+  );
+
+  return updated.rowCount === 0 ? 'conflict' : 'ok';
+}
+
 export default {
   registerUser,
   getUserById,
@@ -120,4 +157,5 @@ export default {
   updateUserRole,
   deleteUser,
   updateBio,
+  changePassword,
 };
