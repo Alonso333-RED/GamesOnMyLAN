@@ -30,7 +30,7 @@
                     <th>Usuario</th>
                     <th>Rol</th>
                     <th>Registrado</th>
-                    {{#if canManageRoles}}
+                    {{#if showActions}}
                     <th>Acciones</th>
                     {{/if}}
                 </tr>
@@ -55,7 +55,7 @@
                         {{registered_at}}
                     </td>
 
-                    {{#if @root.canManageRoles}}
+                    {{#if @root.showActions}}
                     <td>
 
                         {{#if canChangeRole}}
@@ -92,7 +92,7 @@
                 {{else}}
 
                 <tr>
-                    <td colspan="{{#if canManageRoles}}4{{else}}3{{/if}}" class="text-center">
+                    <td colspan="{{#if showActions}}4{{else}}3{{/if}}" class="text-center">
                         No hay usuarios registrados.
                     </td>
                 </tr>
@@ -100,7 +100,7 @@
                 {{/each}}
 
                 <tr id="noResults" style="display:none;">
-                    <td colspan="{{#if canManageRoles}}4{{else}}3{{/if}}" class="text-center">
+                    <td colspan="{{#if showActions}}4{{else}}3{{/if}}" class="text-center">
                         No se encontraron usuarios que coincidan con tu búsqueda.
                     </td>
                 </tr>

@@ -110,3 +110,9 @@
   font-size: 1.1rem;
   line-height: 1.2;
 }
+
+.alert-box.alert-box-success {
+  background: rgba(0, 200, 100, 0.12);
+  border-color: rgba(0, 200, 100, 0.4);
+  color: #d3ffe6;
+}
