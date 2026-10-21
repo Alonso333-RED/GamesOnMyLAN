@@ -52,7 +52,7 @@ function Home() {
                     <strong>Como respaldar los juegos y usuarios, y restaurarlos en otra instalación</strong>
                 </Link>
                 <a
-                    href="https://github.com/Alonso333-RED/GamesOnMyLAN"
+                    href="https://alonso-space.github.io/GamesOnMyLAN/"
                     className="action-card"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -61,7 +61,7 @@ function Home() {
                     <strong>Repositorio GitHub</strong>
                 </a>
                 <a
-                    href="https://alonso333-red.github.io/AlonsoSpace/"
+                    href="https://alonso-space.github.io/AlonsoSpace/"
                     className="action-card"
                     target="_blank"
                     rel="noopener noreferrer"
