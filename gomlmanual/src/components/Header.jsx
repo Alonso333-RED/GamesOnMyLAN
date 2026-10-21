@@ -45,7 +45,7 @@ function Header() {
                 ))}
 
                 <a
-                    href="https://github.com/Alonso333-RED/GamesOnMyLAN"
+                    href="https://alonso-space.github.io/GamesOnMyLAN/"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
